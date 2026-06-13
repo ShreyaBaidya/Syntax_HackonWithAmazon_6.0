@@ -109,8 +109,10 @@ async def add_item(
         return None
 
     if product_id in cart["items"]:
-        # Increment quantity if already in cart
+        # Increment quantity and track who also added it
         cart["items"][product_id]["quantity"] += quantity
+        if participant_name not in cart["items"][product_id]["added_by"]:
+            cart["items"][product_id]["added_by"].append(participant_name)
     else:
         # Fetch product details from catalog
         products = get_products_by_ids([product_id])
@@ -125,7 +127,7 @@ async def add_item(
             "image_url":  p["image_url"],
             "category":   p["category"],
             "quantity":   quantity,
-            "added_by":   participant_name,
+            "added_by":   [participant_name],
         }
 
     cart["total"], cart["item_count"] = _compute_totals(cart["items"])

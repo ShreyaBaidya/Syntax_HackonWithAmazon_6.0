@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getRecommendations, Recommendations, Product, Order, createSharedCart } from '@/lib/api';
+import { getRecommendations, Recommendations, Product, Order, createSharedCart, getSharedCart } from '@/lib/api';
 import { RecommendationFeed } from '@/components/RecommendationFeed';
 import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
 import { AmazonHeader } from '@/components/AmazonHeader';
@@ -14,6 +14,28 @@ export default function HomePage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCheckout, setShowCheckout] = useState(false);
   const [startingSharedCart, setStartingSharedCart] = useState(false);
+  const [showJoinInput, setShowJoinInput] = useState(false);
+  const [joinLink, setJoinLink] = useState('');
+  const [activeSharedCartId, setActiveSharedCartId] = useState<string | null>(null);
+  const [sharedCartTotal, setSharedCartTotal] = useState(0);
+  const [sharedCartItemCount, setSharedCartItemCount] = useState(0);
+
+  // Check sessionStorage for an active shared cart on mount and fetch its total
+  useEffect(() => {
+    const keys = Object.keys(sessionStorage);
+    const cartKey = keys.find(k => k.startsWith('cart_name_'));
+    if (cartKey) {
+      const id = cartKey.replace('cart_name_', '');
+      setActiveSharedCartId(id);
+      // Fetch latest cart state for the total
+      getSharedCart(id)
+        .then(c => {
+          setSharedCartTotal(c.total);
+          setSharedCartItemCount(c.item_count);
+        })
+        .catch(() => { /* cart may have expired */ });
+    }
+  }, []);
 
   const handleStartSharedCart = useCallback(async () => {
     setStartingSharedCart(true);
@@ -21,12 +43,30 @@ export default function HomePage() {
       const storedName = sessionStorage.getItem('my_name') || 'You';
       const cart = await createSharedCart(storedName);
       sessionStorage.setItem(`cart_name_${cart.cart_id}`, storedName);
+      setActiveSharedCartId(cart.cart_id);
       router.push(`/cart/${cart.cart_id}`);
     } catch {
       alert('Could not create cart. Is the backend running?');
       setStartingSharedCart(false);
     }
   }, [router]);
+
+  const handleJoinCart = useCallback(() => {
+    const input = joinLink.trim();
+    if (!input) return;
+    // Extract cart ID from a full link (e.g. http://localhost:3000/cart/ABC123) or just the code
+    let cartId = input;
+    const match = input.match(/\/cart\/([A-Za-z0-9]+)/);
+    if (match) {
+      cartId = match[1];
+    }
+    // Remove any trailing slashes or query params
+    cartId = cartId.replace(/[/?#].*$/, '').toUpperCase();
+    if (cartId) {
+      setActiveSharedCartId(cartId);
+      router.push(`/cart/${cartId}`);
+    }
+  }, [joinLink, router]);
 
   useEffect(() => {
     getRecommendations()
@@ -87,34 +127,133 @@ export default function HomePage() {
         </svg>
       </div>
 
-      {/* Shared Cart CTA */}
-      <div
-        onClick={handleStartSharedCart}
-        style={{
-          background: 'linear-gradient(135deg, #065F46 0%, #059669 100%)',
-          margin: '6px 10px 0', borderRadius: 10, padding: '12px 14px',
-          cursor: startingSharedCart ? 'wait' : 'pointer',
-          display: 'flex', alignItems: 'center', gap: 12,
-          opacity: startingSharedCart ? 0.7 : 1,
-        }}
-      >
-        <div style={{
-          width: 40, height: 40, background: 'rgba(255,255,255,0.2)',
-          borderRadius: '50%', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', fontSize: 20, flexShrink: 0,
-        }}>🛒</div>
-        <div style={{ flex: 1 }}>
-          <p style={{ color: 'white', fontWeight: 700, fontSize: 13, margin: 0 }}>
-            {startingSharedCart ? 'Creating cart…' : 'Start a Shared Cart'}
-          </p>
-          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 11, margin: '2px 0 0' }}>
-            Shop together — share a link, add items in real-time
-          </p>
+      {/* Shared Cart CTAs — Start & Join */}
+      <div style={{ margin: '6px 10px 0', display: 'flex', gap: 8 }}>
+        {/* Start a new cart */}
+        <div
+          onClick={handleStartSharedCart}
+          style={{
+            flex: 1,
+            background: 'linear-gradient(135deg, #065F46 0%, #059669 100%)',
+            borderRadius: 10, padding: '12px 12px',
+            cursor: startingSharedCart ? 'wait' : 'pointer',
+            display: 'flex', alignItems: 'center', gap: 10,
+            opacity: startingSharedCart ? 0.7 : 1,
+          }}
+        >
+          <div style={{
+            width: 36, height: 36, background: 'rgba(255,255,255,0.2)',
+            borderRadius: '50%', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', fontSize: 18, flexShrink: 0,
+          }}>🛒</div>
+          <div style={{ flex: 1 }}>
+            <p style={{ color: 'white', fontWeight: 700, fontSize: 12, margin: 0 }}>
+              {startingSharedCart ? 'Creating…' : 'Start Cart'}
+            </p>
+            <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, margin: '2px 0 0' }}>
+              Create & share link
+            </p>
+          </div>
         </div>
-        <svg width="16" height="16" fill="rgba(255,255,255,0.8)" viewBox="0 0 24 24">
-          <path d="M10 17l5-5-5-5v10z"/>
-        </svg>
+
+        {/* Join a cart */}
+        <div
+          onClick={() => setShowJoinInput(true)}
+          style={{
+            flex: 1,
+            background: 'linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%)',
+            borderRadius: 10, padding: '12px 12px',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 10,
+          }}
+        >
+          <div style={{
+            width: 36, height: 36, background: 'rgba(255,255,255,0.2)',
+            borderRadius: '50%', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', fontSize: 18, flexShrink: 0,
+          }}>🔗</div>
+          <div style={{ flex: 1 }}>
+            <p style={{ color: 'white', fontWeight: 700, fontSize: 12, margin: 0 }}>
+              Join Cart
+            </p>
+            <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, margin: '2px 0 0' }}>
+              Paste link or code
+            </p>
+          </div>
+        </div>
       </div>
+
+      {/* Join Cart modal/input */}
+      {showJoinInput && (
+        <div
+          onClick={() => setShowJoinInput(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 100, padding: 20,
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: 'white', borderRadius: 14, padding: 24,
+              maxWidth: 360, width: '100%',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+            }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: 18 }}>
+              <div style={{ fontSize: 40, marginBottom: 6 }}>🔗</div>
+              <h3 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 800, color: '#0F1111' }}>
+                Join a Shared Cart
+              </h3>
+              <p style={{ margin: 0, color: '#888', fontSize: 12 }}>
+                Paste the cart link or enter the 6-character code
+              </p>
+            </div>
+
+            <input
+              type="text"
+              placeholder="e.g. ABC123 or http://…/cart/ABC123"
+              value={joinLink}
+              onChange={e => setJoinLink(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleJoinCart()}
+              autoFocus
+              style={{
+                width: '100%', padding: '12px 14px', borderRadius: 8,
+                border: '1.5px solid #DDD', fontSize: 14, outline: 'none',
+                boxSizing: 'border-box', marginBottom: 14,
+              }}
+            />
+
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={() => { setShowJoinInput(false); setJoinLink(''); }}
+                style={{
+                  flex: 1, padding: '11px', borderRadius: 8,
+                  border: '1px solid #DDD', background: 'white',
+                  fontWeight: 600, fontSize: 14, cursor: 'pointer', color: '#555',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleJoinCart}
+                disabled={!joinLink.trim()}
+                style={{
+                  flex: 1, padding: '11px', borderRadius: 8,
+                  border: 'none',
+                  background: joinLink.trim() ? '#FFD814' : '#EEE',
+                  color: joinLink.trim() ? '#0F1111' : '#AAA',
+                  fontWeight: 800, fontSize: 14,
+                  cursor: joinLink.trim() ? 'pointer' : 'default',
+                }}
+              >
+                Join →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Assured cashback strip */}
       <div style={{
@@ -169,6 +308,43 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      {/* Floating shared cart pill — shows when user has an active shared cart */}
+      {activeSharedCartId && (
+        <div
+          onClick={() => router.push(`/cart/${activeSharedCartId}`)}
+          style={{
+            position: 'fixed',
+            bottom: cartCount > 0 && !showCheckout ? 108 : 52,
+            left: '50%', transform: 'translateX(-50%)',
+            zIndex: 41,
+            background: 'linear-gradient(135deg, #065F46 0%, #059669 100%)',
+            color: 'white',
+            borderRadius: 24, padding: '8px 18px',
+            display: 'flex', alignItems: 'center', gap: 8,
+            cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(5,150,105,0.4)',
+            transition: 'bottom 0.2s ease',
+          }}
+        >
+          <span style={{ fontSize: 16 }}>👥</span>
+          <span style={{ fontSize: 12, fontWeight: 700 }}>Shared Cart</span>
+          {sharedCartItemCount > 0 ? (
+            <span style={{
+              background: 'rgba(255,255,255,0.25)', borderRadius: 10,
+              padding: '2px 8px', fontSize: 11, fontWeight: 700,
+            }}>₹{sharedCartTotal.toFixed(0)} · {sharedCartItemCount} items</span>
+          ) : (
+            <span style={{
+              background: 'rgba(255,255,255,0.25)', borderRadius: 10,
+              padding: '2px 8px', fontSize: 11, fontWeight: 600,
+            }}>View</span>
+          )}
+          <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
+            <path d="M10 17l5-5-5-5v10z"/>
+          </svg>
+        </div>
+      )}
 
       {/* Amazon-style bottom nav */}
       <nav style={{

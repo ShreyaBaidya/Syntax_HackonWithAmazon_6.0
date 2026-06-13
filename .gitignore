@@ -34,4 +34,5 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+.wibey-tasks
 frontend/.env.local

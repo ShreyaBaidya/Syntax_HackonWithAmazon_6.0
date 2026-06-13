@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   CartState, CartItem, CartSSEEvent, Product,
   openCartStream, addToSharedCart, updateCartItemQty, removeFromSharedCart,
-  joinSharedCart, placeOrder, searchProducts,
+  joinSharedCart, placeOrder, searchProducts, getProductsByCategory, getRecommendations,
 } from '@/lib/api';
 
 interface Props {
@@ -31,6 +31,10 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
   const [checkingOut, setCheckingOut] = useState(false);
   const [orderDone, setOrderDone] = useState<string | null>(null);
   const esRef = useRef<EventSource | null>(null);
+
+  // The first participant in the list is the owner (cart creator)
+  const ownerName = cart.participants[0] ?? '';
+  const isOwner = participantName === ownerName;
 
   // ── Product search state ─────────────────────────────────────────────────────
   const [showSearch, setShowSearch] = useState(false);
@@ -186,7 +190,7 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
       <div style={{ background: 'white', padding: '10px 16px', borderBottom: '1px solid #F0F0F0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 11, color: '#888', fontWeight: 600 }}>ONLINE:</span>
-          {cart.participants.map(p => (
+          {cart.participants.map((p, idx) => (
             <div key={p} style={{
               display: 'flex', alignItems: 'center', gap: 5,
               background: '#F7F7F7', borderRadius: 20, padding: '3px 10px',
@@ -199,6 +203,12 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
               <span style={{ fontSize: 12, fontWeight: p === participantName ? 700 : 400 }}>
                 {p}{p === participantName ? ' (you)' : ''}
               </span>
+              {idx === 0 && (
+                <span style={{
+                  background: '#FF9900', color: 'white', fontSize: 9, fontWeight: 700,
+                  padding: '1px 5px', borderRadius: 4, marginLeft: 2,
+                }}>Owner</span>
+              )}
             </div>
           ))}
         </div>
@@ -213,121 +223,32 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
         </div>
       )}
 
-      {/* ── Add Products panel ── */}
+      {/* ── Add Products button ── */}
       <div style={{ background: 'white', padding: '8px 12px', borderBottom: '1px solid #F0F0F0' }}>
-        {!showSearch ? (
-          <button
-            onClick={() => setShowSearch(true)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: '#F0FAF6', border: '1.5px dashed #067D62',
-              borderRadius: 8, padding: '8px 16px', cursor: 'pointer',
-              color: '#067D62', fontWeight: 700, fontSize: 13, width: '100%',
-              justifyContent: 'center',
-            }}
-          >
-            ➕ Add Products
-          </button>
-        ) : (
-          <div>
-            {/* Search input row */}
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
-              <div style={{ flex: 1, position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: '#aaa' }}>🔍</span>
-                <input
-                  autoFocus
-                  type="text"
-                  placeholder="Search products…"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  style={{
-                    width: '100%', padding: '9px 12px 9px 32px',
-                    borderRadius: 8, border: '1.5px solid #067D62',
-                    fontSize: 13, outline: 'none', boxSizing: 'border-box',
-                  }}
-                />
-              </div>
-              <button
-                onClick={closeSearch}
-                style={{
-                  background: '#F5F5F5', border: 'none', borderRadius: 8,
-                  width: 36, height: 36, cursor: 'pointer', fontSize: 16,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Search status */}
-            {searching && (
-              <p style={{ margin: '0 0 6px', fontSize: 12, color: '#888', textAlign: 'center' }}>Searching…</p>
-            )}
-            {!searching && searchQuery.trim().length >= 2 && searchResults.length === 0 && (
-              <p style={{ margin: '0 0 6px', fontSize: 12, color: '#aaa', textAlign: 'center' }}>No products found</p>
-            )}
-            {!searching && searchQuery.trim().length < 2 && (
-              <p style={{ margin: '0 0 6px', fontSize: 11, color: '#aaa', textAlign: 'center' }}>Type at least 2 characters to search</p>
-            )}
-
-            {/* Search results */}
-            {searchResults.length > 0 && (
-              <div style={{ borderRadius: 8, overflow: 'hidden', border: '1px solid #F0F0F0' }}>
-                {searchResults.map((product, i) => {
-                  const alreadyInCart = !!cart.items[product.id];
-                  const isAdding = addingIds.has(product.id);
-                  return (
-                    <div
-                      key={product.id}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: 10,
-                        padding: '10px 12px',
-                        borderBottom: i === searchResults.length - 1 ? 'none' : '1px solid #F5F5F5',
-                        background: 'white',
-                      }}
-                    >
-                      {/* Image */}
-                      <div style={{ width: 44, height: 44, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#FAFAFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={product.image_url} alt={product.name} style={{ width: 40, height: 40, objectFit: 'contain' }} />
-                      </div>
-
-                      {/* Name + unit */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: '#0F1111', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {product.name}
-                        </p>
-                        <p style={{ margin: '2px 0 0', fontSize: 10, color: '#888' }}>{product.unit}</p>
-                      </div>
-
-                      {/* Price */}
-                      <span style={{ fontSize: 13, fontWeight: 700, flexShrink: 0 }}>₹{product.price}</span>
-
-                      {/* Add button */}
-                      <button
-                        onClick={() => handleAddProduct(product)}
-                        disabled={isAdding}
-                        style={{
-                          background: alreadyInCart ? '#E0F4EC' : '#FFD814',
-                          color: alreadyInCart ? '#067D62' : '#0F1111',
-                          border: 'none', borderRadius: 6,
-                          padding: '6px 12px', fontWeight: 700, fontSize: 12,
-                          cursor: isAdding ? 'not-allowed' : 'pointer',
-                          flexShrink: 0, opacity: isAdding ? 0.6 : 1,
-                          minWidth: 52,
-                        }}
-                      >
-                        {isAdding ? '…' : alreadyInCart ? '✓ Add' : '+ Add'}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
+        <button
+          onClick={() => setShowSearch(true)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: '#F0FAF6', border: '1.5px dashed #067D62',
+            borderRadius: 8, padding: '8px 16px', cursor: 'pointer',
+            color: '#067D62', fontWeight: 700, fontSize: 13, width: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          ➕ Add Products
+        </button>
       </div>
+
+      {/* ── Full-screen catalog overlay ── */}
+      {showSearch && (
+        <CatalogOverlay
+          cart={cart}
+          participantName={participantName}
+          onAddProduct={handleAddProduct}
+          addingIds={addingIds}
+          onClose={closeSearch}
+        />
+      )}
 
       {/* ── Cart items ── */}
       <div style={{ marginTop: 8 }}>
@@ -344,7 +265,8 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
                 key={item.product_id}
                 item={item}
                 isLast={i === itemList.length - 1}
-                participantColor={colorForParticipant(item.added_by, cart.participants)}
+                participantColor={colorForParticipant(item.added_by[0] ?? '', cart.participants)}
+                canEdit={item.added_by.includes(participantName) || isOwner}
                 onQty={(delta) => handleQty(item.product_id, delta, item.quantity)}
               />
             ))}
@@ -388,18 +310,33 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
           </div>
           <span style={{ fontSize: 11, color: '#067D62', fontWeight: 600 }}>⚡ 28 min delivery</span>
         </div>
-        <button
-          onClick={handleCheckout}
-          disabled={cart.item_count === 0 || checkingOut}
-          style={{
-            width: '100%', background: cart.item_count === 0 ? '#E0E0E0' : '#FFD814',
-            color: '#0F1111', border: 'none', borderRadius: 8,
-            padding: '14px 20px', fontWeight: 800, fontSize: 15,
-            cursor: cart.item_count === 0 ? 'not-allowed' : 'pointer',
-          }}
-        >
-          {checkingOut ? 'Placing Order…' : `⚡ Checkout · ₹${cart.total.toFixed(2)}`}
-        </button>
+        {isOwner ? (
+          <button
+            onClick={handleCheckout}
+            disabled={cart.item_count === 0 || checkingOut}
+            style={{
+              width: '100%', background: cart.item_count === 0 ? '#E0E0E0' : '#FFD814',
+              color: '#0F1111', border: 'none', borderRadius: 8,
+              padding: '14px 20px', fontWeight: 800, fontSize: 15,
+              cursor: cart.item_count === 0 ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {checkingOut ? 'Placing Order…' : `⚡ Checkout · ₹${cart.total.toFixed(2)}`}
+          </button>
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              width: '100%', background: '#F0F0F0',
+              color: '#888', border: 'none', borderRadius: 8,
+              padding: '14px 20px', fontWeight: 600, fontSize: 14,
+            }}>
+              🔒 Only the cart owner can checkout
+            </div>
+            <p style={{ margin: '6px 0 0', fontSize: 11, color: '#aaa' }}>
+              Waiting for <strong>{ownerName}</strong> to place the order
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -407,11 +344,12 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
 
 // ── Single cart row ────────────────────────────────────────────────────────────
 function CartRow({
-  item, isLast, participantColor, onQty,
+  item, isLast, participantColor, canEdit, onQty,
 }: {
   item: CartItem;
   isLast: boolean;
   participantColor: string;
+  canEdit: boolean;
   onQty: (delta: number) => void;
 }) {
   return (
@@ -440,7 +378,7 @@ function CartRow({
         <p style={{ margin: '2px 0 0', fontSize: 10, color: '#888' }}>{item.unit}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 3 }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: participantColor }} />
-          <span style={{ fontSize: 10, color: '#888' }}>by {item.added_by}</span>
+          <span style={{ fontSize: 10, color: '#888' }}>by {item.added_by.join(' & ')}</span>
         </div>
       </div>
 
@@ -452,22 +390,318 @@ function CartRow({
         )}
       </div>
 
-      {/* Qty stepper */}
+      {/* Qty stepper — only if canEdit */}
+      {canEdit ? (
+        <div style={{
+          display: 'flex', alignItems: 'center',
+          background: '#FFD814', borderRadius: 20,
+          border: '1px solid #F0C000', overflow: 'hidden',
+        }}>
+          <button onClick={() => onQty(-1)}
+            style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, fontWeight: 700 }}>
+            −
+          </button>
+          <span style={{ minWidth: 18, textAlign: 'center', fontSize: 13, fontWeight: 700 }}>
+            {item.quantity}
+          </span>
+          <button onClick={() => onQty(1)}
+            style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, fontWeight: 700 }}>
+            +
+          </button>
+        </div>
+      ) : (
+        <div style={{
+          display: 'flex', alignItems: 'center',
+          background: '#F5F5F5', borderRadius: 20,
+          border: '1px solid #E0E0E0', padding: '4px 10px',
+        }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#888' }}>
+            ×{item.quantity}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Category data for the catalog overlay ─────────────────────────────────────
+const CATEGORIES = [
+  { id: '',             icon: '🏠', label: 'Top Picks',   color: '#FFF3E0' },
+  { id: 'beverages',    icon: '🥤', label: 'Beverages',   color: '#E3F2FD' },
+  { id: 'snacks',       icon: '🍿', label: 'Snacks',      color: '#FFF8E1' },
+  { id: 'dairy',        icon: '🥛', label: 'Dairy & Eggs', color: '#F1F8E9' },
+  { id: 'fresh',        icon: '🥦', label: 'Fresh',       color: '#E8F5E9' },
+  { id: 'medicine',     icon: '💊', label: 'Health',      color: '#FCE4EC' },
+  { id: 'personal_care',icon: '🧴', label: 'Personal Care', color: '#EDE7F6' },
+  { id: 'cleaning',     icon: '🧹', label: 'Cleaners',    color: '#E0F7FA' },
+  { id: 'baby',         icon: '👶', label: 'Baby',        color: '#FFF3E0' },
+  { id: 'electronics',  icon: '🔋', label: 'Electronics', color: '#ECEFF1' },
+  { id: 'fashion',      icon: '👕', label: 'Fashion',     color: '#FCE4EC' },
+];
+
+// ── Full-screen catalog overlay ───────────────────────────────────────────────
+function CatalogOverlay({
+  cart, participantName, onAddProduct, addingIds, onClose,
+}: {
+  cart: CartState;
+  participantName: string;
+  onAddProduct: (product: Product) => void;
+  addingIds: Set<string>;
+  onClose: () => void;
+}) {
+  const [activeCategory, setActiveCategory] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [searching, setSearching] = useState(false);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Fetch products on category change
+  useEffect(() => {
+    setLoading(true);
+    if (activeCategory) {
+      getProductsByCategory(activeCategory, 20)
+        .then(setProducts)
+        .catch(() => setProducts([]))
+        .finally(() => setLoading(false));
+    } else {
+      // Top picks = recommendations trending + now
+      getRecommendations()
+        .then(recs => {
+          setProducts([...recs.now_suggestions, ...recs.trending]);
+        })
+        .catch(() => setProducts([]))
+        .finally(() => setLoading(false));
+    }
+  }, [activeCategory]);
+
+  // Debounced search
+  useEffect(() => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    const q = searchQuery.trim();
+    if (q.length < 2) { setSearchResults([]); setSearching(false); return; }
+    setSearching(true);
+    searchTimerRef.current = setTimeout(async () => {
+      try {
+        const results = await searchProducts(q, 12);
+        setSearchResults(results);
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setSearching(false);
+      }
+    }, 350);
+    return () => { if (searchTimerRef.current) clearTimeout(searchTimerRef.current); };
+  }, [searchQuery]);
+
+  const displayProducts = searchQuery.trim().length >= 2 ? searchResults : products;
+  const isSearching = searchQuery.trim().length >= 2;
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 60,
+      background: '#F7F7F7', display: 'flex', flexDirection: 'column',
+    }}>
+      {/* Header */}
       <div style={{
-        display: 'flex', alignItems: 'center',
-        background: '#FFD814', borderRadius: 20,
-        border: '1px solid #F0C000', overflow: 'hidden',
+        background: '#0F1111', padding: '10px 12px',
+        display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
       }}>
-        <button onClick={() => onQty(-1)}
-          style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, fontWeight: 700 }}>
-          −
+        <button
+          onClick={onClose}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}
+        >
+          <svg width="22" height="22" fill="white" viewBox="0 0 24 24">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
         </button>
-        <span style={{ minWidth: 18, textAlign: 'center', fontSize: 13, fontWeight: 700 }}>
-          {item.quantity}
-        </span>
-        <button onClick={() => onQty(1)}
-          style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, fontWeight: 700 }}>
-          +
+        <div style={{ flex: 1 }}>
+          <p style={{ color: 'white', fontWeight: 700, fontSize: 14, margin: 0 }}>
+            Add to Shared Cart
+          </p>
+          <p style={{ color: '#aaa', fontSize: 10, margin: 0 }}>
+            {cart.item_count} items · ₹{cart.total.toFixed(0)} in cart
+          </p>
+        </div>
+      </div>
+
+      {/* Search bar */}
+      <div style={{ background: 'white', padding: '8px 12px', borderBottom: '1px solid #F0F0F0' }}>
+        <div style={{ position: 'relative' }}>
+          <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: '#aaa' }}>🔍</span>
+          <input
+            type="text"
+            placeholder="Search products…"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%', padding: '9px 12px 9px 32px',
+              borderRadius: 8, border: '1.5px solid #DDD',
+              fontSize: 13, outline: 'none', boxSizing: 'border-box',
+              background: '#F7F7F7',
+            }}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              style={{
+                position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#888',
+              }}
+            >✕</button>
+          )}
+        </div>
+      </div>
+
+      {/* Category strip (hidden when searching) */}
+      {!isSearching && (
+        <div style={{ background: 'white', borderBottom: '1px solid #F0F0F0', padding: '10px 0 6px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', gap: 0, overflowX: 'auto', paddingLeft: 8, paddingRight: 8 }}>
+            {CATEGORIES.map(cat => {
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    gap: 4, flexShrink: 0, background: 'none', border: 'none',
+                    cursor: 'pointer', padding: '2px 8px', minWidth: 56,
+                  }}
+                >
+                  <div style={{
+                    width: 48, height: 48, background: isActive ? cat.color : '#F7F7F7',
+                    borderRadius: 8,
+                    border: isActive ? '2px solid #067D62' : '2px solid transparent',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
+                  }}>{cat.icon}</div>
+                  <span style={{
+                    fontSize: 9, fontWeight: isActive ? 700 : 500,
+                    color: isActive ? '#0F1111' : '#565959',
+                    textAlign: 'center', maxWidth: 56, whiteSpace: 'nowrap',
+                    overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Product grid */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 8px 80px' }}>
+        {(loading || searching) && (
+          <div style={{ textAlign: 'center', padding: '32px 20px' }}>
+            <p style={{ color: '#888', fontSize: 13 }}>Loading…</p>
+          </div>
+        )}
+
+        {!loading && !searching && displayProducts.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+            <p style={{ color: '#888', fontSize: 13 }}>
+              {isSearching ? 'No products found' : 'No products in this category'}
+            </p>
+          </div>
+        )}
+
+        {!loading && !searching && displayProducts.length > 0 && (
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8,
+          }}>
+            {displayProducts.map(product => {
+              const cartItem = cart.items[product.id];
+              const alreadyInCart = !!cartItem;
+              const isAdding = addingIds.has(product.id);
+              return (
+                <div key={product.id} style={{
+                  background: 'white', borderRadius: 8, overflow: 'hidden',
+                  border: alreadyInCart ? '2px solid #067D62' : '1px solid #F0F0F0',
+                  display: 'flex', flexDirection: 'column',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                }}>
+                  {/* Image */}
+                  <div style={{ background: '#FAFAFA', position: 'relative', paddingTop: '75%', overflow: 'hidden' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={product.image_url} alt={product.name}
+                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: 4 }}
+                    />
+                    {alreadyInCart && (
+                      <div style={{
+                        position: 'absolute', top: 4, left: 4,
+                        background: '#067D62', color: 'white',
+                        fontSize: 8, fontWeight: 700, padding: '2px 5px', borderRadius: 3,
+                      }}>
+                        In cart ×{cartItem.quantity}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div style={{ padding: '6px 6px 8px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <p style={{
+                      fontSize: 11, color: '#0F1111', margin: 0, lineHeight: 1.3,
+                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                    }}>
+                      {product.name}
+                    </p>
+                    <p style={{ fontSize: 9, color: '#888', margin: '2px 0 4px' }}>{product.unit}</p>
+
+                    {/* Added by (if in cart) */}
+                    {alreadyInCart && (
+                      <p style={{ fontSize: 9, color: '#067D62', margin: '0 0 4px', fontWeight: 500 }}>
+                        by {cartItem.added_by.join(' & ')}
+                      </p>
+                    )}
+
+                    {/* Price + Add */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
+                      <span style={{ fontSize: 12, fontWeight: 700 }}>₹{product.price}</span>
+                      <button
+                        onClick={() => onAddProduct(product)}
+                        disabled={isAdding}
+                        style={{
+                          background: alreadyInCart ? '#E0F4EC' : '#FFD814',
+                          color: alreadyInCart ? '#067D62' : '#0F1111',
+                          border: 'none', borderRadius: 6,
+                          padding: '4px 10px', fontWeight: 700, fontSize: 11,
+                          cursor: isAdding ? 'not-allowed' : 'pointer',
+                          opacity: isAdding ? 0.6 : 1,
+                        }}
+                      >
+                        {isAdding ? '…' : '+ Add'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Bottom bar showing cart total */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        background: 'white', borderTop: '1px solid #F0F0F0',
+        padding: '10px 16px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        boxShadow: '0 -2px 8px rgba(0,0,0,0.06)',
+      }}>
+        <div>
+          <span style={{ fontSize: 12, color: '#555' }}>{cart.item_count} items · </span>
+          <span style={{ fontSize: 15, fontWeight: 800 }}>₹{cart.total.toFixed(0)}</span>
+        </div>
+        <button
+          onClick={onClose}
+          style={{
+            background: '#FFD814', color: '#0F1111',
+            border: 'none', borderRadius: 8, padding: '10px 20px',
+            fontWeight: 700, fontSize: 14, cursor: 'pointer',
+          }}
+        >
+          ← Back to Cart
         </button>
       </div>
     </div>

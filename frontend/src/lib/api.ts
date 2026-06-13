@@ -36,7 +36,7 @@ export type CartItem = {
   image_url: string;
   category: string;
   quantity: number;
-  added_by: string;
+  added_by: string[];
 };
 
 export type CartState = {

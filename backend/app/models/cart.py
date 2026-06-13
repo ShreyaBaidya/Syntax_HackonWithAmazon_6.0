@@ -10,7 +10,7 @@ class CartItem(BaseModel):
     image_url: str
     category: str
     quantity: int
-    added_by: str  # participant name / emoji
+    added_by: List[str]  # all participants who added this item
 
 
 class CartState(BaseModel):
