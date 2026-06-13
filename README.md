@@ -1,1 +1,0 @@
-# Syntax_HackonWithAmazon_6.0
