@@ -5,8 +5,8 @@ Three lanes: Now Suggestions (time-based) · Reorder Nudges · Trending.
 """
 from datetime import datetime
 
-from app.db.seed import PRODUCTS, TIME_BASED_CATEGORIES
-from app.services.catalog import _format, get_trending
+from app.db.seed import TIME_BASED_CATEGORIES
+from app.services.catalog import ALL_PRODUCTS, _format, get_trending
 
 
 def _time_context() -> str:
@@ -34,18 +34,29 @@ _GREETINGS = {
 
 def _now_suggestions(time_ctx: str) -> list[dict]:
     categories = TIME_BASED_CATEGORIES.get(time_ctx, ["snacks", "beverages"])
-    products: list[dict] = []
-    for cat in categories[:2]:
-        cat_products = [p for p in PRODUCTS if p["category"] == cat][:2]
-        products.extend(cat_products)
-
     reason = _GREETINGS.get(time_ctx, "For you right now")
-    result = []
-    for p in products[:4]:
-        formatted = _format(p)
-        formatted["reason"] = reason
-        result.append(formatted)
-    return result
+    seen_ids: set[str] = set()
+    result: list[dict] = []
+
+    # Pull 2 in-stock products per category from the full catalog
+    for cat in categories[:2]:
+        count = 0
+        for p in ALL_PRODUCTS:
+            if not p.get("in_stock"):
+                continue
+            if p.get("category") != cat:
+                continue
+            if p["id"] in seen_ids:
+                continue
+            formatted = _format(p)
+            formatted["reason"] = reason
+            result.append(formatted)
+            seen_ids.add(p["id"])
+            count += 1
+            if count >= 2:
+                break
+
+    return result[:4]
 
 
 def _reorder_nudges(user_id: str) -> list[dict]:
@@ -63,7 +74,7 @@ def _reorder_nudges(user_id: str) -> list[dict]:
         for item in order.get("items", []):
             pid = item.get("product_id")
             if pid and pid not in seen:
-                product = next((p for p in PRODUCTS if p["id"] == pid), None)
+                product = next((p for p in ALL_PRODUCTS if p["id"] == pid), None)
                 if product:
                     formatted = _format(product)
                     formatted["reason"] = "You ordered this before 🔁"

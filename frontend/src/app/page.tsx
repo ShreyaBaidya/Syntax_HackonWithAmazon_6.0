@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getRecommendations, Recommendations, Product, Order } from '@/lib/api';
+import { getRecommendations, Recommendations, Product, Order, createSharedCart } from '@/lib/api';
 import { RecommendationFeed } from '@/components/RecommendationFeed';
 import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
 import { AmazonHeader } from '@/components/AmazonHeader';
@@ -13,6 +13,20 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [startingSharedCart, setStartingSharedCart] = useState(false);
+
+  const handleStartSharedCart = useCallback(async () => {
+    setStartingSharedCart(true);
+    try {
+      const storedName = sessionStorage.getItem('my_name') || 'You';
+      const cart = await createSharedCart(storedName);
+      sessionStorage.setItem(`cart_name_${cart.cart_id}`, storedName);
+      router.push(`/cart/${cart.cart_id}`);
+    } catch {
+      alert('Could not create cart. Is the backend running?');
+      setStartingSharedCart(false);
+    }
+  }, [router]);
 
   useEffect(() => {
     getRecommendations()
@@ -73,26 +87,33 @@ export default function HomePage() {
         </svg>
       </div>
 
-      {/* Back to School style banner */}
-      <div style={{
-        margin: '8px 10px 0', borderRadius: 10, overflow: 'hidden',
-        background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
-        padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
-        <div>
-          <p style={{ color: 'white', fontWeight: 900, fontSize: 16, margin: 0, textTransform: 'uppercase', letterSpacing: '-0.5px' }}>
-            🎒 Back to school
-          </p>
-          <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 12, margin: '2px 0 0', fontWeight: 600 }}>
-            Up to 30% off on essentials
-          </p>
-        </div>
+      {/* Shared Cart CTA */}
+      <div
+        onClick={handleStartSharedCart}
+        style={{
+          background: 'linear-gradient(135deg, #065F46 0%, #059669 100%)',
+          margin: '6px 10px 0', borderRadius: 10, padding: '12px 14px',
+          cursor: startingSharedCart ? 'wait' : 'pointer',
+          display: 'flex', alignItems: 'center', gap: 12,
+          opacity: startingSharedCart ? 0.7 : 1,
+        }}
+      >
         <div style={{
-          background: 'white', color: '#F7931E',
-          fontSize: 11, fontWeight: 700, padding: '5px 12px', borderRadius: 20,
-        }}>
-          Shop Now
+          width: 40, height: 40, background: 'rgba(255,255,255,0.2)',
+          borderRadius: '50%', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', fontSize: 20, flexShrink: 0,
+        }}>🛒</div>
+        <div style={{ flex: 1 }}>
+          <p style={{ color: 'white', fontWeight: 700, fontSize: 13, margin: 0 }}>
+            {startingSharedCart ? 'Creating cart…' : 'Start a Shared Cart'}
+          </p>
+          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 11, margin: '2px 0 0' }}>
+            Shop together — share a link, add items in real-time
+          </p>
         </div>
+        <svg width="16" height="16" fill="rgba(255,255,255,0.8)" viewBox="0 0 24 24">
+          <path d="M10 17l5-5-5-5v10z"/>
+        </svg>
       </div>
 
       {/* Assured cashback strip */}

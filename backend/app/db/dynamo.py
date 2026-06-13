@@ -2,7 +2,7 @@
 import boto3
 from boto3.dynamodb.conditions import Attr
 
-from app.core.config import settings
+from __MACOSX.urgentShopping.urgentShopping.backend.app.core.config import settings
 
 _dynamodb = boto3.resource("dynamodb", region_name=settings.aws_region)
 _products_table = _dynamodb.Table(settings.dynamodb_products_table)

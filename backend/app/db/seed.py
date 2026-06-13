@@ -3,7 +3,7 @@ Seed data: 50 mock products across 10 categories.
 Used both as DynamoDB seed and as in-memory fallback for local dev.
 """
 import boto3
-from app.core.config import settings
+from __MACOSX.urgentShopping.urgentShopping.backend.app.core.config import settings
 
 PRODUCTS: list[dict] = [
     # ── Medicine ──────────────────────────────────────────────────────────────

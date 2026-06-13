@@ -12,6 +12,7 @@ const CATEGORIES = [
   { id: 'cleaning',     icon: '🧹', label: 'Cleaners',    color: '#E0F7FA' },
   { id: 'baby',         icon: '👶', label: 'Baby',        color: '#FFF3E0' },
   { id: 'electronics',  icon: '🔋', label: 'Electronics', color: '#ECEFF1' },
+  { id: 'fashion',      icon: '👕', label: 'Fashion',     color: '#FCE4EC' },
 ];
 
 interface Props {

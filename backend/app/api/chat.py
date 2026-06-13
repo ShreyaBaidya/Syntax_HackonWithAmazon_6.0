@@ -7,7 +7,7 @@ from app.services.intent_engine import stream_nowspeak
 router = APIRouter()
 
 
-@router.post("/chat", summary="NowSpeak — unified voice+chat AI endpoint (SSE)")
+@router.post("/chat")
 async def chat(request: ChatRequest):
     """
     Accepts a user message (text or voice transcript).

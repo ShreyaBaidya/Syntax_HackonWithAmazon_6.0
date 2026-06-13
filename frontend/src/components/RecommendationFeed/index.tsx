@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Product } from '@/lib/api';
+import { useState, useEffect } from 'react';
+import { Product, getProductsByCategory } from '@/lib/api';
 import { ProductCard } from '@/components/ProductCard';
 import { CategoryStrip } from '@/components/CategoryStrip';
 
@@ -31,17 +31,40 @@ export function RecommendationFeed({
 }: Props) {
   const [activeCategory, setActiveCategory] = useState('');
   const [activeSub, setActiveSub] = useState('All');
+  const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
+  const [loadingCategory, setLoadingCategory] = useState(false);
 
-  const filter = (products: Product[]) =>
-    activeCategory ? products.filter(p => p.category === activeCategory) : products;
+  // Fetch catalog products whenever a category is selected
+  useEffect(() => {
+    if (!activeCategory) {
+      setCategoryProducts([]);
+      return;
+    }
+    setLoadingCategory(true);
+    getProductsByCategory(activeCategory, 20)
+      .then(setCategoryProducts)
+      .catch(() => setCategoryProducts([]))
+      .finally(() => setLoadingCategory(false));
+  }, [activeCategory]);
 
-  const filtered = filter([...nowSuggestions, ...trending]);
-  const filteredReorder = filter(reorderNudges);
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setActiveSub('All');
+  };
+
+  // When no category selected, show recommendations; otherwise show catalog products
+  const isBrowsing = Boolean(activeCategory);
+  const filtered = isBrowsing ? categoryProducts : [...nowSuggestions, ...trending];
+  const filteredReorder = isBrowsing ? [] : reorderNudges;
+
+  const sectionTitle = isBrowsing
+    ? `${activeCategory.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())} Products`
+    : (SECTION_TITLES[timeContext] ?? '✨ For you right now');
 
   return (
     <div style={{ background: '#F7F7F7' }}>
       {/* Category icon strip */}
-      <CategoryStrip active={activeCategory} onChange={setActiveCategory} />
+      <CategoryStrip active={activeCategory} onChange={handleCategoryChange} />
 
       {/* Sub-category pill chips */}
       <div style={{ background: 'white', borderBottom: '1px solid #F0F0F0' }}>
@@ -68,15 +91,22 @@ export function RecommendationFeed({
         </div>
       </div>
 
+      {/* Loading state */}
+      {loadingCategory && (
+        <div style={{ textAlign: 'center', padding: '32px 20px', background: 'white', marginTop: 8 }}>
+          <p style={{ color: '#888', fontSize: 13 }}>Loading products…</p>
+        </div>
+      )}
+
       {/* Main product grid */}
-      {filtered.length > 0 && (
-        <Section title={SECTION_TITLES[timeContext] ?? '✨ For you right now'}>
+      {!loadingCategory && filtered.length > 0 && (
+        <Section title={sectionTitle}>
           <ProductGrid4 products={filtered} onProductSelect={onProductSelect} />
         </Section>
       )}
 
-      {/* Reorder nudges */}
-      {filteredReorder.length > 0 && (
+      {/* Reorder nudges (only on home / Top Picks view) */}
+      {!isBrowsing && filteredReorder.length > 0 && (
         <Section title="🔁 Buy Again">
           <div>
             {filteredReorder.map(p => (
@@ -86,11 +116,11 @@ export function RecommendationFeed({
         </Section>
       )}
 
-      {filtered.length === 0 && (
+      {!loadingCategory && filtered.length === 0 && (
         <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', marginTop: 8 }}>
           <p style={{ color: '#888', fontSize: 14 }}>No products in this category.</p>
           <button
-            onClick={() => setActiveCategory('')}
+            onClick={() => handleCategoryChange('')}
             style={{
               marginTop: 8, background: '#FFD814', color: '#0F1111',
               border: 'none', borderRadius: 6, padding: '8px 20px',

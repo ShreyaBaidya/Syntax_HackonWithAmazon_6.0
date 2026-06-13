@@ -9,7 +9,7 @@ from app.models.order import OrderRequest, OrderResponse
 router = APIRouter()
 
 
-@router.post("/orders", response_model=OrderResponse, summary="Place an order (Speed Checkout)")
+@router.post("/orders", response_model=OrderResponse)
 async def place_order(request: OrderRequest):
     """
     Creates an order record and returns confirmation with ETA.

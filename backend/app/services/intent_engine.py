@@ -31,7 +31,7 @@ Extract the shopping intent from the customer message below.
 Respond with ONLY a JSON object — no explanation, no markdown, no code block.
 
 Format:
-{{"query": "<specific product search terms>", "category": "<one of: medicine | beverages | dairy | snacks | personal_care | cleaning | baby | home | electronics | grocery | fresh | (empty string if unsure)>"}}
+{{"query": "<specific product search terms>", "category": "<one of: medicine | beverages | dairy | snacks | personal_care | cleaning | baby | home | electronics | fashion | grocery | fresh | (empty string if unsure)>"}}
 
 Customer message: "{message}"
 """
