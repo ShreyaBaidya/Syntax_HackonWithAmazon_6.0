@@ -14,11 +14,7 @@ export default function NowSpeakPage() {
   const addToCart = (product: Product) => {
     setCart(prev => {
       const existing = prev.find(i => i.product.id === product.id);
-      if (existing) {
-        return prev.map(i =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
+      if (existing) return prev.map(i => i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
       return [...prev, { product, quantity: 1 }];
     });
   };
@@ -29,41 +25,61 @@ export default function NowSpeakPage() {
   };
 
   const cartTotal = cart.reduce((s, i) => s + i.product.price * i.quantity, 0);
+  const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* ── Header ──────────────────────────────────────────────────── */}
-      <header className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3 flex-shrink-0 shadow-sm z-10">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#EAEDED' }}>
+      {/* Header */}
+      <header style={{
+        background: '#232F3E', padding: '10px 12px',
+        display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
+      }}>
         <button
           onClick={() => router.back()}
-          className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-gray-900 rounded-xl hover:bg-gray-100 transition-colors"
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: 4, display: 'flex', alignItems: 'center',
+          }}
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          <svg width="22" height="22" fill="white" viewBox="0 0 24 24">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
           </svg>
         </button>
-        <div className="flex-1">
-          <h1 className="font-bold text-gray-900 flex items-center gap-1.5 text-base">
-            <span>🎙️</span> NowSpeak™
-          </h1>
-          <p className="text-xs text-gray-400">Voice + AI · 30-min delivery</p>
+
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ color: '#FF9900', fontWeight: 700, fontSize: 15, fontStyle: 'italic' }}>amazon</span>
+            <span style={{
+              background: '#067D62', color: 'white',
+              fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 3,
+            }}>now</span>
+            <span style={{ color: '#FF9900', fontSize: 10 }}>⚡</span>
+            <span style={{ color: '#aaa', fontSize: 11 }}>· NowSpeak™</span>
+          </div>
+          <p style={{ color: '#67B0D1', fontSize: 10, margin: 0 }}>
+            Voice + AI · 30-min delivery
+          </p>
         </div>
-        {cart.length > 0 && (
+
+        {cartCount > 0 && (
           <button
             onClick={() => setShowCheckout(true)}
-            className="bg-blue-600 text-white px-3 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5"
+            style={{
+              background: '#FF9900', color: 'white', border: 'none',
+              borderRadius: 4, padding: '6px 12px', fontWeight: 700,
+              fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+            }}
           >
-            🛒 {cart.length} · ₹{cartTotal.toFixed(0)}
+            🛒 {cartCount} · ₹{cartTotal.toFixed(0)}
           </button>
         )}
       </header>
 
-      {/* ── NowSpeak Chat ─────────────────────────────────────────── */}
-      <div className="flex-1 overflow-hidden">
+      {/* NowSpeak chat */}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
         <NowSpeak onProductSelect={addToCart} />
       </div>
 
-      {/* ── Speed Checkout Modal ─────────────────────────────────── */}
       {showCheckout && cart.length > 0 && (
         <SpeedCheckout
           cart={cart}

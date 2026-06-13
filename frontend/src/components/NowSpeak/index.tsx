@@ -1,29 +1,27 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNowSpeak } from '@/hooks/useNowSpeak';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { ProductCard } from '@/components/ProductCard';
 import { Product } from '@/lib/api';
 
 const QUICK_PROMPTS = [
-  "I have a fever 🤒",
-  "Need coffee ☕",
-  "Party supplies 🎉",
-  "Running low on milk 🥛",
+  { label: 'I have a fever 🤒', q: 'I have a fever and need medicine fast' },
+  { label: 'Need coffee ☕', q: 'Need instant coffee urgently' },
+  { label: 'Party supplies 🎉', q: 'Party snacks and drinks for tonight' },
+  { label: 'Running low on milk 🥛', q: 'Need milk delivered fast' },
 ];
 
 interface Props {
-  readonly onProductSelect?: (product: Product) => void;
+  onProductSelect?: (product: Product) => void;
 }
 
-export function NowSpeak({ onProductSelect }: readonly Props) {
+export function NowSpeak({ onProductSelect }: Props) {
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const { messages, isStreaming, sendMessage } = useNowSpeak();
 
-  // Voice → same sendMessage pipeline
   const handleVoiceResult = (transcript: string) => {
     sendMessage(transcript);
   };
@@ -38,85 +36,129 @@ export function NowSpeak({ onProductSelect }: readonly Props) {
     setInputText('');
   };
 
-  // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
-      {/* ── Messages ─────────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#F3F3F3' }}>
+      {/* Messages area */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px 0' }}>
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center py-12">
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-              <span className="text-4xl">🎙️</span>
-            </div>
-            <h2 className="text-xl font-bold text-gray-800 mb-1">What do you need?</h2>
-            <p className="text-gray-500 text-sm max-w-xs">
-              Speak or type your urgent need — I'll find it and get it to you in 30 minutes.
+          <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            justifyContent: 'center', height: '100%', textAlign: 'center', paddingTop: 48,
+          }}>
+            <div style={{
+              width: 72, height: 72, borderRadius: '50%', background: '#FFF3E0',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, marginBottom: 16, border: '2px solid #FF9900',
+            }}>🎙️</div>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0F1111', margin: '0 0 6px' }}>
+              What do you need?
+            </h2>
+            <p style={{ color: '#565959', fontSize: 13, maxWidth: 260, lineHeight: 1.5, margin: 0 }}>
+              Speak or type your need — we deliver in 30 minutes.
             </p>
-            <div className="mt-6 flex flex-wrap gap-2 justify-center">
-              {QUICK_PROMPTS.map(prompt => (
+
+            {/* Quick prompts */}
+            <div style={{
+              marginTop: 20, display: 'flex', flexWrap: 'wrap',
+              gap: 8, justifyContent: 'center', maxWidth: 340,
+            }}>
+              {QUICK_PROMPTS.map(p => (
                 <button
-                  key={prompt}
-                  onClick={() => sendMessage(prompt)}
-                  className="text-sm bg-white border border-gray-200 hover:border-blue-300 hover:text-blue-700 text-gray-700 px-4 py-2 rounded-full transition-colors shadow-sm"
+                  key={p.label}
+                  onClick={() => sendMessage(p.q)}
+                  style={{
+                    padding: '7px 14px', borderRadius: 20,
+                    background: 'white', color: '#0F1111', fontSize: 12,
+                    border: '1px solid #DDD', cursor: 'pointer',
+                    fontWeight: 500,
+                  }}
                 >
-                  {prompt}
+                  {p.label}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {messages.map((msg, i) => (
-        <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className="max-w-[88%]">
-              {msg.role === 'user' ? (
-                <div className="bg-blue-600 text-white px-4 py-3 rounded-2xl rounded-tr-sm text-sm leading-relaxed">
-                  {msg.text}
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {(msg.text || (isStreaming && i === messages.length - 1)) && (
-                    <div className="bg-white border border-gray-100 shadow-sm px-4 py-3 rounded-2xl rounded-tl-sm text-sm text-gray-800 leading-relaxed">
-                      {msg.text}
-                      {isStreaming && i === messages.length - 1 && (
-                        <span className="inline-block w-1.5 h-4 bg-blue-400 ml-1 animate-pulse rounded-sm align-middle" />
-                      )}
-                    </div>
-                  )}
-                  {msg.products && msg.products.length > 0 && (
-                    <div className="grid grid-cols-2 gap-2">
-                      {msg.products.map(p => (
-                        <ProductCard
-                          key={p.id}
-                          product={p}
-                          onAddToCart={onProductSelect}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              style={{
+                display: 'flex',
+                justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+              }}
+            >
+              <div style={{ maxWidth: '88%' }}>
+                {msg.role === 'user' ? (
+                  <div style={{
+                    background: '#232F3E', color: 'white',
+                    padding: '10px 14px', borderRadius: '18px 18px 4px 18px',
+                    fontSize: 13, lineHeight: 1.5,
+                  }}>
+                    {msg.text}
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {(msg.text || (isStreaming && i === messages.length - 1)) && (
+                      <div style={{
+                        background: 'white', border: '1px solid #E8E8E8',
+                        padding: '10px 14px', borderRadius: '18px 18px 18px 4px',
+                        fontSize: 13, lineHeight: 1.5, color: '#0F1111',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                      }}>
+                        {msg.text}
+                        {isStreaming && i === messages.length - 1 && (
+                          <span style={{
+                            display: 'inline-block', width: 6, height: 14,
+                            background: '#FF9900', marginLeft: 4,
+                            borderRadius: 2, verticalAlign: 'middle',
+                            animation: 'pulse 1s infinite',
+                          }} />
+                        )}
+                      </div>
+                    )}
+                    {/* Product cards */}
+                    {msg.products && msg.products.length > 0 && (
+                      <div style={{
+                        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8,
+                      }}>
+                        {msg.products.map(p => (
+                          <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+          ))}
+        </div>
+        <div ref={messagesEndRef} style={{ height: 12 }} />
       </div>
 
-      {/* ── Input bar ────────────────────────────────────────────────────── */}
-      <div className="border-t border-gray-100 bg-white px-4 py-3 safe-area-bottom">
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+      {/* Input bar — Amazon style */}
+      <div style={{
+        background: 'white', borderTop: '1px solid #DDD',
+        padding: '10px 10px 12px',
+      }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <input
-            ref={inputRef}
             type="text"
             value={inputText}
             onChange={e => setInputText(e.target.value)}
-            placeholder={isListening ? '🎤 Listening...' : 'What do you need urgently?'}
+            placeholder={isListening ? '🎤 Listening...' : 'Search or describe what you need...'}
             disabled={isStreaming || isListening}
-            className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder:text-gray-400 disabled:opacity-60"
+            style={{
+              flex: 1, border: '1px solid #DDD', borderRadius: 4,
+              padding: '10px 12px', fontSize: 13, outline: 'none',
+              background: isStreaming ? '#F3F3F3' : 'white',
+              color: '#0F1111',
+            }}
           />
 
           {isSupported && (
@@ -124,27 +166,42 @@ export function NowSpeak({ onProductSelect }: readonly Props) {
               type="button"
               onClick={isListening ? stopListening : startListening}
               disabled={isStreaming}
-              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all disabled:opacity-40 ${
-                isListening
-                  ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-200'
-                  : 'bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600'
-              }`}
+              style={{
+                width: 40, height: 40, borderRadius: '50%', border: 'none',
+                background: isListening ? '#CC0C39' : '#F3F3F3',
+                color: isListening ? 'white' : '#565959',
+                cursor: 'pointer', fontSize: 18,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                animation: isListening ? 'pulse 1s infinite' : 'none',
+              }}
             >
-              <span className="text-xl">{isListening ? '⏹' : '🎤'}</span>
+              🎤
             </button>
           )}
 
           <button
             type="submit"
             disabled={!inputText.trim() || isStreaming}
-            className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center disabled:opacity-40 hover:bg-blue-700 active:scale-95 transition-all"
+            style={{
+              width: 40, height: 40, borderRadius: '50%',
+              background: inputText.trim() ? '#FF9900' : '#DDD',
+              border: 'none', cursor: inputText.trim() ? 'pointer' : 'default',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
           >
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" stroke="currentColor" strokeWidth={2.5}>
-              <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" />
+            <svg viewBox="0 0 24 24" fill="white" width="18" height="18">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
             </svg>
           </button>
         </form>
       </div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,5 +1,16 @@
 'use client';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Web Speech API types aren't included in TS's DOM lib — declare them here
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+  type SpeechRecognition = any;
+  type SpeechRecognitionEvent = any;
+}
+
 import { useState, useRef, useCallback } from 'react';
 
 export interface VoiceInputHook {
