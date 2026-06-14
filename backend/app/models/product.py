@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict
 
 
@@ -45,6 +45,10 @@ class ProductCard(BaseModel):
     tags: str = ""
     in_stock: bool = True
     reason: Optional[str] = None
+    ingredients: List[str] = []
+    dietary_tags: List[str] = []
+    allergen_tags: List[str] = []
+    nutrition_summary: Optional[Dict[str, Any]] = None
 
 
 class ProductSearchResponse(BaseModel):

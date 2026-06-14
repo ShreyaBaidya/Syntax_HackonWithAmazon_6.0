@@ -6,9 +6,12 @@ import { getRecommendations, Recommendations, Product, Order, createSharedCart, 
 import { RecommendationFeed } from '@/components/RecommendationFeed';
 import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
 import { AmazonHeader } from '@/components/AmazonHeader';
+import { useProfile } from '@/hooks/useProfile';
+import { ProfileBanner } from '@/components/ProfileBanner';
 
 export default function HomePage() {
   const router = useRouter();
+  const { userId, profile, exclusionSet, loading: profileLoading } = useProfile();
   const [recs, setRecs] = useState<Recommendations | null>(null);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -73,6 +76,145 @@ export default function HomePage() {
         });
     }
   }, []);
+
+  // ── Intent state (React-managed, synced from sessionStorage) ────────────
+  const [chatIntent, setChatIntent] = useState<string | null>(null);
+
+  // Read initial intent from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('last_chat_intent');
+      if (stored) {
+        console.log('[HomePage] Initial intent from sessionStorage:', stored);
+        setChatIntent(stored);
+      }
+    } catch { /* sessionStorage unavailable */ }
+  }, []);
+
+  // Re-sync intent when page becomes visible (user navigates back from NowSpeak)
+  useEffect(() => {
+    const syncIntent = () => {
+      try {
+        const stored = sessionStorage.getItem('last_chat_intent') || null;
+        setChatIntent(prev => {
+          if (prev !== stored) {
+            console.log('[HomePage] Intent changed on focus/visibility:', prev, '→', stored);
+            return stored;
+          }
+          return prev;
+        });
+      } catch { /* sessionStorage unavailable */ }
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') syncIntent();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', syncIntent);
+    // Also listen for custom event dispatched by useNowSpeak
+    window.addEventListener('chat-intent-changed', syncIntent);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', syncIntent);
+      window.removeEventListener('chat-intent-changed', syncIntent);
+    };
+  }, []);
+
+  // ── Fetch recommendations whenever userId or chatIntent changes ─────────
+  useEffect(() => {
+    console.log('[Recommendations] React state — userId:', userId, 'chatIntent:', chatIntent);
+
+    getRecommendations(userId ?? undefined, chatIntent ?? undefined)
+      .then(data => {
+        console.log('[Recommendations] Response — now_suggestions:', data.now_suggestions.length, ', trending:', data.trending.length);
+        setRecs(data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [userId, chatIntent]);
+
+
+  const [chatIntent, setChatIntent] = useState<string | null>(null);
+
+  // Read initial intent from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('last_chat_intent');
+      if (stored) {
+        console.log('[HomePage] Initial intent from sessionStorage:', stored);
+        setChatIntent(stored);
+      }
+    } catch { /* sessionStorage unavailable */ }
+  }, []);
+
+  // Re-sync intent when page becomes visible (user navigates back from NowSpeak)
+  useEffect(() => {
+    const syncIntent = () => {
+      try {
+        const stored = sessionStorage.getItem('last_chat_intent') || null;
+        setChatIntent(prev => {
+          if (prev !== stored) {
+            console.log('[HomePage] Intent changed on focus/visibility:', prev, '→', stored);
+            return stored;
+          }
+          return prev;
+        });
+      } catch { /* sessionStorage unavailable */ }
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') syncIntent();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', syncIntent);
+    // Also listen for custom event dispatched by useNowSpeak
+    window.addEventListener('chat-intent-changed', syncIntent);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', syncIntent);
+      window.removeEventListener('chat-intent-changed', syncIntent);
+    };
+  }, []);
+
+  // ── Fetch recommendations whenever userId or chatIntent changes ─────────
+  useEffect(() => {
+    console.log('[Recommendations] React state — userId:', userId, 'chatIntent:', chatIntent);
+
+    getRecommendations(userId ?? undefined, chatIntent ?? undefined)
+      .then(data => {
+        console.log('[Recommendations] Response — now_suggestions:', data.now_suggestions.length, ', trending:', data.trending.length);
+        setRecs(data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [userId, chatIntent]);
+
+  const [showJoinInput, setShowJoinInput] = useState(false);
+  const [joinLink, setJoinLink] = useState('');
+  const [activeSharedCartId, setActiveSharedCartId] = useState<string | null>(null);
+  const [sharedCartTotal, setSharedCartTotal] = useState(0);
+  const [sharedCartItemCount, setSharedCartItemCount] = useState(0);
+
+  // Check sessionStorage for an active shared cart on mount and fetch its total
+  useEffect(() => {
+    const keys = Object.keys(sessionStorage);
+    const cartKey = keys.find(k => k.startsWith('cart_name_'));
+    if (cartKey) {
+      const id = cartKey.replace('cart_name_', '');
+      // Verify the cart still exists on the backend
+      getSharedCart(id)
+        .then(c => {
+          setActiveSharedCartId(id);
+          setSharedCartTotal(c.total);
+          setSharedCartItemCount(c.item_count);
+        })
+        .catch(() => {
+          // Cart expired or backend restarted — clean up stale session
+          sessionStorage.removeItem(cartKey);
+          setActiveSharedCartId(null);
+        });
+    }
+  }, []);
+
+  
 
   const handleStartSharedCart = useCallback(async () => {
     setStartingSharedCart(true);
@@ -161,6 +303,20 @@ export default function HomePage() {
         cart={cart}
         onCartClick={() => cartCount > 0 && router.push('/cart')}
         onProductSelect={handleProductSelect}
+      />
+
+      {/* Dietary Profile Banner */}
+      <ProfileBanner
+        dietTags={profile?.diet_tags ?? []}
+        allergenTags={profile?.allergen_tags ?? []}
+        hasProfile={!!profile}
+      />
+
+      {/* Dietary Profile Banner */}
+      <ProfileBanner
+        dietTags={profile?.diet_tags ?? []}
+        allergenTags={profile?.allergen_tags ?? []}
+        hasProfile={!!profile}
       />
 
       {/* NowSpeak CTA banner */}
@@ -564,6 +720,8 @@ export default function HomePage() {
             trending={recs.trending}
             timeContext={recs.time_context}
             onProductSelect={handleProductSelect}
+            exclusionSet={exclusionSet}
+            alternatives={recs.alternatives}
           />
         ) : (
           <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', margin: '8px 0' }}>

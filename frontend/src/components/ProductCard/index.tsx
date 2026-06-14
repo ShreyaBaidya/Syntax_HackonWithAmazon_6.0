@@ -20,6 +20,7 @@ const ORIG: Record<string, number> = {
 
 export function ProductCard({ product, onAddToCart, compact = false, grid = false }: Props) {
   const [qty, setQty] = useState(0);
+  const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
 
   const add = useCallback(() => {
     setQty(1);
@@ -75,6 +76,19 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
 
   // ── Grid card (4-column compact, matches Amazon Now) ──────────────────────
   if (grid) {
+    // Task 8.1: Dietary badges (max 3, green chips) - only show for food items
+    const dietaryBadges = (product.dietary_tags || []).slice(0, 3);
+    // Task 8.2: Allergen safety badge - only show when product has dietary_tags (i.e., it's a food item)
+    const showAllergenSafe = dietaryBadges.length > 0 && product.allergen_tags !== undefined && product.allergen_tags.length === 0;
+    // Task 8.3: Reason text truncated at 120 chars
+    const reasonText = product.reason
+      ? (product.reason.length > 120 ? product.reason.slice(0, 120) + '…' : product.reason)
+      : null;
+    // Task 8.5: Ingredients expandable section
+    const hasIngredients = product.ingredients && product.ingredients.length > 0;
+    // Task 8.6: Discount display with MRP strikethrough
+    const discountPercent = origPrice && discount && discount > 0 ? discount : null;
+
     return (
       <div style={{
         background: 'white', borderRadius: 6,
@@ -128,20 +142,105 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
           </p>
           <p style={{ fontSize: 9, color: '#888', margin: '2px 0 4px' }}>{product.unit}</p>
 
-          {/* Price + Add button — minHeight 28px reserves space so card height
-              stays constant whether showing "+" (26px) or "–1+" stepper (26px pill). */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            marginTop: 'auto', minHeight: 28 }}>
-            <div style={{ minWidth: 0, flex: 1, marginRight: 4 }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#0F1111' }}>₹{product.price}</span>
-              {origPrice && (
-                <span style={{ fontSize: 9, color: '#888', textDecoration: 'line-through', marginLeft: 3 }}>
-                  ₹{origPrice}
+          {/* Task 8.3: Reason field (grey italic) */}
+          {reasonText && (
+            <p style={{
+              fontSize: 10, color: '#666', fontStyle: 'italic', margin: '0 0 4px',
+              lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}>
+              {reasonText}
+            </p>
+          )}
+
+          {/* Task 8.1: Dietary badges (green chips, max 3) */}
+          {dietaryBadges.length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, margin: '0 0 4px' }}>
+              {dietaryBadges.map(tag => (
+                <span key={tag} style={{
+                  fontSize: 8, color: '#067D62', background: '#E6F7F2', border: '1px solid #B2E8D9',
+                  borderRadius: 3, padding: '1px 4px', fontWeight: 500, whiteSpace: 'nowrap',
+                }}>
+                  ✓ {tag}
                 </span>
+              ))}
+            </div>
+          )}
+
+          {/* Task 8.2: Allergen safety badge (blue chip) */}
+          {showAllergenSafe && (
+            <div style={{ margin: '0 0 4px' }}>
+              <span style={{
+                fontSize: 8, color: '#1565C0', background: '#E3F2FD', border: '1px solid #90CAF9',
+                borderRadius: 3, padding: '1px 4px', fontWeight: 500,
+              }}>
+                ✓ Allergen Safe
+              </span>
+            </div>
+          )}
+
+          {/* Task 8.4: Alternative product badge (orange) */}
+          {product.is_alternative && (
+            <div style={{ margin: '0 0 4px' }}>
+              <span style={{
+                fontSize: 8, color: '#E65100', background: '#FFF3E0', border: '1px solid #FFCC80',
+                borderRadius: 3, padding: '1px 4px', fontWeight: 600,
+              }}>
+                🔄 Recommended Alternative
+              </span>
+              {product.replaces && (
+                <p style={{ fontSize: 8, color: '#999', margin: '2px 0 0', lineHeight: 1.2 }}>
+                  Replaces: {product.replaces}
+                </p>
               )}
             </div>
+          )}
+
+          {/* Task 8.6: Price with MRP strikethrough + discount badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, margin: '2px 0 4px' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#0F1111' }}>₹{product.price}</span>
+            {origPrice && discountPercent && (
+              <>
+                <span style={{ fontSize: 9, color: '#888', textDecoration: 'line-through' }}>
+                  ₹{origPrice}
+                </span>
+                <span style={{
+                  fontSize: 8, color: '#CC0C39', fontWeight: 600,
+                }}>
+                  -{discountPercent}%
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Task 8.5: Expandable ingredients + Add button row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
+            {hasIngredients ? (
+              <button
+                onClick={() => setIngredientsExpanded(prev => !prev)}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                  fontSize: 9, color: '#555', display: 'flex', alignItems: 'center', gap: 2,
+                }}
+              >
+                <span style={{ fontSize: 8 }}>{ingredientsExpanded ? '▾' : '▸'}</span> Ingredients
+              </button>
+            ) : (
+              <span />
+            )}
             <AddBtn qty={qty} onAdd={add} onInc={inc} onDec={dec} small />
           </div>
+
+          {/* Task 8.5: Expanded ingredients list */}
+          {hasIngredients && ingredientsExpanded && (
+            <ul style={{
+              margin: '4px 0 0', padding: '4px 0 0', borderTop: '1px solid #F0F0F0',
+              listStyle: 'none', fontSize: 8, color: '#555', lineHeight: 1.5,
+            }}>
+              {product.ingredients!.map((ing, i) => (
+                <li key={i} style={{ padding: '1px 0' }}>• {ing}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     );
@@ -184,6 +283,40 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
           {product.name}
         </p>
         <p style={{ fontSize: 11, color: '#888', margin: '2px 0 0' }}>{product.unit}</p>
+
+        {/* Reason text */}
+        {product.reason && (
+          <p style={{ fontSize: 10, color: '#666', fontStyle: 'italic', margin: '3px 0 0', lineHeight: 1.3 }}>
+            {product.reason.length > 120 ? product.reason.slice(0, 120) + '…' : product.reason}
+          </p>
+        )}
+
+        {/* Dietary badges */}
+        {product.dietary_tags && product.dietary_tags.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, margin: '4px 0 0' }}>
+            {product.dietary_tags.slice(0, 3).map(tag => (
+              <span key={tag} style={{
+                fontSize: 9, color: '#067D62', background: '#E6F7F2', border: '1px solid #B2E8D9',
+                borderRadius: 3, padding: '1px 5px', fontWeight: 500,
+              }}>
+                ✓ {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Allergen safe badge */}
+        {(product.dietary_tags && product.dietary_tags.length > 0) && product.allergen_tags !== undefined && product.allergen_tags.length === 0 && (
+          <div style={{ margin: '3px 0 0' }}>
+            <span style={{
+              fontSize: 9, color: '#1565C0', background: '#E3F2FD', border: '1px solid #90CAF9',
+              borderRadius: 3, padding: '1px 5px', fontWeight: 500,
+            }}>
+              ✓ Allergen Safe
+            </span>
+          </div>
+        )}
+
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginTop: 4 }}>
           <span style={{ fontSize: 14, fontWeight: 700, color: '#0F1111' }}>₹{product.price}</span>
           {origPrice && (

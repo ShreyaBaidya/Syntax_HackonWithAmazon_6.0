@@ -128,7 +128,7 @@ export function NowSpeak({ onProductSelect }: Props) {
                         display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8,
                       }}>
                         {msg.products.map(p => (
-                          <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} />
+                          <ProductCard key={p.id} product={p} onAddToCart={(product, _qty) => onProductSelect?.(product)} />
                         ))}
                       </div>
                     )}

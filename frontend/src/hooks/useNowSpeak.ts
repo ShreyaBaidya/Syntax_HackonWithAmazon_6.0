@@ -33,6 +33,14 @@ export function useNowSpeak(): NowSpeakHook {
     const trimmed = text.trim();
     if (!trimmed || isStreaming) return;
 
+    // Store the user's intent so the home page can react to it
+    try {
+      sessionStorage.setItem('last_chat_intent', trimmed);
+      console.log('[NowSpeak] Stored chat intent:', trimmed);
+      // Dispatch custom event so home page picks up the change immediately
+      window.dispatchEvent(new Event('chat-intent-changed'));
+    } catch { /* sessionStorage unavailable */ }
+
     // Append user bubble immediately
     setMessages(prev => [...prev, { role: 'user', text: trimmed }]);
     setIsStreaming(true);

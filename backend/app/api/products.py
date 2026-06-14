@@ -1,9 +1,11 @@
 from typing import Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 
 from app.models.product import ProductSearchResponse
-from app.services.catalog import search_products, get_catalog_stats
+from app.services.catalog import search_products, get_catalog_stats, get_products_by_ids
+from app.services.profile_service import get_exclusion_set
+from app.services.recommendation import find_alternatives
 
 router = APIRouter()
 
@@ -63,6 +65,36 @@ async def search(
         le=50,
         description="Maximum results to return (1–50)",
     ),
+    user_id: Optional[str] = Query(
+        default=None,
+        description="User ID for dietary profile filtering",
+    ),
 ):
-    products = search_products(query=q, category=category, limit=limit)
+    exclusion_set = get_exclusion_set(user_id)
+    products = search_products(query=q, category=category, limit=limit, exclusion_set=exclusion_set)
     return {"products": products, "total": len(products)}
+
+
+@router.get("/products/{product_id}/alternatives")
+async def get_product_alternatives(
+    product_id: str,
+    user_id: Optional[str] = Query(default=None),
+):
+    """Get safe alternative products for a given product based on user's dietary profile."""
+    products = get_products_by_ids([product_id])
+    if not products:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    product = products[0]
+    exclusion_set = get_exclusion_set(user_id) if user_id else set()
+
+    if not exclusion_set:
+        return {"alternatives": []}
+
+    # Get safe products from the same category to use as potential alternatives
+    safe_products = search_products(
+        query="", category=product.get("category"), limit=20, exclusion_set=exclusion_set
+    )
+
+    alternatives = find_alternatives([product], exclusion_set, safe_products)
+    return {"alternatives": alternatives}

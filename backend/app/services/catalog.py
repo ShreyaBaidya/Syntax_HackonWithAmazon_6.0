@@ -10,12 +10,62 @@ search priority, with curated products retained as a local fallback):
 """
 from app.db.seed import PRODUCTS
 from app.db.amazon_catalog import AMAZON_PRODUCTS
+from app.db.food_catalog import FOOD_ENHANCED_PRODUCTS
+from app.services.profile_service import filter_products
 
 # Amazon products receive higher priority in sequential in-memory search.
-ALL_PRODUCTS: list[dict] = AMAZON_PRODUCTS + PRODUCTS
+# Enhanced food catalog provides 200+ structured food products with ingredients/dietary metadata.
+ALL_PRODUCTS: list[dict] = AMAZON_PRODUCTS + FOOD_ENHANCED_PRODUCTS + PRODUCTS
+
+
+def _infer_dietary_tags(p: dict) -> list[str]:
+    """Infer dietary tags for legacy products that don't have structured metadata.
+    Only applies to food-related categories — non-food items get no dietary tags."""
+    if p.get("dietary_tags"):
+        return p["dietary_tags"]
+    
+    # Only infer for food categories
+    FOOD_CATEGORIES = {"fruits", "vegetables", "fresh", "dairy", "beverages", "snacks", 
+                       "grocery", "breakfast", "plant_based", "high_protein", 
+                       "allergy_friendly", "ready_to_eat", "medicine"}
+    category = p.get("category", "")
+    if category not in FOOD_CATEGORIES:
+        return []
+    
+    tags_lower = p.get("tags", "").lower()
+    name_lower = p.get("name", "").lower()
+    combined = f"{tags_lower} {name_lower}"
+    inferred = []
+    
+    # Check for vegetarian indicators
+    meat_keywords = ["chicken", "mutton", "pork", "fish", "prawn", "shrimp", "meat", "non-veg"]
+    if not any(kw in combined for kw in meat_keywords):
+        inferred.append("Vegetarian")
+    
+    # Check for vegan (no animal products at all)
+    animal_keywords = meat_keywords + ["milk", "dairy", "egg", "butter", "cheese", "yogurt", "honey", "cream", "paneer", "ghee"]
+    if not any(kw in combined for kw in animal_keywords):
+        if "Vegetarian" in inferred:
+            inferred.append("Vegan")
+    
+    # Category-based inferences
+    if category in ("fruits", "vegetables", "fresh"):
+        if "Vegan" not in inferred:
+            inferred.append("Vegan")
+        if "Gluten-Free" not in inferred:
+            inferred.append("Gluten-Free")
+    
+    # Gluten-free check
+    gluten_keywords = ["wheat", "bread", "flour", "atta", "maida", "noodles", "pasta", "biscuit"]
+    if not any(kw in combined for kw in gluten_keywords):
+        if "Gluten-Free" not in inferred:
+            inferred.append("Gluten-Free")
+    
+    return inferred[:3]  # Limit to 3 tags
 
 
 def _format(p: dict) -> dict:
+    dietary = p.get("dietary_tags", []) or _infer_dietary_tags(p)
     return {
         "id":               p.get("id", ""),
         "name":             p.get("name", ""),
@@ -28,6 +78,10 @@ def _format(p: dict) -> dict:
         "category":         p.get("category", ""),
         "tags":             p.get("tags", ""),
         "in_stock":         bool(p.get("in_stock", True)),
+        "ingredients":      p.get("ingredients", []),
+        "dietary_tags":     dietary,
+        "allergen_tags":    p.get("allergen_tags", []),
+        "nutrition_summary": p.get("nutrition_summary", None),
     }
 
 
@@ -58,43 +112,69 @@ def search_products(
     query: str,
     category: str | None = None,
     limit: int = 5,
+    exclusion_set: set | None = None,
 ) -> list[dict]:
     """
     Search the product catalog.
     Attempts DynamoDB; silently falls back to in-memory data.
+    When exclusion_set is provided, fetches extra results and filters.
     """
+    # Determine internal fetch limit
+    fetch_limit = limit * 2 if exclusion_set else limit
+
     try:
         from app.db.dynamo import search_products_by_query, search_products_by_category
         if category:
-            results = search_products_by_category(category, limit)
+            results = search_products_by_category(category, fetch_limit)
             if not results and query:
-                results = search_products_by_query(query, limit)
+                results = search_products_by_query(query, fetch_limit)
         else:
-            results = search_products_by_query(query, limit)
+            results = search_products_by_query(query, fetch_limit)
         if results:
-            return [_format(p) for p in results[:limit]]
+            formatted = [_format(p) for p in results[:fetch_limit]]
+            if exclusion_set:
+                formatted = filter_products(formatted, exclusion_set)
+            return formatted[:limit]
     except Exception:
         pass  # DynamoDB unavailable — fall through to in-memory
 
-    return _search_memory(query, category, limit)
+    results = _search_memory(query, category, fetch_limit)
+
+    if exclusion_set:
+        results = filter_products(results, exclusion_set)
+
+    return results[:limit]
 
 
 def _search_memory(query: str, category: str | None, limit: int) -> list[dict]:
     q = query.lower() if query else ""
+    words = [w for w in q.split() if len(w) >= 3]  # meaningful words only
     out = []
     for p in ALL_PRODUCTS:
         if not p.get("in_stock"):
             continue
         if category and p.get("category") != category:
             continue
-        if q and q not in p.get("name", "").lower() \
-              and q not in p.get("tags", "").lower() \
-              and q not in p.get("category", "").lower():
-            if not category:
+        if q:
+            searchable = f"{p.get('name', '')} {p.get('tags', '')} {p.get('category', '')}".lower()
+            # Match if full query is a substring OR any individual word matches
+            if q in searchable:
+                out.append(_format(p))
+            elif words and any(w in searchable for w in words):
+                out.append(_format(p))
+            elif not category:
                 continue  # skip non-matching items when no category filter
-        out.append(_format(p))
+            # If category matches but query doesn't, still include (browsing by category)
+            else:
+                out.append(_format(p))
+        else:
+            out.append(_format(p))
 
-    # If we still have nothing, return top in-stock products (safety net)
+    # If we still have nothing and a category was specified, return category items
+    if not out and category:
+        out = [_format(p) for p in ALL_PRODUCTS if p.get("in_stock") and p.get("category") == category]
+
+    # Last resort: return top in-stock products (safety net)
     if not out:
         out = [_format(p) for p in ALL_PRODUCTS if p.get("in_stock")]
 
