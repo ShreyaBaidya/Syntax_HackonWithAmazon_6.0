@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,8 +24,7 @@
 
 body {
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  /* background: #EAEDED; */
-  background:#E0F2F1;
+  background: #E0F2F1;
   color: var(--amazon-text);
   overscroll-behavior: none;
   margin: 0;
@@ -35,8 +35,7 @@ body {
 body > div:first-child {
   max-width: 800px;
   margin: 0 auto;
-  /* background: #F7F7F7; */
-    background:#E0F2F1;
+  background: #E0F2F1;
   min-height: 100vh;
   box-shadow: 0 0 40px rgba(0,0,0,0.15);
   position: relative;
@@ -55,9 +54,7 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 3px rgba(228, 121, 17, 0.5) !important;
 }
 
-/* ── Smooth page transitions ─────────────────────────────────────────────────
-   Every new page fades in over 150ms, preventing the abrupt "enlarged" flash
-   that appears when navigating between the dense home and sparser inner pages. */
+/* Smooth page transitions */
 @keyframes pageFadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -67,7 +64,7 @@ body > div > div {
   animation: pageFadeIn 0.15s ease-out;
 }
 
-/* ── Scrollbar hide for category strip */
+/* Scrollbar hide for category strip */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -77,12 +74,10 @@ button:focus-visible, input:focus-visible {
   outline-offset: 2px;
 }
 
-/* Smooth transitions */
 .add-btn-transition {
   transition: all 0.15s ease;
 }
 
-/* Global button hover + box-shadow */
 button {
   transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.15s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -100,7 +95,6 @@ button:active {
   filter: brightness(0.85);
 }
 
-/* Hover for clickable divs (shared cart pill, banners, etc.) */
 div[style*="cursor: pointer"],
 div[style*="cursor:pointer"] {
   transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.15s ease;
@@ -119,9 +113,6 @@ div[style*="cursor:pointer"]:active {
   filter: brightness(0.85);
 }
 
-/* Keep FIXED elements inside the centered column.
-   Sticky elements (AmazonHeader) are already inside the centered column div
-   and must NOT get left:50%/transform — that mis-positions them after navigation. */
 nav[style*="position: fixed"] {
   max-width: 800px;
   left: 50% !important;

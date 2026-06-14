@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Roboto } from 'next/font/google';
 import './globals.css';
 
-const inter = Roboto({ subsets: ['latin'], weight: ['300','400','500','700'] });
+const inter = Roboto({ subsets: ['latin'], weight: ['300', '400', '500', '700'] });
 
 export const metadata: Metadata = {
   title: 'Amazon Now — Reimagining Urgent Shopping',
