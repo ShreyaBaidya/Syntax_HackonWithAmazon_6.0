@@ -75,13 +75,14 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
         <div
           onClick={() => router.push('/orders')}
           style={{
-            width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.2)',
+            width: 30, height: 30, borderRadius: '55%',
+            background: 'rgba(226, 250, 249, 1)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0, cursor: 'pointer',
+            // flexShrink: 0,
+             cursor: 'pointer',
           }}
         >
-          <svg width="18" height="18" fill="white" viewBox="0 0 24 24">
+          <svg width="18" height="18" fill="black" viewBox="0 0 24 24">
             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
           </svg>
         </div>

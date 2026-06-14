@@ -29,6 +29,7 @@ export default function HomePage() {
   const [refill, setRefill] = useState<RefillSuggestions | null>(null);
   const [refillExpanded, setRefillExpanded] = useState(false);
   const [refillTab, setRefillTab] = useState<'daily' | 'weekly' | 'biweekly' | 'monthly'>('weekly');
+  const [dismissedRefillIds, setDismissedRefillIds] = useState<Set<string>>(new Set());
   const [startingSharedCart, setStartingSharedCart] = useState(false);
   const [showJoinInput, setShowJoinInput] = useState(false);
   const [joinLink, setJoinLink] = useState('');
@@ -356,19 +357,23 @@ export default function HomePage() {
                     ? (() => {
                         const tabItems = refill.grouped[refillTab]?.items ?? [];
                         // Count how many tab items are in cart and their total
-                        const inCartItems = tabItems.filter(i => cart.find(c => c.product.id === i.id));
                         const tabCartTotal = tabItems.reduce((s, i) => {
                           const cartItem = cart.find(c => c.product.id === i.id);
                           return s + (cartItem ? cartItem.product.price * cartItem.quantity : 0);
                         }, 0);
+                        const tabCartQty = tabItems.reduce((s, i) => {
+                          const cartItem = cart.find(c => c.product.id === i.id);
+                          return s + (cartItem ? cartItem.quantity : 0);
+                        }, 0);
+                        const tabItemsInCart = tabItems.filter(i => cart.find(c => c.product.id === i.id)).length;
                         const tabStaticTotal = tabItems.reduce((s, i) => s + i.price, 0);
                         const tabLabels: Record<string, string> = { daily: 'Daily', weekly: 'Weekly', biweekly: 'Bi-weekly', monthly: 'Monthly' };
                         return (
                           <>
                             {tabLabels[refillTab]} · {tabItems.length} items · <strong>₹{tabStaticTotal.toFixed(0)}</strong>
-                            {inCartItems.length > 0 && (
+                            {tabCartQty > 0 && (
                               <span style={{ color: '#067D62', marginLeft: 6 }}>
-                                · {inCartItems.length} in cart ₹{tabCartTotal.toFixed(0)}
+                                · {tabItemsInCart} product{tabItemsInCart > 1 ? 's' : ''} ({tabCartQty} qty) ₹{tabCartTotal.toFixed(0)}
                               </span>
                             )}
                           </>
@@ -406,7 +411,7 @@ export default function HomePage() {
                 <div style={{ display: 'flex', borderBottom: '1px solid #E8F5E9', background: '#FAFEF8' }}>
                   {(['daily', 'weekly', 'biweekly', 'monthly'] as const).map(tab => {
                     const group = refill.grouped[tab];
-                    const count = group?.items?.length ?? 0;
+                    const count = (group?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).length;
                     const labels: Record<string, string> = {
                       daily: '🛒 Daily', weekly: '📅 Weekly',
                       biweekly: '🗓️ Bi-weekly', monthly: '📦 Monthly',
@@ -444,19 +449,18 @@ export default function HomePage() {
                 )}
 
                 {/* Items for active tab */}
-                {(refill.grouped[refillTab]?.items ?? []).length === 0 ? (
+                {(refill.grouped[refillTab]?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).length === 0 ? (
                   <div style={{ padding: '16px 14px', textAlign: 'center' }}>
                     <span style={{ fontSize: 11, color: '#aaa' }}>No items in this frequency</span>
                   </div>
                 ) : (
-                  (refill.grouped[refillTab]?.items ?? []).map((item, i) => {
+                  (refill.grouped[refillTab]?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).map((item, i, arr) => {
                     const cartItem = cart.find(c => c.product.id === item.id);
                     const qty = cartItem?.quantity ?? 0;
-                    const items = refill.grouped[refillTab].items;
                     return (
                       <div key={item.id} style={{
                         display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px',
-                        borderBottom: i === items.length - 1 ? 'none' : '1px solid #F5F5F5',
+                        borderBottom: i === arr.length - 1 ? 'none' : '1px solid #F5F5F5',
                       }}>
                         <div style={{ width: 36, height: 36, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#FAFAFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -476,7 +480,15 @@ export default function HomePage() {
                           ) : `₹${item.price.toFixed(2)}`}
                         </span>
                         {qty === 0 ? (
-                          <button onClick={() => handleProductSelect(item as unknown as Product, 1)} style={{ background: '#FFD814', border: '1px solid #F0C000', borderRadius: '50%', width: 26, height: 26, fontSize: 16, fontWeight: 700, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                            {/* Dismiss from refill list */}
+                            <button
+                              onClick={() => setDismissedRefillIds(prev => new Set([...prev, item.id]))}
+                              title="Remove from suggestions"
+                              style={{ background: 'none', border: '1px solid #DDD', borderRadius: '50%', width: 22, height: 22, fontSize: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000000ff', flexShrink: 0 }}
+                            >✕</button>
+                            <button onClick={() => handleProductSelect(item as unknown as Product, 1)} style={{ background: '#FFD814', border: '1px solid #F0C000', borderRadius: '50%', width: 26, height: 26, fontSize: 16, fontWeight: 700, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                          </div>
                         ) : (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
                             <button onClick={() => handleProductSelect(item as unknown as Product, 0)} style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '50%', width: 24, height: 24, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DC2626' }}>🗑</button>
