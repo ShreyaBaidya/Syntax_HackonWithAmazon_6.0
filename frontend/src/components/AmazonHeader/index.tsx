@@ -80,6 +80,15 @@ export function AmazonHeader({ cart, onCartClick }: Props) {
           <span style={{ color: '#999', fontSize: 13 }}>Search for...</span>
         </button>
 
+        {/* Profile */}
+        <button
+          onClick={() => router.push('/profile')}
+          aria-label="Dietary profile"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, padding: '4px 8px' }}
+        >
+          🍽️
+        </button>
+
         {/* Cart */}
         <button
           onClick={onCartClick}

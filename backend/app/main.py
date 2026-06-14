@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.api import chat, recommendations, products, orders, cart
+from app.api import chat, recommendations, products, orders, cart, profile
 
 _DESCRIPTION = """
 
@@ -72,6 +72,7 @@ app.include_router(recommendations.router, prefix="/api/v1", tags=["Recommendati
 app.include_router(products.router,        prefix="/api/v1", tags=["Products"])
 app.include_router(orders.router,          prefix="/api/v1", tags=["Orders"])
 app.include_router(cart.router,            prefix="/api/v1", tags=["Shared Cart"])
+app.include_router(profile.router,         prefix="/api/v1", tags=["Profile"])
 
 
 @app.get("/health", tags=["Health"])

@@ -1,0 +1,6579 @@
+[
+  {
+    "id": "food_001",
+    "name": "Fresh Banana Robusta 1kg",
+    "category": "fruits",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80",
+    "tags": "fresh banana robusta 1kg fruit fresh",
+    "ingredients": [
+      "Banana"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_002",
+    "name": "Shimla Apple Premium 1kg",
+    "category": "fruits",
+    "price": 180,
+    "mrp": 220,
+    "discount_percent": 18,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
+    "tags": "shimla apple premium 1kg fruit fresh",
+    "ingredients": [
+      "Apple"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_003",
+    "name": "Fresh Orange Nagpur 1kg",
+    "category": "fruits",
+    "price": 90,
+    "mrp": 110,
+    "discount_percent": 18,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=600&q=80",
+    "tags": "fresh orange nagpur 1kg fruit fresh",
+    "ingredients": [
+      "Orange"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_004",
+    "name": "Fresh Papaya 1kg",
+    "category": "fruits",
+    "price": 55,
+    "mrp": 65,
+    "discount_percent": 15,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&fit=crop&w=600&q=80",
+    "tags": "fresh papaya 1kg fruit fresh",
+    "ingredients": [
+      "Papaya"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_005",
+    "name": "Watermelon Seedless 2kg",
+    "category": "fruits",
+    "price": 60,
+    "mrp": 75,
+    "discount_percent": 19,
+    "unit": "2kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?auto=format&fit=crop&w=600&q=80",
+    "tags": "watermelon seedless 2kg fruit fresh",
+    "ingredients": [
+      "Watermelon"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_006",
+    "name": "Mango Alphonso 500g",
+    "category": "fruits",
+    "price": 250,
+    "mrp": 300,
+    "discount_percent": 16,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=600&q=80",
+    "tags": "mango alphonso 500g fruit fresh",
+    "ingredients": [
+      "Mango"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_007",
+    "name": "Pomegranate Fresh 500g",
+    "category": "fruits",
+    "price": 120,
+    "mrp": 145,
+    "discount_percent": 17,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1541344999736-83eca272f6fc?auto=format&fit=crop&w=600&q=80",
+    "tags": "pomegranate fresh 500g fruit fresh",
+    "ingredients": [
+      "Pomegranate"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_008",
+    "name": "Grapes Seedless Green 500g",
+    "category": "fruits",
+    "price": 85,
+    "mrp": 100,
+    "discount_percent": 15,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=600&q=80",
+    "tags": "grapes seedless green 500g fruit fresh",
+    "ingredients": [
+      "Grapes"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_009",
+    "name": "Pineapple Fresh 1pc",
+    "category": "fruits",
+    "price": 70,
+    "mrp": 85,
+    "discount_percent": 17,
+    "unit": "1pc",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=600&q=80",
+    "tags": "pineapple fresh 1pc fruit fresh",
+    "ingredients": [
+      "Pineapple"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_010",
+    "name": "Strawberry Premium 200g",
+    "category": "fruits",
+    "price": 110,
+    "mrp": 130,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80",
+    "tags": "strawberry premium 200g fruit fresh",
+    "ingredients": [
+      "Strawberry"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_011",
+    "name": "Kiwi Green 3pcs",
+    "category": "fruits",
+    "price": 95,
+    "mrp": 115,
+    "discount_percent": 17,
+    "unit": "3pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1585059895524-72f83aca6f65?auto=format&fit=crop&w=600&q=80",
+    "tags": "kiwi green 3pcs fruit fresh",
+    "ingredients": [
+      "Kiwi"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_012",
+    "name": "Guava Fresh 500g",
+    "category": "fruits",
+    "price": 40,
+    "mrp": 50,
+    "discount_percent": 19,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1536511132770-e5058c7e8c46?auto=format&fit=crop&w=600&q=80",
+    "tags": "guava fresh 500g fruit fresh",
+    "ingredients": [
+      "Guava"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_013",
+    "name": "Blueberry Imported 125g",
+    "category": "fruits",
+    "price": 199,
+    "mrp": 250,
+    "discount_percent": 20,
+    "unit": "125g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=600&q=80",
+    "tags": "blueberry imported 125g fruit fresh",
+    "ingredients": [
+      "Blueberry"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_014",
+    "name": "Lemon Fresh 500g",
+    "category": "fruits",
+    "price": 30,
+    "mrp": 40,
+    "discount_percent": 25,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1590502593747-42a996133562?auto=format&fit=crop&w=600&q=80",
+    "tags": "lemon fresh 500g fruit fresh",
+    "ingredients": [
+      "Lemon"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_015",
+    "name": "Coconut Fresh 1pc",
+    "category": "fruits",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "1pc",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1580984969071-a8da5656c2fb?auto=format&fit=crop&w=600&q=80",
+    "tags": "coconut fresh 1pc fruit fresh",
+    "ingredients": [
+      "Coconut"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_016",
+    "name": "Sapota Chikoo 500g",
+    "category": "fruits",
+    "price": 60,
+    "mrp": 75,
+    "discount_percent": 19,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1604495772376-9657f0035eb5?auto=format&fit=crop&w=600&q=80",
+    "tags": "sapota chikoo 500g fruit fresh",
+    "ingredients": [
+      "Sapota"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_017",
+    "name": "Dragon Fruit 1pc",
+    "category": "fruits",
+    "price": 80,
+    "mrp": 99,
+    "discount_percent": 19,
+    "unit": "1pc",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1527325678964-54921661f888?auto=format&fit=crop&w=600&q=80",
+    "tags": "dragon fruit 1pc fruit fresh",
+    "ingredients": [
+      "Dragon Fruit"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_018",
+    "name": "Avocado Imported 1pc",
+    "category": "fruits",
+    "price": 150,
+    "mrp": 180,
+    "discount_percent": 16,
+    "unit": "1pc",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80",
+    "tags": "avocado imported 1pc fruit fresh",
+    "ingredients": [
+      "Avocado"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_019",
+    "name": "Sweet Lime Mosambi 1kg",
+    "category": "fruits",
+    "price": 65,
+    "mrp": 80,
+    "discount_percent": 18,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=600&q=80",
+    "tags": "sweet lime mosambi 1kg fruit fresh",
+    "ingredients": [
+      "Sweet Lime"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_020",
+    "name": "Pear Imported 4pcs",
+    "category": "fruits",
+    "price": 140,
+    "mrp": 170,
+    "discount_percent": 17,
+    "unit": "4pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?auto=format&fit=crop&w=600&q=80",
+    "tags": "pear imported 4pcs fruit fresh",
+    "ingredients": [
+      "Pear"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_021",
+    "name": "Custard Apple 500g",
+    "category": "fruits",
+    "price": 90,
+    "mrp": 110,
+    "discount_percent": 18,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1604495772376-9657f0035eb5?auto=format&fit=crop&w=600&q=80",
+    "tags": "custard apple 500g fruit fresh",
+    "ingredients": [
+      "Custard Apple"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_022",
+    "name": "Fig Fresh 250g",
+    "category": "fruits",
+    "price": 120,
+    "mrp": 150,
+    "discount_percent": 19,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1601379327928-bedfaf9da2d0?auto=format&fit=crop&w=600&q=80",
+    "tags": "fig fresh 250g fruit fresh",
+    "ingredients": [
+      "Fig"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 60,
+      "protein": "1g",
+      "carbs": "14g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_023",
+    "name": "Fresh Tomato 1kg",
+    "category": "vegetables",
+    "price": 35,
+    "mrp": 45,
+    "discount_percent": 22,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "fresh tomato 1kg vegetable fresh cooking",
+    "ingredients": [
+      "Tomato"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_024",
+    "name": "Onion 1kg",
+    "category": "vegetables",
+    "price": 30,
+    "mrp": 40,
+    "discount_percent": 25,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "onion 1kg vegetable fresh cooking",
+    "ingredients": [
+      "Onion"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_025",
+    "name": "Potato Fresh 1kg",
+    "category": "vegetables",
+    "price": 25,
+    "mrp": 35,
+    "discount_percent": 28,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "potato fresh 1kg vegetable fresh cooking",
+    "ingredients": [
+      "Potato"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_026",
+    "name": "Green Capsicum 250g",
+    "category": "vegetables",
+    "price": 30,
+    "mrp": 38,
+    "discount_percent": 21,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "green capsicum 250g vegetable fresh cooking",
+    "ingredients": [
+      "Capsicum"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_027",
+    "name": "Fresh Spinach 250g",
+    "category": "vegetables",
+    "price": 25,
+    "mrp": 30,
+    "discount_percent": 16,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "fresh spinach 250g vegetable fresh cooking",
+    "ingredients": [
+      "Spinach"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_028",
+    "name": "Broccoli 250g",
+    "category": "vegetables",
+    "price": 55,
+    "mrp": 70,
+    "discount_percent": 21,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "broccoli 250g vegetable fresh cooking",
+    "ingredients": [
+      "Broccoli"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_029",
+    "name": "Carrot Fresh 500g",
+    "category": "vegetables",
+    "price": 30,
+    "mrp": 38,
+    "discount_percent": 21,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "carrot fresh 500g vegetable fresh cooking",
+    "ingredients": [
+      "Carrot"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_030",
+    "name": "Cauliflower 1pc",
+    "category": "vegetables",
+    "price": 35,
+    "mrp": 45,
+    "discount_percent": 22,
+    "unit": "1pc",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "cauliflower 1pc vegetable fresh cooking",
+    "ingredients": [
+      "Cauliflower"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_031",
+    "name": "Lady Finger 500g",
+    "category": "vegetables",
+    "price": 30,
+    "mrp": 40,
+    "discount_percent": 25,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "lady finger 500g vegetable fresh cooking",
+    "ingredients": [
+      "Lady Finger"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_032",
+    "name": "Cucumber 500g",
+    "category": "vegetables",
+    "price": 20,
+    "mrp": 28,
+    "discount_percent": 28,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "cucumber 500g vegetable fresh cooking",
+    "ingredients": [
+      "Cucumber"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_033",
+    "name": "French Beans 250g",
+    "category": "vegetables",
+    "price": 35,
+    "mrp": 45,
+    "discount_percent": 22,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "french beans 250g vegetable fresh cooking",
+    "ingredients": [
+      "French Beans"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_034",
+    "name": "Bitter Gourd 500g",
+    "category": "vegetables",
+    "price": 35,
+    "mrp": 45,
+    "discount_percent": 22,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "bitter gourd 500g vegetable fresh cooking",
+    "ingredients": [
+      "Bitter Gourd"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_035",
+    "name": "Bottle Gourd 1pc",
+    "category": "vegetables",
+    "price": 30,
+    "mrp": 38,
+    "discount_percent": 21,
+    "unit": "1pc",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "bottle gourd 1pc vegetable fresh cooking",
+    "ingredients": [
+      "Bottle Gourd"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_036",
+    "name": "Beetroot 500g",
+    "category": "vegetables",
+    "price": 30,
+    "mrp": 38,
+    "discount_percent": 21,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "beetroot 500g vegetable fresh cooking",
+    "ingredients": [
+      "Beetroot"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_037",
+    "name": "Sweet Potato 500g",
+    "category": "vegetables",
+    "price": 35,
+    "mrp": 45,
+    "discount_percent": 22,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "sweet potato 500g vegetable fresh cooking",
+    "ingredients": [
+      "Sweet Potato"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_038",
+    "name": "Mushroom Button 200g",
+    "category": "vegetables",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "mushroom button 200g vegetable fresh cooking",
+    "ingredients": [
+      "Mushroom"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_039",
+    "name": "Green Peas 250g",
+    "category": "vegetables",
+    "price": 40,
+    "mrp": 50,
+    "discount_percent": 19,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "green peas 250g vegetable fresh cooking",
+    "ingredients": [
+      "Green Peas"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_040",
+    "name": "Coriander Leaves 100g",
+    "category": "vegetables",
+    "price": 10,
+    "mrp": 15,
+    "discount_percent": 33,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "coriander leaves 100g vegetable fresh cooking",
+    "ingredients": [
+      "Coriander"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_041",
+    "name": "Ginger Fresh 100g",
+    "category": "vegetables",
+    "price": 15,
+    "mrp": 20,
+    "discount_percent": 25,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "ginger fresh 100g vegetable fresh cooking",
+    "ingredients": [
+      "Ginger"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_042",
+    "name": "Garlic 250g",
+    "category": "vegetables",
+    "price": 40,
+    "mrp": 50,
+    "discount_percent": 19,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "garlic 250g vegetable fresh cooking",
+    "ingredients": [
+      "Garlic"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_043",
+    "name": "Drumstick 250g",
+    "category": "vegetables",
+    "price": 25,
+    "mrp": 35,
+    "discount_percent": 28,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "drumstick 250g vegetable fresh cooking",
+    "ingredients": [
+      "Drumstick"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_044",
+    "name": "Ridge Gourd 500g",
+    "category": "vegetables",
+    "price": 25,
+    "mrp": 35,
+    "discount_percent": 28,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "ridge gourd 500g vegetable fresh cooking",
+    "ingredients": [
+      "Ridge Gourd"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 30,
+      "protein": "2g",
+      "carbs": "6g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_045",
+    "name": "Amul Full Cream Milk 1L",
+    "category": "dairy",
+    "price": 66,
+    "mrp": 68,
+    "discount_percent": 2,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul full cream milk 1l dairy milk",
+    "ingredients": [
+      "Milk"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_046",
+    "name": "Mother Dairy Toned Milk 1L",
+    "category": "dairy",
+    "price": 54,
+    "mrp": 56,
+    "discount_percent": 3,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "mother dairy toned milk 1l dairy milk",
+    "ingredients": [
+      "Toned Milk"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_047",
+    "name": "Amul Gold Milk 500ml",
+    "category": "dairy",
+    "price": 35,
+    "mrp": 37,
+    "discount_percent": 5,
+    "unit": "500ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul gold milk 500ml dairy milk",
+    "ingredients": [
+      "Milk"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_048",
+    "name": "Amul Butter 100g",
+    "category": "dairy",
+    "price": 56,
+    "mrp": 58,
+    "discount_percent": 3,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul butter 100g dairy milk",
+    "ingredients": [
+      "Cream",
+      "Salt",
+      "Butter"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_049",
+    "name": "Amul Cheese Slices 200g",
+    "category": "dairy",
+    "price": 115,
+    "mrp": 125,
+    "discount_percent": 7,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul cheese slices 200g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Cheese Culture",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_050",
+    "name": "Amul Paneer Block 200g",
+    "category": "dairy",
+    "price": 90,
+    "mrp": 100,
+    "discount_percent": 9,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul paneer block 200g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Citric Acid",
+      "Paneer"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_051",
+    "name": "Nestle Dahi 400g",
+    "category": "dairy",
+    "price": 42,
+    "mrp": 45,
+    "discount_percent": 6,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "nestle dahi 400g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Yogurt Culture"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_052",
+    "name": "Amul Masti Buttermilk 200ml",
+    "category": "dairy",
+    "price": 15,
+    "mrp": 18,
+    "discount_percent": 16,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul masti buttermilk 200ml dairy milk",
+    "ingredients": [
+      "Buttermilk",
+      "Salt",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_053",
+    "name": "Mother Dairy Classic Curd 400g",
+    "category": "dairy",
+    "price": 40,
+    "mrp": 44,
+    "discount_percent": 9,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "mother dairy classic curd 400g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Culture"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_054",
+    "name": "Amul Fresh Cream 200ml",
+    "category": "dairy",
+    "price": 55,
+    "mrp": 60,
+    "discount_percent": 8,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul fresh cream 200ml dairy milk",
+    "ingredients": [
+      "Cream"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_055",
+    "name": "Britannia Cheese Spread 180g",
+    "category": "dairy",
+    "price": 99,
+    "mrp": 110,
+    "discount_percent": 9,
+    "unit": "180g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "britannia cheese spread 180g dairy milk",
+    "ingredients": [
+      "Cheese",
+      "Milk Solids",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_056",
+    "name": "Amul Shrikhand 100g",
+    "category": "dairy",
+    "price": 40,
+    "mrp": 45,
+    "discount_percent": 11,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul shrikhand 100g dairy milk",
+    "ingredients": [
+      "Yogurt",
+      "Sugar",
+      "Saffron"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_057",
+    "name": "Milky Mist Greek Yogurt 100g",
+    "category": "dairy",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "milky mist greek yogurt 100g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Yogurt Culture"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_058",
+    "name": "Epigamia Greek Yogurt Strawberry 90g",
+    "category": "dairy",
+    "price": 50,
+    "mrp": 60,
+    "discount_percent": 16,
+    "unit": "90g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "epigamia greek yogurt strawberry 90g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Strawberry",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_059",
+    "name": "Go Cheese Slice 200g",
+    "category": "dairy",
+    "price": 105,
+    "mrp": 115,
+    "discount_percent": 8,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "go cheese slice 200g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Cheese Culture"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_060",
+    "name": "Amul Ghee 500ml",
+    "category": "dairy",
+    "price": 295,
+    "mrp": 320,
+    "discount_percent": 7,
+    "unit": "500ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul ghee 500ml dairy milk",
+    "ingredients": [
+      "Ghee",
+      "Butter"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_061",
+    "name": "Verka Lassi Sweet 200ml",
+    "category": "dairy",
+    "price": 20,
+    "mrp": 25,
+    "discount_percent": 19,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "verka lassi sweet 200ml dairy milk",
+    "ingredients": [
+      "Yogurt",
+      "Sugar",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_062",
+    "name": "Mother Dairy Mishti Doi 100g",
+    "category": "dairy",
+    "price": 30,
+    "mrp": 35,
+    "discount_percent": 14,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "mother dairy mishti doi 100g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Sugar",
+      "Culture"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_063",
+    "name": "Amul Kool Milk Badam 200ml",
+    "category": "dairy",
+    "price": 25,
+    "mrp": 30,
+    "discount_percent": 16,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul kool milk badam 200ml dairy milk",
+    "ingredients": [
+      "Milk",
+      "Sugar",
+      "Almond Flavour"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_064",
+    "name": "Amul Ice Cream Vanilla 500ml",
+    "category": "dairy",
+    "price": 135,
+    "mrp": 155,
+    "discount_percent": 12,
+    "unit": "500ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul ice cream vanilla 500ml dairy milk",
+    "ingredients": [
+      "Milk",
+      "Sugar",
+      "Cream",
+      "Vanilla"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_065",
+    "name": "Amul Mozzarella Cheese 200g",
+    "category": "dairy",
+    "price": 130,
+    "mrp": 145,
+    "discount_percent": 10,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul mozzarella cheese 200g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Cheese Culture",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_066",
+    "name": "Mother Dairy Probiotic Curd 400g",
+    "category": "dairy",
+    "price": 50,
+    "mrp": 58,
+    "discount_percent": 13,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    "tags": "mother dairy probiotic curd 400g dairy milk",
+    "ingredients": [
+      "Milk",
+      "Probiotic Culture"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "6g",
+      "carbs": "10g",
+      "fat": "6g"
+    }
+  },
+  {
+    "id": "food_067",
+    "name": "Sofit Soy Milk 1L",
+    "category": "plant_based",
+    "price": 99,
+    "mrp": 115,
+    "discount_percent": 13,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "sofit soy milk 1l plant based vegan",
+    "ingredients": [
+      "Soy",
+      "Water",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_068",
+    "name": "Epigamia Oat Milk 1L",
+    "category": "plant_based",
+    "price": 185,
+    "mrp": 220,
+    "discount_percent": 15,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "epigamia oat milk 1l plant based vegan",
+    "ingredients": [
+      "Oats",
+      "Water",
+      "Sunflower Oil"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_069",
+    "name": "Raw Pressery Almond Milk 1L",
+    "category": "plant_based",
+    "price": 199,
+    "mrp": 240,
+    "discount_percent": 17,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "raw pressery almond milk 1l plant based vegan",
+    "ingredients": [
+      "Almonds",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_070",
+    "name": "Tofu Firm 200g",
+    "category": "plant_based",
+    "price": 55,
+    "mrp": 65,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "tofu firm 200g plant based vegan",
+    "ingredients": [
+      "Soybean",
+      "Water",
+      "Coagulant"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_071",
+    "name": "Vezlay Soya Chaap 200g",
+    "category": "plant_based",
+    "price": 85,
+    "mrp": 100,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "vezlay soya chaap 200g plant based vegan",
+    "ingredients": [
+      "Soy Protein",
+      "Spices",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_072",
+    "name": "GoodDot Proteiz 250g",
+    "category": "plant_based",
+    "price": 160,
+    "mrp": 190,
+    "discount_percent": 15,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "gooddot proteiz 250g plant based vegan",
+    "ingredients": [
+      "Pea Protein",
+      "Wheat Gluten",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_073",
+    "name": "Epigamia Coconut Yogurt 90g",
+    "category": "plant_based",
+    "price": 60,
+    "mrp": 75,
+    "discount_percent": 19,
+    "unit": "90g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "epigamia coconut yogurt 90g plant based vegan",
+    "ingredients": [
+      "Coconut Milk",
+      "Culture",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_074",
+    "name": "Sunflower Seed Butter 200g",
+    "category": "plant_based",
+    "price": 299,
+    "mrp": 350,
+    "discount_percent": 14,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "sunflower seed butter 200g plant based vegan",
+    "ingredients": [
+      "Sunflower Seeds",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_075",
+    "name": "Plant-Based Burger Patty 2pcs",
+    "category": "plant_based",
+    "price": 199,
+    "mrp": 240,
+    "discount_percent": 17,
+    "unit": "2pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "plant-based burger patty 2pcs plant based vegan",
+    "ingredients": [
+      "Pea Protein",
+      "Beetroot",
+      "Coconut Oil",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_076",
+    "name": "Tempeh Fresh 200g",
+    "category": "plant_based",
+    "price": 120,
+    "mrp": 145,
+    "discount_percent": 17,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "tempeh fresh 200g plant based vegan",
+    "ingredients": [
+      "Soybean",
+      "Tempeh Culture"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_077",
+    "name": "Cashew Cheese Spread 150g",
+    "category": "plant_based",
+    "price": 249,
+    "mrp": 290,
+    "discount_percent": 14,
+    "unit": "150g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "cashew cheese spread 150g plant based vegan",
+    "ingredients": [
+      "Cashews",
+      "Lemon",
+      "Nutritional Yeast"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_078",
+    "name": "Coconut Cream 200ml",
+    "category": "plant_based",
+    "price": 65,
+    "mrp": 80,
+    "discount_percent": 18,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "coconut cream 200ml plant based vegan",
+    "ingredients": [
+      "Coconut",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_079",
+    "name": "Flax Milk 500ml",
+    "category": "plant_based",
+    "price": 149,
+    "mrp": 180,
+    "discount_percent": 17,
+    "unit": "500ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "flax milk 500ml plant based vegan",
+    "ingredients": [
+      "Flax Seeds",
+      "Water",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_080",
+    "name": "Jackfruit Shredded 300g",
+    "category": "plant_based",
+    "price": 130,
+    "mrp": 155,
+    "discount_percent": 16,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "jackfruit shredded 300g plant based vegan",
+    "ingredients": [
+      "Young Jackfruit",
+      "Water",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_081",
+    "name": "Vegan Mayo 250g",
+    "category": "plant_based",
+    "price": 175,
+    "mrp": 210,
+    "discount_percent": 16,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "vegan mayo 250g plant based vegan",
+    "ingredients": [
+      "Soy Milk",
+      "Vinegar",
+      "Mustard",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_082",
+    "name": "Oat Cream 200ml",
+    "category": "plant_based",
+    "price": 99,
+    "mrp": 120,
+    "discount_percent": 17,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+    "tags": "oat cream 200ml plant based vegan",
+    "ingredients": [
+      "Oats",
+      "Water",
+      "Sunflower Oil"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 90,
+      "protein": "5g",
+      "carbs": "12g",
+      "fat": "4g"
+    }
+  },
+  {
+    "id": "food_083",
+    "name": "Quaker Oats 1kg",
+    "category": "breakfast",
+    "price": 185,
+    "mrp": 220,
+    "discount_percent": 15,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "quaker oats 1kg breakfast morning",
+    "ingredients": [
+      "Whole Grain Oats"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Vegan",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_084",
+    "name": "Kelloggs Corn Flakes 475g",
+    "category": "breakfast",
+    "price": 175,
+    "mrp": 199,
+    "discount_percent": 12,
+    "unit": "475g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "kelloggs corn flakes 475g breakfast morning",
+    "ingredients": [
+      "Corn",
+      "Sugar",
+      "Malt",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_085",
+    "name": "Saffola Masala Oats 500g",
+    "category": "breakfast",
+    "price": 145,
+    "mrp": 165,
+    "discount_percent": 12,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "saffola masala oats 500g breakfast morning",
+    "ingredients": [
+      "Oats",
+      "Masala Seasoning",
+      "Dehydrated Vegetables"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_086",
+    "name": "Britannia Bread White 400g",
+    "category": "breakfast",
+    "price": 40,
+    "mrp": 45,
+    "discount_percent": 11,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "britannia bread white 400g breakfast morning",
+    "ingredients": [
+      "Wheat Flour",
+      "Yeast",
+      "Sugar",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_087",
+    "name": "MTR Poha Mix 180g",
+    "category": "breakfast",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "180g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "mtr poha mix 180g breakfast morning",
+    "ingredients": [
+      "Flattened Rice",
+      "Peanuts",
+      "Spices",
+      "Curry Leaves"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_088",
+    "name": "MTR Upma Mix 200g",
+    "category": "breakfast",
+    "price": 48,
+    "mrp": 58,
+    "discount_percent": 17,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "mtr upma mix 200g breakfast morning",
+    "ingredients": [
+      "Semolina",
+      "Spices",
+      "Cashews",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_089",
+    "name": "Yoga Bar Muesli 400g",
+    "category": "breakfast",
+    "price": 299,
+    "mrp": 350,
+    "discount_percent": 14,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "yoga bar muesli 400g breakfast morning",
+    "ingredients": [
+      "Oats",
+      "Honey",
+      "Almonds",
+      "Raisins",
+      "Seeds"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_090",
+    "name": "Bagrry's Muesli No Sugar 500g",
+    "category": "breakfast",
+    "price": 250,
+    "mrp": 295,
+    "discount_percent": 15,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "bagrry's muesli no sugar 500g breakfast morning",
+    "ingredients": [
+      "Oats",
+      "Wheat Flakes",
+      "Raisins",
+      "Almonds"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_091",
+    "name": "Pillsbury Pancake Mix 250g",
+    "category": "breakfast",
+    "price": 99,
+    "mrp": 120,
+    "discount_percent": 17,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "pillsbury pancake mix 250g breakfast morning",
+    "ingredients": [
+      "Wheat Flour",
+      "Sugar",
+      "Baking Powder",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_092",
+    "name": "True Elements Granola 300g",
+    "category": "breakfast",
+    "price": 249,
+    "mrp": 299,
+    "discount_percent": 16,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "true elements granola 300g breakfast morning",
+    "ingredients": [
+      "Oats",
+      "Honey",
+      "Almonds",
+      "Cranberry"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_093",
+    "name": "Britannia Brown Bread 400g",
+    "category": "breakfast",
+    "price": 45,
+    "mrp": 52,
+    "discount_percent": 13,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "britannia brown bread 400g breakfast morning",
+    "ingredients": [
+      "Whole Wheat Flour",
+      "Yeast",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_094",
+    "name": "Aashirvaad Multigrain Atta 1kg",
+    "category": "breakfast",
+    "price": 72,
+    "mrp": 82,
+    "discount_percent": 12,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "aashirvaad multigrain atta 1kg breakfast morning",
+    "ingredients": [
+      "Wheat",
+      "Soya",
+      "Oat",
+      "Maize Fiber"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_095",
+    "name": "Saffola Oats Peppy Tomato 40g",
+    "category": "breakfast",
+    "price": 20,
+    "mrp": 25,
+    "discount_percent": 19,
+    "unit": "40g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "saffola oats peppy tomato 40g breakfast morning",
+    "ingredients": [
+      "Oats",
+      "Tomato Powder",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_096",
+    "name": "Nestle Ceregrow 300g",
+    "category": "breakfast",
+    "price": 260,
+    "mrp": 299,
+    "discount_percent": 13,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "nestle ceregrow 300g breakfast morning",
+    "ingredients": [
+      "Wheat",
+      "Milk Solids",
+      "Iron",
+      "Vitamins"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_097",
+    "name": "Patanjali Dalia 500g",
+    "category": "breakfast",
+    "price": 32,
+    "mrp": 40,
+    "discount_percent": 19,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "patanjali dalia 500g breakfast morning",
+    "ingredients": [
+      "Broken Wheat"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_098",
+    "name": "Slurrp Farm Millet Dosa Mix 150g",
+    "category": "breakfast",
+    "price": 99,
+    "mrp": 120,
+    "discount_percent": 17,
+    "unit": "150g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80",
+    "tags": "slurrp farm millet dosa mix 150g breakfast morning",
+    "ingredients": [
+      "Ragi",
+      "Rice",
+      "Lentils",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 350,
+      "protein": "10g",
+      "carbs": "60g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_099",
+    "name": "Tata Tea Gold 500g",
+    "category": "beverages",
+    "price": 260,
+    "mrp": 290,
+    "discount_percent": 10,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "tata tea gold 500g beverage drink",
+    "ingredients": [
+      "Tea Leaves"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_100",
+    "name": "Nescafe Classic 200g",
+    "category": "beverages",
+    "price": 450,
+    "mrp": 499,
+    "discount_percent": 9,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "nescafe classic 200g beverage drink",
+    "ingredients": [
+      "Coffee Beans"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_101",
+    "name": "Tropicana Orange Juice 1L",
+    "category": "beverages",
+    "price": 110,
+    "mrp": 125,
+    "discount_percent": 12,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "tropicana orange juice 1l beverage drink",
+    "ingredients": [
+      "Orange Juice",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_102",
+    "name": "Real Mango Juice 1L",
+    "category": "beverages",
+    "price": 99,
+    "mrp": 115,
+    "discount_percent": 13,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "real mango juice 1l beverage drink",
+    "ingredients": [
+      "Mango Pulp",
+      "Sugar",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_103",
+    "name": "Paper Boat Aam Panna 250ml",
+    "category": "beverages",
+    "price": 30,
+    "mrp": 35,
+    "discount_percent": 14,
+    "unit": "250ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "paper boat aam panna 250ml beverage drink",
+    "ingredients": [
+      "Raw Mango",
+      "Sugar",
+      "Spices",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_104",
+    "name": "Bisleri Water 1L",
+    "category": "beverages",
+    "price": 20,
+    "mrp": 20,
+    "discount_percent": 0,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "bisleri water 1l beverage drink",
+    "ingredients": [
+      "Purified Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_105",
+    "name": "Red Bull Energy 250ml",
+    "category": "beverages",
+    "price": 115,
+    "mrp": 125,
+    "discount_percent": 7,
+    "unit": "250ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "red bull energy 250ml beverage drink",
+    "ingredients": [
+      "Water",
+      "Sugar",
+      "Caffeine",
+      "Taurine",
+      "B-Vitamins"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_106",
+    "name": "Amul Lassi 200ml",
+    "category": "beverages",
+    "price": 20,
+    "mrp": 25,
+    "discount_percent": 19,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul lassi 200ml beverage drink",
+    "ingredients": [
+      "Yogurt",
+      "Sugar",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_107",
+    "name": "Amul Buttermilk Masala 200ml",
+    "category": "beverages",
+    "price": 15,
+    "mrp": 18,
+    "discount_percent": 16,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul buttermilk masala 200ml beverage drink",
+    "ingredients": [
+      "Buttermilk",
+      "Spices",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_108",
+    "name": "Coconut Water Fresh 200ml",
+    "category": "beverages",
+    "price": 35,
+    "mrp": 40,
+    "discount_percent": 12,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "coconut water fresh 200ml beverage drink",
+    "ingredients": [
+      "Coconut Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_109",
+    "name": "Tang Orange 500g",
+    "category": "beverages",
+    "price": 145,
+    "mrp": 165,
+    "discount_percent": 12,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "tang orange 500g beverage drink",
+    "ingredients": [
+      "Sugar",
+      "Citric Acid",
+      "Orange Flavour",
+      "Vitamin C"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_110",
+    "name": "Hersheys Chocolate Syrup 200ml",
+    "category": "beverages",
+    "price": 140,
+    "mrp": 160,
+    "discount_percent": 12,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "hersheys chocolate syrup 200ml beverage drink",
+    "ingredients": [
+      "Sugar",
+      "Cocoa",
+      "Water",
+      "Corn Syrup"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_111",
+    "name": "Bournvita Health Drink 500g",
+    "category": "beverages",
+    "price": 235,
+    "mrp": 265,
+    "discount_percent": 11,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "bournvita health drink 500g beverage drink",
+    "ingredients": [
+      "Sugar",
+      "Cocoa",
+      "Malt",
+      "Vitamins"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_112",
+    "name": "Green Tea Organic 25bags",
+    "category": "beverages",
+    "price": 135,
+    "mrp": 160,
+    "discount_percent": 15,
+    "unit": "25bags",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "green tea organic 25bags beverage drink",
+    "ingredients": [
+      "Green Tea Leaves"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "Organic"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_113",
+    "name": "Appy Fizz 250ml",
+    "category": "beverages",
+    "price": 25,
+    "mrp": 30,
+    "discount_percent": 16,
+    "unit": "250ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "appy fizz 250ml beverage drink",
+    "ingredients": [
+      "Apple Juice",
+      "Carbonated Water",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_114",
+    "name": "Dabur Glucose D 500g",
+    "category": "beverages",
+    "price": 99,
+    "mrp": 115,
+    "discount_percent": 13,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "dabur glucose d 500g beverage drink",
+    "ingredients": [
+      "Glucose",
+      "Vitamin D",
+      "Calcium"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_115",
+    "name": "Minute Maid Pulpy Orange 400ml",
+    "category": "beverages",
+    "price": 40,
+    "mrp": 45,
+    "discount_percent": 11,
+    "unit": "400ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "minute maid pulpy orange 400ml beverage drink",
+    "ingredients": [
+      "Orange Juice",
+      "Sugar",
+      "Water",
+      "Pulp"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_116",
+    "name": "Lipton Ice Tea Peach 350ml",
+    "category": "beverages",
+    "price": 35,
+    "mrp": 40,
+    "discount_percent": 12,
+    "unit": "350ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "lipton ice tea peach 350ml beverage drink",
+    "ingredients": [
+      "Water",
+      "Sugar",
+      "Tea Extract",
+      "Peach Flavour"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_117",
+    "name": "Electral ORS Powder 4pcs",
+    "category": "beverages",
+    "price": 30,
+    "mrp": 35,
+    "discount_percent": 14,
+    "unit": "4pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "electral ors powder 4pcs beverage drink",
+    "ingredients": [
+      "Sodium Chloride",
+      "Potassium Chloride",
+      "Glucose",
+      "Citrate"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_118",
+    "name": "Fresh Sugarcane Juice 300ml",
+    "category": "beverages",
+    "price": 40,
+    "mrp": 50,
+    "discount_percent": 19,
+    "unit": "300ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "fresh sugarcane juice 300ml beverage drink",
+    "ingredients": [
+      "Sugarcane Juice",
+      "Lemon",
+      "Ginger"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_119",
+    "name": "Kombucha Ginger Lemon 250ml",
+    "category": "beverages",
+    "price": 120,
+    "mrp": 145,
+    "discount_percent": 17,
+    "unit": "250ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "kombucha ginger lemon 250ml beverage drink",
+    "ingredients": [
+      "Green Tea",
+      "Sugar",
+      "SCOBY Culture",
+      "Ginger",
+      "Lemon"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_120",
+    "name": "Protein Shake Chocolate 200ml",
+    "category": "beverages",
+    "price": 99,
+    "mrp": 120,
+    "discount_percent": 17,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "protein shake chocolate 200ml beverage drink",
+    "ingredients": [
+      "Milk",
+      "Whey Protein",
+      "Cocoa",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Dairy",
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 80,
+      "protein": "1g",
+      "carbs": "18g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_121",
+    "name": "Lays Classic Salted 52g",
+    "category": "snacks",
+    "price": 20,
+    "mrp": 20,
+    "discount_percent": 0,
+    "unit": "52g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "lays classic salted 52g snack",
+    "ingredients": [
+      "Potato",
+      "Vegetable Oil",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_122",
+    "name": "Haldirams Aloo Bhujia 200g",
+    "category": "snacks",
+    "price": 60,
+    "mrp": 70,
+    "discount_percent": 14,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "haldirams aloo bhujia 200g snack",
+    "ingredients": [
+      "Gram Flour",
+      "Potato",
+      "Spices",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_123",
+    "name": "Kurkure Masala Munch 90g",
+    "category": "snacks",
+    "price": 20,
+    "mrp": 20,
+    "discount_percent": 0,
+    "unit": "90g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "kurkure masala munch 90g snack",
+    "ingredients": [
+      "Rice Meal",
+      "Corn",
+      "Spices",
+      "Oil",
+      "Peanut"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_124",
+    "name": "Parle-G Biscuits 800g",
+    "category": "snacks",
+    "price": 56,
+    "mrp": 60,
+    "discount_percent": 6,
+    "unit": "800g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "parle-g biscuits 800g snack",
+    "ingredients": [
+      "Wheat Flour",
+      "Sugar",
+      "Vegetable Oil",
+      "Milk Solids"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_125",
+    "name": "Oreo Original 120g",
+    "category": "snacks",
+    "price": 30,
+    "mrp": 35,
+    "discount_percent": 14,
+    "unit": "120g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "oreo original 120g snack",
+    "ingredients": [
+      "Wheat Flour",
+      "Sugar",
+      "Cocoa",
+      "Palm Oil",
+      "Cream"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_126",
+    "name": "Dark Fantasy Choco Fills 75g",
+    "category": "snacks",
+    "price": 40,
+    "mrp": 45,
+    "discount_percent": 11,
+    "unit": "75g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "dark fantasy choco fills 75g snack",
+    "ingredients": [
+      "Wheat Flour",
+      "Sugar",
+      "Cocoa",
+      "Butter"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_127",
+    "name": "Yoga Bar Protein Bar 60g",
+    "category": "snacks",
+    "price": 70,
+    "mrp": 80,
+    "discount_percent": 12,
+    "unit": "60g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "yoga bar protein bar 60g snack",
+    "ingredients": [
+      "Whey Protein",
+      "Oats",
+      "Almonds",
+      "Honey",
+      "Dark Chocolate"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Nuts",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_128",
+    "name": "RiteBite Max Protein Bar 70g",
+    "category": "snacks",
+    "price": 99,
+    "mrp": 115,
+    "discount_percent": 13,
+    "unit": "70g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "ritebite max protein bar 70g snack",
+    "ingredients": [
+      "Soy Protein",
+      "Oats",
+      "Dark Chocolate",
+      "Almonds"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Soy",
+      "Gluten",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_129",
+    "name": "Makhana Roasted 100g",
+    "category": "snacks",
+    "price": 99,
+    "mrp": 120,
+    "discount_percent": 17,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "makhana roasted 100g snack",
+    "ingredients": [
+      "Fox Nuts",
+      "Ghee",
+      "Salt",
+      "Black Pepper"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_130",
+    "name": "Trail Mix Premium 200g",
+    "category": "snacks",
+    "price": 249,
+    "mrp": 299,
+    "discount_percent": 16,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "trail mix premium 200g snack",
+    "ingredients": [
+      "Almonds",
+      "Cashews",
+      "Raisins",
+      "Walnuts",
+      "Cranberry"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_131",
+    "name": "Bikaneri Bhujia 400g",
+    "category": "snacks",
+    "price": 130,
+    "mrp": 150,
+    "discount_percent": 13,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "bikaneri bhujia 400g snack",
+    "ingredients": [
+      "Gram Flour",
+      "Moth Bean",
+      "Spices",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_132",
+    "name": "Act II Popcorn Butter 70g",
+    "category": "snacks",
+    "price": 30,
+    "mrp": 35,
+    "discount_percent": 14,
+    "unit": "70g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "act ii popcorn butter 70g snack",
+    "ingredients": [
+      "Corn",
+      "Butter Flavour",
+      "Salt",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_133",
+    "name": "Too Yumm Multigrain Chips 54g",
+    "category": "snacks",
+    "price": 20,
+    "mrp": 20,
+    "discount_percent": 0,
+    "unit": "54g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "too yumm multigrain chips 54g snack",
+    "ingredients": [
+      "Rice",
+      "Corn",
+      "Ragi",
+      "Oats",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_134",
+    "name": "Britannia Good Day Butter 75g",
+    "category": "snacks",
+    "price": 30,
+    "mrp": 32,
+    "discount_percent": 6,
+    "unit": "75g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "britannia good day butter 75g snack",
+    "ingredients": [
+      "Wheat Flour",
+      "Butter",
+      "Sugar",
+      "Cashews"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Dairy",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_135",
+    "name": "Pringles Original 107g",
+    "category": "snacks",
+    "price": 149,
+    "mrp": 169,
+    "discount_percent": 11,
+    "unit": "107g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "pringles original 107g snack",
+    "ingredients": [
+      "Potato",
+      "Vegetable Oil",
+      "Wheat Starch",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_136",
+    "name": "Sundrop Peanut Butter Creamy 200g",
+    "category": "snacks",
+    "price": 115,
+    "mrp": 135,
+    "discount_percent": 14,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "sundrop peanut butter creamy 200g snack",
+    "ingredients": [
+      "Roasted Peanuts",
+      "Sugar",
+      "Salt",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_137",
+    "name": "Nutella Hazelnut Spread 350g",
+    "category": "snacks",
+    "price": 399,
+    "mrp": 450,
+    "discount_percent": 11,
+    "unit": "350g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "nutella hazelnut spread 350g snack",
+    "ingredients": [
+      "Sugar",
+      "Palm Oil",
+      "Hazelnuts",
+      "Cocoa",
+      "Milk Powder"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Nuts",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_138",
+    "name": "Cornitos Nacho Chips 150g",
+    "category": "snacks",
+    "price": 89,
+    "mrp": 99,
+    "discount_percent": 10,
+    "unit": "150g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "cornitos nacho chips 150g snack",
+    "ingredients": [
+      "Corn",
+      "Vegetable Oil",
+      "Salt",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_139",
+    "name": "Happilo Almonds 200g",
+    "category": "snacks",
+    "price": 249,
+    "mrp": 290,
+    "discount_percent": 14,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "happilo almonds 200g snack",
+    "ingredients": [
+      "Almonds"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_140",
+    "name": "Dates Medjool 250g",
+    "category": "snacks",
+    "price": 350,
+    "mrp": 399,
+    "discount_percent": 12,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "dates medjool 250g snack",
+    "ingredients": [
+      "Dates"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_141",
+    "name": "Roasted Chana 200g",
+    "category": "snacks",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "roasted chana 200g snack",
+    "ingredients": [
+      "Chickpeas",
+      "Salt",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_142",
+    "name": "Rice Cakes Multigrain 6pcs",
+    "category": "snacks",
+    "price": 89,
+    "mrp": 105,
+    "discount_percent": 15,
+    "unit": "6pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "rice cakes multigrain 6pcs snack",
+    "ingredients": [
+      "Brown Rice",
+      "Quinoa",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 150,
+      "protein": "3g",
+      "carbs": "20g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_143",
+    "name": "Amul Paneer 200g",
+    "category": "high_protein",
+    "price": 90,
+    "mrp": 100,
+    "discount_percent": 9,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "amul paneer 200g protein fitness",
+    "ingredients": [
+      "Milk",
+      "Citric Acid"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_144",
+    "name": "Eggs Farm Fresh 6pcs",
+    "category": "high_protein",
+    "price": 48,
+    "mrp": 55,
+    "discount_percent": 12,
+    "unit": "6pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "eggs farm fresh 6pcs protein fitness",
+    "ingredients": [
+      "Eggs"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Eggs"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_145",
+    "name": "Toor Dal 1kg",
+    "category": "high_protein",
+    "price": 145,
+    "mrp": 165,
+    "discount_percent": 12,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "toor dal 1kg protein fitness",
+    "ingredients": [
+      "Pigeon Pea Lentils"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_146",
+    "name": "Moong Dal 1kg",
+    "category": "high_protein",
+    "price": 135,
+    "mrp": 155,
+    "discount_percent": 12,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "moong dal 1kg protein fitness",
+    "ingredients": [
+      "Green Gram Lentils"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_147",
+    "name": "Chickpeas Kabuli 500g",
+    "category": "high_protein",
+    "price": 85,
+    "mrp": 100,
+    "discount_percent": 15,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "chickpeas kabuli 500g protein fitness",
+    "ingredients": [
+      "Chickpeas"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_148",
+    "name": "Rajma Red Kidney Beans 500g",
+    "category": "high_protein",
+    "price": 90,
+    "mrp": 105,
+    "discount_percent": 14,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "rajma red kidney beans 500g protein fitness",
+    "ingredients": [
+      "Red Kidney Beans"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_149",
+    "name": "Soyabean Chunks 200g",
+    "category": "high_protein",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "soyabean chunks 200g protein fitness",
+    "ingredients": [
+      "Soy Protein"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_150",
+    "name": "Chicken Breast Boneless 500g",
+    "category": "high_protein",
+    "price": 250,
+    "mrp": 290,
+    "discount_percent": 13,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "chicken breast boneless 500g protein fitness",
+    "ingredients": [
+      "Chicken Breast"
+    ],
+    "dietary_tags": [
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_151",
+    "name": "Fish Rohu Fresh 500g",
+    "category": "high_protein",
+    "price": 180,
+    "mrp": 210,
+    "discount_percent": 14,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "fish rohu fresh 500g protein fitness",
+    "ingredients": [
+      "Rohu Fish"
+    ],
+    "dietary_tags": [
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_152",
+    "name": "Eggs Kadaknath 6pcs",
+    "category": "high_protein",
+    "price": 120,
+    "mrp": 140,
+    "discount_percent": 14,
+    "unit": "6pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "eggs kadaknath 6pcs protein fitness",
+    "ingredients": [
+      "Kadaknath Eggs"
+    ],
+    "dietary_tags": [
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Eggs"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_153",
+    "name": "MuscleBlaze Whey 1kg",
+    "category": "high_protein",
+    "price": 1799,
+    "mrp": 2199,
+    "discount_percent": 18,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "muscleblaze whey 1kg protein fitness",
+    "ingredients": [
+      "Whey Protein Concentrate",
+      "Cocoa",
+      "Sucralose"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_154",
+    "name": "Peanut Butter Crunchy 400g",
+    "category": "high_protein",
+    "price": 199,
+    "mrp": 240,
+    "discount_percent": 17,
+    "unit": "400g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "peanut butter crunchy 400g protein fitness",
+    "ingredients": [
+      "Roasted Peanuts",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_155",
+    "name": "Greek Yogurt Plain 200g",
+    "category": "high_protein",
+    "price": 65,
+    "mrp": 75,
+    "discount_percent": 13,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "greek yogurt plain 200g protein fitness",
+    "ingredients": [
+      "Milk",
+      "Yogurt Culture"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_156",
+    "name": "Quinoa White 500g",
+    "category": "high_protein",
+    "price": 299,
+    "mrp": 350,
+    "discount_percent": 14,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "quinoa white 500g protein fitness",
+    "ingredients": [
+      "Quinoa"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_157",
+    "name": "Chia Seeds 200g",
+    "category": "high_protein",
+    "price": 199,
+    "mrp": 240,
+    "discount_percent": 17,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "chia seeds 200g protein fitness",
+    "ingredients": [
+      "Chia Seeds"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_158",
+    "name": "Masoor Dal Red 1kg",
+    "category": "high_protein",
+    "price": 110,
+    "mrp": 130,
+    "discount_percent": 15,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "masoor dal red 1kg protein fitness",
+    "ingredients": [
+      "Red Lentils"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "20g",
+      "carbs": "5g",
+      "fat": "3g"
+    }
+  },
+  {
+    "id": "food_159",
+    "name": "Oat Milk Barista 1L",
+    "category": "allergy_friendly",
+    "price": 199,
+    "mrp": 240,
+    "discount_percent": 17,
+    "unit": "1L",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "oat milk barista 1l allergy friendly safe",
+    "ingredients": [
+      "Oats",
+      "Water",
+      "Rapeseed Oil",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_160",
+    "name": "Coconut Yogurt Plain 150g",
+    "category": "allergy_friendly",
+    "price": 75,
+    "mrp": 90,
+    "discount_percent": 16,
+    "unit": "150g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "coconut yogurt plain 150g allergy friendly safe",
+    "ingredients": [
+      "Coconut Milk",
+      "Live Cultures",
+      "Tapioca Starch"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_161",
+    "name": "Sunflower Seed Butter 200g",
+    "category": "allergy_friendly",
+    "price": 320,
+    "mrp": 380,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "sunflower seed butter 200g allergy friendly safe",
+    "ingredients": [
+      "Sunflower Seeds",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_162",
+    "name": "Gluten Free Bread 300g",
+    "category": "allergy_friendly",
+    "price": 149,
+    "mrp": 180,
+    "discount_percent": 17,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "gluten free bread 300g allergy friendly safe",
+    "ingredients": [
+      "Rice Flour",
+      "Tapioca Starch",
+      "Potato Starch",
+      "Yeast"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_163",
+    "name": "Rice Pasta Penne 250g",
+    "category": "allergy_friendly",
+    "price": 135,
+    "mrp": 160,
+    "discount_percent": 15,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "rice pasta penne 250g allergy friendly safe",
+    "ingredients": [
+      "Brown Rice Flour",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_164",
+    "name": "Gluten Free Atta 1kg",
+    "category": "allergy_friendly",
+    "price": 185,
+    "mrp": 220,
+    "discount_percent": 15,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "gluten free atta 1kg allergy friendly safe",
+    "ingredients": [
+      "Rice Flour",
+      "Amaranth",
+      "Jowar",
+      "Bajra"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_165",
+    "name": "Coconut Milk Unsweetened 400ml",
+    "category": "allergy_friendly",
+    "price": 89,
+    "mrp": 105,
+    "discount_percent": 15,
+    "unit": "400ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "coconut milk unsweetened 400ml allergy friendly safe",
+    "ingredients": [
+      "Coconut Extract",
+      "Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_166",
+    "name": "Dairy-Free Cheese Slices 120g",
+    "category": "allergy_friendly",
+    "price": 175,
+    "mrp": 210,
+    "discount_percent": 16,
+    "unit": "120g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "dairy-free cheese slices 120g allergy friendly safe",
+    "ingredients": [
+      "Coconut Oil",
+      "Potato Starch",
+      "Salt",
+      "Cultures"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_167",
+    "name": "Egg-Free Mayo 250g",
+    "category": "allergy_friendly",
+    "price": 145,
+    "mrp": 175,
+    "discount_percent": 17,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "egg-free mayo 250g allergy friendly safe",
+    "ingredients": [
+      "Soy Milk",
+      "Canola Oil",
+      "Vinegar",
+      "Mustard"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_168",
+    "name": "Almond Flour 200g",
+    "category": "allergy_friendly",
+    "price": 280,
+    "mrp": 330,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "almond flour 200g allergy friendly safe",
+    "ingredients": [
+      "Blanched Almonds"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Dairy-Free",
+      "Keto"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_169",
+    "name": "Buckwheat Flour 500g",
+    "category": "allergy_friendly",
+    "price": 110,
+    "mrp": 130,
+    "discount_percent": 15,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "buckwheat flour 500g allergy friendly safe",
+    "ingredients": [
+      "Buckwheat"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_170",
+    "name": "Ragi Flour 500g",
+    "category": "allergy_friendly",
+    "price": 60,
+    "mrp": 72,
+    "discount_percent": 16,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "ragi flour 500g allergy friendly safe",
+    "ingredients": [
+      "Finger Millet"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_171",
+    "name": "Jowar Flour 500g",
+    "category": "allergy_friendly",
+    "price": 55,
+    "mrp": 65,
+    "discount_percent": 15,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "jowar flour 500g allergy friendly safe",
+    "ingredients": [
+      "Sorghum"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_172",
+    "name": "Soy-Free Tempeh 200g",
+    "category": "allergy_friendly",
+    "price": 140,
+    "mrp": 165,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "soy-free tempeh 200g allergy friendly safe",
+    "ingredients": [
+      "Black Beans",
+      "Rice",
+      "Tempeh Culture"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_173",
+    "name": "Seed Mix Trail 150g",
+    "category": "allergy_friendly",
+    "price": 185,
+    "mrp": 220,
+    "discount_percent": 15,
+    "unit": "150g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "seed mix trail 150g allergy friendly safe",
+    "ingredients": [
+      "Pumpkin Seeds",
+      "Sunflower Seeds",
+      "Flax Seeds",
+      "Sesame"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_174",
+    "name": "Cassava Chips 100g",
+    "category": "allergy_friendly",
+    "price": 75,
+    "mrp": 90,
+    "discount_percent": 16,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "cassava chips 100g allergy friendly safe",
+    "ingredients": [
+      "Cassava",
+      "Coconut Oil",
+      "Sea Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_175",
+    "name": "MTR Dal Makhani 300g",
+    "category": "ready_to_eat",
+    "price": 85,
+    "mrp": 99,
+    "discount_percent": 14,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "mtr dal makhani 300g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Lentils",
+      "Tomato",
+      "Butter",
+      "Cream",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_176",
+    "name": "MTR Palak Paneer 300g",
+    "category": "ready_to_eat",
+    "price": 89,
+    "mrp": 105,
+    "discount_percent": 15,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "mtr palak paneer 300g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Spinach",
+      "Paneer",
+      "Cream",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_177",
+    "name": "Haldirams Rajma Chawal 300g",
+    "category": "ready_to_eat",
+    "price": 79,
+    "mrp": 90,
+    "discount_percent": 12,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "haldirams rajma chawal 300g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Kidney Beans",
+      "Rice",
+      "Tomato",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_178",
+    "name": "Maggi 2-Min Noodles 4pk",
+    "category": "ready_to_eat",
+    "price": 56,
+    "mrp": 60,
+    "discount_percent": 6,
+    "unit": "4pk",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "maggi 2-min noodles 4pk ready to eat instant quick meal soup",
+    "ingredients": [
+      "Wheat Flour",
+      "Palm Oil",
+      "Salt",
+      "Spices",
+      "Tastemaker"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_179",
+    "name": "Knorr Tomato Soup 250ml",
+    "category": "ready_to_eat",
+    "price": 40,
+    "mrp": 48,
+    "discount_percent": 16,
+    "unit": "250ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "knorr tomato soup 250ml ready to eat instant quick meal soup",
+    "ingredients": [
+      "Tomato Powder",
+      "Corn Starch",
+      "Sugar",
+      "Salt",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_180",
+    "name": "Knorr Hot & Sour Soup 250ml",
+    "category": "ready_to_eat",
+    "price": 45,
+    "mrp": 52,
+    "discount_percent": 13,
+    "unit": "250ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "knorr hot & sour soup 250ml ready to eat instant quick meal soup",
+    "ingredients": [
+      "Corn Starch",
+      "Vegetables",
+      "Soy Sauce",
+      "Vinegar",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_181",
+    "name": "MTR Bisibele Bath 300g",
+    "category": "ready_to_eat",
+    "price": 75,
+    "mrp": 88,
+    "discount_percent": 14,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "mtr bisibele bath 300g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Rice",
+      "Lentils",
+      "Vegetables",
+      "Ghee",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_182",
+    "name": "ITC Aashirvaad Atta Noodles 280g",
+    "category": "ready_to_eat",
+    "price": 35,
+    "mrp": 40,
+    "discount_percent": 12,
+    "unit": "280g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "itc aashirvaad atta noodles 280g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Wheat Flour",
+      "Vegetables",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_183",
+    "name": "Frozen Paratha 5pcs",
+    "category": "ready_to_eat",
+    "price": 75,
+    "mrp": 90,
+    "discount_percent": 16,
+    "unit": "5pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "frozen paratha 5pcs ready to eat instant quick meal soup",
+    "ingredients": [
+      "Wheat Flour",
+      "Vegetable Oil",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_184",
+    "name": "Cup Noodles Tom Yum 70g",
+    "category": "ready_to_eat",
+    "price": 45,
+    "mrp": 50,
+    "discount_percent": 9,
+    "unit": "70g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "cup noodles tom yum 70g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Wheat Flour",
+      "Palm Oil",
+      "Dried Vegetables",
+      "Tom Yum Seasoning"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_185",
+    "name": "Chicken Momos Frozen 10pcs",
+    "category": "ready_to_eat",
+    "price": 180,
+    "mrp": 210,
+    "discount_percent": 14,
+    "unit": "10pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "chicken momos frozen 10pcs ready to eat instant quick meal soup",
+    "ingredients": [
+      "Wheat Flour",
+      "Chicken",
+      "Cabbage",
+      "Onion",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_186",
+    "name": "Veg Biryani Ready 250g",
+    "category": "ready_to_eat",
+    "price": 89,
+    "mrp": 105,
+    "discount_percent": 15,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "veg biryani ready 250g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Basmati Rice",
+      "Mixed Vegetables",
+      "Ghee",
+      "Spices",
+      "Saffron"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_187",
+    "name": "Instant Idli Mix 200g",
+    "category": "ready_to_eat",
+    "price": 49,
+    "mrp": 58,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "instant idli mix 200g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Rice Flour",
+      "Urad Dal Flour",
+      "Salt",
+      "Baking Soda"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_188",
+    "name": "Khichdi Ready Mix 200g",
+    "category": "ready_to_eat",
+    "price": 55,
+    "mrp": 65,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "khichdi ready mix 200g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Rice",
+      "Moong Dal",
+      "Turmeric",
+      "Ghee",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_189",
+    "name": "Soup - Mixed Veg Instant 4pcs",
+    "category": "ready_to_eat",
+    "price": 99,
+    "mrp": 115,
+    "discount_percent": 13,
+    "unit": "4pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "soup - mixed veg instant 4pcs ready to eat instant quick meal soup",
+    "ingredients": [
+      "Dehydrated Vegetables",
+      "Corn Starch",
+      "Salt",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_190",
+    "name": "Upma Instant Cup 80g",
+    "category": "ready_to_eat",
+    "price": 35,
+    "mrp": 42,
+    "discount_percent": 16,
+    "unit": "80g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "upma instant cup 80g ready to eat instant quick meal soup",
+    "ingredients": [
+      "Semolina",
+      "Vegetables",
+      "Cashews",
+      "Spices",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten",
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 250,
+      "protein": "8g",
+      "carbs": "35g",
+      "fat": "10g"
+    }
+  },
+  {
+    "id": "food_191",
+    "name": "Jackfruit Raw 1kg",
+    "category": "fruits",
+    "price": 50,
+    "mrp": 65,
+    "discount_percent": 23,
+    "unit": "1kg",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80",
+    "tags": "jackfruit raw 1kg fruit fresh",
+    "ingredients": [
+      "Jackfruit"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 55,
+      "protein": "1g",
+      "carbs": "13g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_192",
+    "name": "Litchi Fresh 500g",
+    "category": "fruits",
+    "price": 110,
+    "mrp": 130,
+    "discount_percent": 15,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80",
+    "tags": "litchi fresh 500g fruit fresh",
+    "ingredients": [
+      "Litchi"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 55,
+      "protein": "1g",
+      "carbs": "13g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_193",
+    "name": "Passion Fruit 4pcs",
+    "category": "fruits",
+    "price": 95,
+    "mrp": 115,
+    "discount_percent": 17,
+    "unit": "4pcs",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80",
+    "tags": "passion fruit 4pcs fruit fresh",
+    "ingredients": [
+      "Passion Fruit"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 55,
+      "protein": "1g",
+      "carbs": "13g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_194",
+    "name": "Baby Corn 200g",
+    "category": "vegetables",
+    "price": 50,
+    "mrp": 60,
+    "discount_percent": 16,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "baby corn 200g vegetable fresh",
+    "ingredients": [
+      "Baby Corn"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 25,
+      "protein": "2g",
+      "carbs": "5g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_195",
+    "name": "Zucchini 250g",
+    "category": "vegetables",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "zucchini 250g vegetable fresh",
+    "ingredients": [
+      "Zucchini"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 25,
+      "protein": "2g",
+      "carbs": "5g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_196",
+    "name": "Asparagus 100g",
+    "category": "vegetables",
+    "price": 120,
+    "mrp": 145,
+    "discount_percent": 17,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+    "tags": "asparagus 100g vegetable fresh",
+    "ingredients": [
+      "Asparagus"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 25,
+      "protein": "2g",
+      "carbs": "5g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_197",
+    "name": "Filter Coffee Decoction 200ml",
+    "category": "beverages",
+    "price": 120,
+    "mrp": 140,
+    "discount_percent": 14,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "filter coffee decoction 200ml beverage drink hydration",
+    "ingredients": [
+      "Coffee Decoction",
+      "Chicory"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 50,
+      "protein": "0g",
+      "carbs": "12g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_198",
+    "name": "Jaljeera Powder 100g",
+    "category": "beverages",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "100g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "jaljeera powder 100g beverage drink hydration",
+    "ingredients": [
+      "Cumin",
+      "Mint",
+      "Black Salt",
+      "Citric Acid"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 50,
+      "protein": "0g",
+      "carbs": "12g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_199",
+    "name": "Kokum Sherbet 500ml",
+    "category": "beverages",
+    "price": 85,
+    "mrp": 100,
+    "discount_percent": 15,
+    "unit": "500ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "kokum sherbet 500ml beverage drink hydration",
+    "ingredients": [
+      "Kokum Extract",
+      "Sugar",
+      "Water",
+      "Cumin"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 50,
+      "protein": "0g",
+      "carbs": "12g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_200",
+    "name": "Tender Coconut Water 250ml",
+    "category": "beverages",
+    "price": 45,
+    "mrp": 55,
+    "discount_percent": 18,
+    "unit": "250ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+    "tags": "tender coconut water 250ml beverage drink hydration",
+    "ingredients": [
+      "Tender Coconut Water"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 50,
+      "protein": "0g",
+      "carbs": "12g",
+      "fat": "0g"
+    }
+  },
+  {
+    "id": "food_201",
+    "name": "Khakhra Methi 200g",
+    "category": "snacks",
+    "price": 55,
+    "mrp": 65,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "khakhra methi 200g snack",
+    "ingredients": [
+      "Wheat Flour",
+      "Fenugreek",
+      "Oil",
+      "Salt",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 180,
+      "protein": "4g",
+      "carbs": "22g",
+      "fat": "9g"
+    }
+  },
+  {
+    "id": "food_202",
+    "name": "Dry Fruit Ladoo 250g",
+    "category": "snacks",
+    "price": 199,
+    "mrp": 240,
+    "discount_percent": 17,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "dry fruit ladoo 250g snack",
+    "ingredients": [
+      "Dates",
+      "Almonds",
+      "Cashews",
+      "Ghee",
+      "Cardamom"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free"
+    ],
+    "allergen_tags": [
+      "Nuts",
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 180,
+      "protein": "4g",
+      "carbs": "22g",
+      "fat": "9g"
+    }
+  },
+  {
+    "id": "food_203",
+    "name": "Banana Chips Kerala 200g",
+    "category": "snacks",
+    "price": 65,
+    "mrp": 75,
+    "discount_percent": 13,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+    "tags": "banana chips kerala 200g snack",
+    "ingredients": [
+      "Banana",
+      "Coconut Oil",
+      "Salt",
+      "Turmeric"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 180,
+      "protein": "4g",
+      "carbs": "22g",
+      "fat": "9g"
+    }
+  },
+  {
+    "id": "food_204",
+    "name": "Sprouts Mixed 200g",
+    "category": "high_protein",
+    "price": 35,
+    "mrp": 42,
+    "discount_percent": 16,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "sprouts mixed 200g protein fitness",
+    "ingredients": [
+      "Moong Sprouts",
+      "Moth Sprouts",
+      "Chana Sprouts"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "12g",
+      "carbs": "8g",
+      "fat": "2g"
+    }
+  },
+  {
+    "id": "food_205",
+    "name": "Edamame Frozen 200g",
+    "category": "high_protein",
+    "price": 149,
+    "mrp": 175,
+    "discount_percent": 14,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "edamame frozen 200g protein fitness",
+    "ingredients": [
+      "Edamame Soybean"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Soy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "12g",
+      "carbs": "8g",
+      "fat": "2g"
+    }
+  },
+  {
+    "id": "food_206",
+    "name": "Cottage Cheese Low Fat 200g",
+    "category": "high_protein",
+    "price": 85,
+    "mrp": 100,
+    "discount_percent": 15,
+    "unit": "200g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",
+    "tags": "cottage cheese low fat 200g protein fitness",
+    "ingredients": [
+      "Skimmed Milk",
+      "Culture",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Nut-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 120,
+      "protein": "12g",
+      "carbs": "8g",
+      "fat": "2g"
+    }
+  },
+  {
+    "id": "food_207",
+    "name": "Sambar Rice Ready 300g",
+    "category": "ready_to_eat",
+    "price": 79,
+    "mrp": 92,
+    "discount_percent": 14,
+    "unit": "300g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "sambar rice ready 300g ready to eat instant quick meal",
+    "ingredients": [
+      "Rice",
+      "Lentils",
+      "Vegetables",
+      "Tamarind",
+      "Spices"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "6g",
+      "carbs": "30g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_208",
+    "name": "Poha Instant Cup 75g",
+    "category": "ready_to_eat",
+    "price": 30,
+    "mrp": 38,
+    "discount_percent": 21,
+    "unit": "75g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "poha instant cup 75g ready to eat instant quick meal",
+    "ingredients": [
+      "Flattened Rice",
+      "Peanuts",
+      "Turmeric",
+      "Curry Leaves",
+      "Oil"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Gluten-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Nuts"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "6g",
+      "carbs": "30g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_209",
+    "name": "Tomato Soup Creamy 200ml",
+    "category": "ready_to_eat",
+    "price": 35,
+    "mrp": 42,
+    "discount_percent": 16,
+    "unit": "200ml",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "tomato soup creamy 200ml ready to eat instant quick meal",
+    "ingredients": [
+      "Tomato",
+      "Cream",
+      "Butter",
+      "Spices",
+      "Sugar"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free"
+    ],
+    "allergen_tags": [
+      "Dairy"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "6g",
+      "carbs": "30g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_210",
+    "name": "Masala Oats Cup 80g",
+    "category": "ready_to_eat",
+    "price": 25,
+    "mrp": 30,
+    "discount_percent": 16,
+    "unit": "80g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "tags": "masala oats cup 80g ready to eat instant quick meal",
+    "ingredients": [
+      "Oats",
+      "Dehydrated Vegetables",
+      "Spices",
+      "Salt"
+    ],
+    "dietary_tags": [
+      "Vegetarian",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [
+      "Gluten"
+    ],
+    "nutrition_summary": {
+      "calories": 200,
+      "protein": "6g",
+      "carbs": "30g",
+      "fat": "8g"
+    }
+  },
+  {
+    "id": "food_211",
+    "name": "Rice Flour Fine 500g",
+    "category": "allergy_friendly",
+    "price": 48,
+    "mrp": 58,
+    "discount_percent": 17,
+    "unit": "500g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "rice flour fine 500g allergy friendly safe",
+    "ingredients": [
+      "Rice"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_212",
+    "name": "Tapioca Pearls 250g",
+    "category": "allergy_friendly",
+    "price": 55,
+    "mrp": 65,
+    "discount_percent": 15,
+    "unit": "250g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "tapioca pearls 250g allergy friendly safe",
+    "ingredients": [
+      "Tapioca"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  },
+  {
+    "id": "food_213",
+    "name": "Hemp Seeds 150g",
+    "category": "allergy_friendly",
+    "price": 350,
+    "mrp": 420,
+    "discount_percent": 16,
+    "unit": "150g",
+    "eta_min": 20,
+    "in_stock": true,
+    "image_url": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=600&q=80",
+    "tags": "hemp seeds 150g allergy friendly safe",
+    "ingredients": [
+      "Hemp Seeds"
+    ],
+    "dietary_tags": [
+      "Vegan",
+      "Gluten-Free",
+      "Nut-Free",
+      "Dairy-Free",
+      "High-Protein"
+    ],
+    "allergen_tags": [],
+    "nutrition_summary": {
+      "calories": 100,
+      "protein": "3g",
+      "carbs": "15g",
+      "fat": "5g"
+    }
+  }
+]

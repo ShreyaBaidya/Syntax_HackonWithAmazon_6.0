@@ -6,14 +6,72 @@ import { getRecommendations, Recommendations, Product, Order, createSharedCart }
 import { RecommendationFeed } from '@/components/RecommendationFeed';
 import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
 import { AmazonHeader } from '@/components/AmazonHeader';
+import { useProfile } from '@/hooks/useProfile';
+import { ProfileBanner } from '@/components/ProfileBanner';
 
 export default function HomePage() {
   const router = useRouter();
+  const { userId, profile, exclusionSet, loading: profileLoading } = useProfile();
   const [recs, setRecs] = useState<Recommendations | null>(null);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCheckout, setShowCheckout] = useState(false);
   const [startingSharedCart, setStartingSharedCart] = useState(false);
+
+  // ── Intent state (React-managed, synced from sessionStorage) ────────────
+  const [chatIntent, setChatIntent] = useState<string | null>(null);
+
+  // Read initial intent from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('last_chat_intent');
+      if (stored) {
+        console.log('[HomePage] Initial intent from sessionStorage:', stored);
+        setChatIntent(stored);
+      }
+    } catch { /* sessionStorage unavailable */ }
+  }, []);
+
+  // Re-sync intent when page becomes visible (user navigates back from NowSpeak)
+  useEffect(() => {
+    const syncIntent = () => {
+      try {
+        const stored = sessionStorage.getItem('last_chat_intent') || null;
+        setChatIntent(prev => {
+          if (prev !== stored) {
+            console.log('[HomePage] Intent changed on focus/visibility:', prev, '→', stored);
+            return stored;
+          }
+          return prev;
+        });
+      } catch { /* sessionStorage unavailable */ }
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') syncIntent();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', syncIntent);
+    // Also listen for custom event dispatched by useNowSpeak
+    window.addEventListener('chat-intent-changed', syncIntent);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', syncIntent);
+      window.removeEventListener('chat-intent-changed', syncIntent);
+    };
+  }, []);
+
+  // ── Fetch recommendations whenever userId or chatIntent changes ─────────
+  useEffect(() => {
+    console.log('[Recommendations] React state — userId:', userId, 'chatIntent:', chatIntent);
+
+    getRecommendations(userId ?? undefined, chatIntent ?? undefined)
+      .then(data => {
+        console.log('[Recommendations] Response — now_suggestions:', data.now_suggestions.length, ', trending:', data.trending.length);
+        setRecs(data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [userId, chatIntent]);
 
   const handleStartSharedCart = useCallback(async () => {
     setStartingSharedCart(true);
@@ -27,13 +85,6 @@ export default function HomePage() {
       setStartingSharedCart(false);
     }
   }, [router]);
-
-  useEffect(() => {
-    getRecommendations()
-      .then(setRecs)
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
 
   const handleProductSelect = useCallback((product: Product, qty: number) => {
     setCart(prev => {
@@ -58,6 +109,13 @@ export default function HomePage() {
       <AmazonHeader
         cart={cart}
         onCartClick={() => cartCount > 0 && setShowCheckout(true)}
+      />
+
+      {/* Dietary Profile Banner */}
+      <ProfileBanner
+        dietTags={profile?.diet_tags ?? []}
+        allergenTags={profile?.allergen_tags ?? []}
+        hasProfile={!!profile}
       />
 
       {/* NowSpeak CTA banner */}
@@ -159,6 +217,8 @@ export default function HomePage() {
             trending={recs.trending}
             timeContext={recs.time_context}
             onProductSelect={handleProductSelect}
+            exclusionSet={exclusionSet}
+            alternatives={recs.alternatives}
           />
         ) : (
           <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', margin: '8px 0' }}>
@@ -180,7 +240,7 @@ export default function HomePage() {
         <NavTab icon="🏠" label="Home" active />
         <NavTab icon="🔍" label="Search" onClick={() => router.push('/nowspeak')} />
         <NavTab icon="🛒" label="Cart" badge={cartCount} onClick={() => cartCount > 0 && setShowCheckout(true)} />
-        <NavTab icon="👤" label="Account" />
+        <NavTab icon="👤" label="Account" onClick={() => router.push('/profile')} />
       </nav>
 
       {/* Bottom cart proceed bar (when items in cart) */}

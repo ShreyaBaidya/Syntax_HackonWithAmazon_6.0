@@ -11,6 +11,35 @@ interface Props {
   trending: Product[];
   timeContext: string;
   onProductSelect: (product: Product, qty: number) => void;
+  exclusionSet?: string[];
+  alternatives?: Product[];
+}
+
+/**
+ * Client-side safety filter: removes products whose category/tags/name
+ * contain any exclusion keyword (case-insensitive substring match).
+ * Returns { safe: Product[], removed: { product: Product, reason: string }[] }
+ */
+function filterProductsClient(products: Product[], exclusionSet: string[]): {
+  safe: Product[];
+  removed: { product: Product; reason: string }[];
+} {
+  if (!exclusionSet || exclusionSet.length === 0) return { safe: products, removed: [] };
+
+  const safe: Product[] = [];
+  const removed: { product: Product; reason: string }[] = [];
+
+  for (const product of products) {
+    const searchable = `${product.name} ${product.category} ${(product as any).tags ?? ''}`.toLowerCase();
+    const matchedKeyword = exclusionSet.find(kw => searchable.includes(kw.toLowerCase()));
+    if (matchedKeyword) {
+      removed.push({ product, reason: `Removed due to ${matchedKeyword} restriction` });
+    } else {
+      safe.push(product);
+    }
+  }
+
+  return { safe, removed };
 }
 
 const SUB_CATS = [
@@ -27,12 +56,18 @@ const SECTION_TITLES: Record<string, string> = {
 };
 
 export function RecommendationFeed({
-  nowSuggestions, reorderNudges, trending, timeContext, onProductSelect,
+  nowSuggestions, reorderNudges, trending, timeContext, onProductSelect, exclusionSet, alternatives,
 }: Props) {
   const [activeCategory, setActiveCategory] = useState('');
   const [activeSub, setActiveSub] = useState('All');
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
   const [loadingCategory, setLoadingCategory] = useState(false);
+
+  console.log('[RecommendationFeed] Rendering with:', {
+    nowSuggestions: nowSuggestions.length,
+    trending: trending.length,
+    exclusionSet: exclusionSet?.length ?? 0,
+  });
 
   // Fetch catalog products whenever a category is selected
   useEffect(() => {
@@ -57,14 +92,41 @@ export function RecommendationFeed({
   const filtered = isBrowsing ? categoryProducts : [...nowSuggestions, ...trending];
   const filteredReorder = isBrowsing ? [] : reorderNudges;
 
-  const sectionTitle = isBrowsing
-    ? `${activeCategory.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())} Products`
-    : (SECTION_TITLES[timeContext] ?? '✨ For you right now');
+  // Apply client-side dietary safety filter
+  const { safe: safeProducts, removed: removedProducts } = filterProductsClient(filtered, exclusionSet ?? []);
+  const { safe: safeReorder } = filterProductsClient(filteredReorder, exclusionSet ?? []);
+
+  console.log('[RecommendationFeed] After filter:', {
+    safe: safeProducts.length,
+    removed: removedProducts.length,
+  });
+
+  const sectionTitle = (() => {
+    let title = isBrowsing
+      ? `${activeCategory.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())} Products`
+      : (SECTION_TITLES[timeContext] ?? '✨ For you right now');
+    // Task 9.2: Enhance header with intent context
+    if (!isBrowsing && timeContext && timeContext.toLowerCase().includes('based')) {
+      title = `${title} 💬`;
+    }
+    // Limit header text to 60 characters
+    if (title.length > 60) {
+      title = title.slice(0, 57) + '…';
+    }
+    return title;
+  })();
 
   return (
     <div style={{ background: '#F7F7F7' }}>
       {/* Category icon strip */}
       <CategoryStrip active={activeCategory} onChange={handleCategoryChange} />
+
+      {/* Task 9.5: Personalized indicator when exclusionSet is active */}
+      {exclusionSet && exclusionSet.length > 0 && (
+        <div style={{ padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontSize: 10, color: '#067D62', fontWeight: 500 }}>🛡️ Personalized for your dietary profile</span>
+        </div>
+      )}
 
       {/* Sub-category pill chips */}
       <div style={{ background: 'white', borderBottom: '1px solid #F0F0F0' }}>
@@ -99,24 +161,60 @@ export function RecommendationFeed({
       )}
 
       {/* Main product grid */}
-      {!loadingCategory && filtered.length > 0 && (
+      {!loadingCategory && safeProducts.length > 0 && (
         <Section title={sectionTitle}>
-          <ProductGrid4 products={filtered} onProductSelect={onProductSelect} />
+          <ProductGrid4 products={safeProducts} onProductSelect={onProductSelect} />
+        </Section>
+      )}
+
+      {/* Explainability: filtered items */}
+      {removedProducts.length > 0 && (
+        <div style={{ padding: '8px 12px', background: '#FFF8E1', margin: '0 10px 8px', borderRadius: 8, border: '1px solid #FFE082' }}>
+          <p style={{ margin: 0, fontSize: 11, color: '#B71C1C', fontWeight: 600 }}>
+            🛡️ {removedProducts.length} item{removedProducts.length > 1 ? 's' : ''} filtered for your safety
+          </p>
+          <div style={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {removedProducts.slice(0, 3).map(({ product, reason }) => (
+              <p key={product.id} style={{ margin: 0, fontSize: 10, color: '#666' }}>
+                • {product.name} — <span style={{ color: '#C62828' }}>{reason}</span>
+              </p>
+            ))}
+            {removedProducts.length > 3 && (
+              <p style={{ margin: 0, fontSize: 10, color: '#888' }}>
+                + {removedProducts.length - 3} more items hidden
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Task 9.1: Alternatives carousel */}
+      {alternatives && alternatives.length > 0 && (
+        <Section title="🔄 Safe Alternatives">
+          <div className="scrollbar-hide" style={{
+            display: 'flex', gap: 10, overflowX: 'auto', padding: '8px 10px 12px',
+          }}>
+            {alternatives.map(p => (
+              <div key={p.id} style={{ minWidth: 150, maxWidth: 150, flexShrink: 0 }}>
+                <ProductCard product={p} onAddToCart={onProductSelect} grid />
+              </div>
+            ))}
+          </div>
         </Section>
       )}
 
       {/* Reorder nudges (only on home / Top Picks view) */}
-      {!isBrowsing && filteredReorder.length > 0 && (
+      {!isBrowsing && safeReorder.length > 0 && (
         <Section title="🔁 Buy Again">
           <div>
-            {filteredReorder.map(p => (
+            {safeReorder.map(p => (
               <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} compact />
             ))}
           </div>
         </Section>
       )}
 
-      {!loadingCategory && filtered.length === 0 && (
+      {!loadingCategory && safeProducts.length === 0 && (
         <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', marginTop: 8 }}>
           <p style={{ color: '#888', fontSize: 14 }}>No products in this category.</p>
           <button

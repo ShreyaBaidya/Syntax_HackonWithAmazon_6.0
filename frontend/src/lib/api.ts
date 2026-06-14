@@ -11,6 +11,12 @@ export type Product = {
   eta_min: number;
   category: string;
   reason?: string;
+  ingredients?: string[];
+  dietary_tags?: string[];
+  allergen_tags?: string[];
+  nutrition_summary?: { calories?: number; protein?: string; carbs?: string; fat?: string };
+  is_alternative?: boolean;
+  replaces?: string;
 };
 
 export type SSEEvent =
@@ -24,6 +30,7 @@ export type Recommendations = {
   now_suggestions: Product[];
   reorder_nudges: Product[];
   trending: Product[];
+  alternatives?: Product[];
 };
 
 // ── Shared Cart types ─────────────────────────────────────────────────────────
@@ -67,8 +74,12 @@ export type Order = {
 export async function getProductsByCategory(
   category: string,
   limit = 20,
+  userId?: string,
 ): Promise<Product[]> {
   const params = new URLSearchParams({ category, limit: String(limit) });
+  if (userId) {
+    params.set('user_id', userId);
+  }
   const res = await fetch(`${API_BASE}/api/v1/products?${params}`);
   if (!res.ok) throw new Error(`Products fetch failed: ${res.status}`);
   const data = await res.json();
@@ -76,19 +87,29 @@ export async function getProductsByCategory(
   return Array.isArray(data) ? data : (data.products ?? []);
 }
 
-export async function searchProducts(query: string, limit = 8): Promise<Product[]> {
+export async function searchProducts(query: string, limit = 8, userId?: string): Promise<Product[]> {
   const params = new URLSearchParams({ q: query, limit: String(limit) });
+  if (userId) {
+    params.set('user_id', userId);
+  }
   const res = await fetch(`${API_BASE}/api/v1/products?${params}`);
   if (!res.ok) throw new Error(`Product search failed: ${res.status}`);
   const data = await res.json();
   return Array.isArray(data) ? data : (data.products ?? []);
 }
 
-export async function getRecommendations(userId?: string): Promise<Recommendations> {
-  const params = userId ? `?user_id=${encodeURIComponent(userId)}` : '';
-  const res = await fetch(`${API_BASE}/api/v1/recommendations${params}`);
+export async function getRecommendations(userId?: string, query?: string): Promise<Recommendations> {
+  const params = new URLSearchParams();
+  if (userId) params.set('user_id', userId);
+  if (query) params.set('query', query);
+  const qs = params.toString() ? `?${params.toString()}` : '';
+  const url = `${API_BASE}/api/v1/recommendations${qs}`;
+  console.log('[API] getRecommendations →', url);
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`Recommendations fetch failed: ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  console.log('[API] getRecommendations response — now_suggestions:', data.now_suggestions?.length, ', trending:', data.trending?.length);
+  return data;
 }
 
 export async function placeOrder(payload: {

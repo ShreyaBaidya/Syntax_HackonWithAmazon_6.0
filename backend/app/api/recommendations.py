@@ -21,5 +21,9 @@ async def recommendations(
             "known":     {"summary": "Returning user",    "value": "user-001"},
         },
     ),
+    query: Optional[str] = Query(
+        default=None,
+        description="Search intent from NowSpeak chat to influence recommendations.",
+    ),
 ):
-    return get_recommendations(user_id=user_id)
+    return get_recommendations(user_id=user_id, query=query)
