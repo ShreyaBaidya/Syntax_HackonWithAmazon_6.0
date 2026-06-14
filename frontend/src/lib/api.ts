@@ -1,5 +1,40 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 
+// ── Coupon types (mirrors backend app/models/coupon.py) ───────────────────────
+
+export type CouponType = 'flat' | 'percent' | 'delivery';
+
+export type CouponResult = {
+  code: string;
+  label: string;
+  description: string;
+  type: CouponType;
+  min_subtotal: number;     // minimum cart value for eligibility
+  savings: number;          // pre-computed for the requested subtotal (use computeCouponSavings for live updates)
+  eligible: boolean;
+  badge?: string | null;
+  // Raw params — lets the frontend recompute savings on every qty change with zero latency
+  discount_amount?: number | null;  // flat / delivery: fixed saving
+  discount_rate?:   number | null;  // percent: rate (e.g. 0.20)
+  discount_cap?:    number | null;  // percent: maximum saving cap
+};
+
+export type CouponsResponse = {
+  best: CouponResult | null;
+  all: CouponResult[];
+};
+
+export async function fetchCoupons(
+  subtotal: number,
+  userId?: string,
+): Promise<CouponsResponse> {
+  const params = new URLSearchParams({ subtotal: subtotal.toFixed(2) });
+  if (userId) params.set('user_id', userId);
+  const res = await fetch(`${API_BASE}/api/v1/coupons/best?${params}`);
+  if (!res.ok) throw new Error(`Coupons fetch failed: ${res.status}`);
+  return res.json();
+}
+
 // ── Shared types ──────────────────────────────────────────────────────────────
 
 export type Product = {

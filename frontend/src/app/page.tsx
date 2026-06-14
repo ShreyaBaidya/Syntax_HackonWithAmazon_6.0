@@ -21,7 +21,16 @@ export default function HomePage() {
     } catch { /* ignore */ }
   }, [router]);
 
-  // Load cart from localStorage on mount (client-only)
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    try {
+      const user = localStorage.getItem('amazon_now_user');
+      if (!user) router.replace('/auth');
+    } catch { /* ignore */ }
+  }, [router]);
+
+  // Load cart from localStorage on mount (client-only).
+
   useEffect(() => {
     try {
       const saved = localStorage.getItem('amazon_now_cart');
@@ -29,12 +38,11 @@ export default function HomePage() {
     } catch { /* ignore */ }
   }, []);
 
-  // Persist cart to localStorage on every change
-  useEffect(() => {
-    localStorage.setItem('amazon_now_cart', JSON.stringify(cart));
-  }, [cart]);
+  // NOTE: cart is persisted directly inside handleProductSelect / handleOrderComplete
+  // to avoid a persist useEffect firing with cart=[] on mount and wiping localStorage.
   const [showCheckout, setShowCheckout] = useState(false);
   const [refill, setRefill] = useState<RefillSuggestions | null>(null);
+  const [refillLoaded, setRefillLoaded] = useState(false);  // false = show skeleton to reserve space
   const [refillExpanded, setRefillExpanded] = useState(false);
   const [refillTab, setRefillTab] = useState<'weekly' | 'biweekly' | 'monthly'>('weekly');
   const [dismissedRefillIds, setDismissedRefillIds] = useState<Set<string>>(new Set());
@@ -105,7 +113,10 @@ export default function HomePage() {
     } catch { /* ignore */ }
 
     getRecommendations()
-      .then(setRecs)
+      .then(data => {
+        setRecs(data);
+        try { sessionStorage.setItem('recs_cache', JSON.stringify(data)); } catch { /* ignore */ }
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
     getRefillSuggestions(userId, cart.map(i => i.product.name))
@@ -115,15 +126,21 @@ export default function HomePage() {
 
   const handleProductSelect = useCallback((product: Product, qty: number) => {
     setCart(prev => {
-      if (qty === 0) return prev.filter(i => i.product.id !== product.id);
-      const exists = prev.find(i => i.product.id === product.id);
-      if (exists) return prev.map(i => i.product.id === product.id ? { ...i, quantity: qty } : i);
-      return [...prev, { product, quantity: qty }];
+      const updated =
+        qty === 0 ? prev.filter(i => i.product.id !== product.id)
+        : prev.find(i => i.product.id === product.id)
+          ? prev.map(i => i.product.id === product.id ? { ...i, quantity: qty } : i)
+          : [...prev, { product, quantity: qty }];
+      // Persist immediately in the handler (not via a useEffect) to avoid the
+      // mount-time wipe where useEffect fires with cart=[] before the load effect.
+      localStorage.setItem('amazon_now_cart', JSON.stringify(updated));
+      return updated;
     });
   }, []);
 
   const handleOrderComplete = (_order: Order) => {
     setCart([]);
+    localStorage.removeItem('amazon_now_cart');
     setTimeout(() => setShowCheckout(false), 3200);
   };
 
@@ -142,7 +159,7 @@ export default function HomePage() {
       {/* Amazon Now white header */}
       <AmazonHeader
         cart={cart}
-        onCartClick={() => cartCount > 0 && setShowCheckout(true)}
+        onCartClick={() => cartCount > 0 && router.push('/cart')}
         onProductSelect={handleProductSelect}
       />
 
@@ -344,7 +361,17 @@ export default function HomePage() {
       {/* Products */}
       <div style={{ marginTop: 0 }}>
 
-        {/* Home Refill Card */}
+        {/* Home Refill Card — skeleton reserves space until data arrives (prevents layout shift) */}
+        {!refillLoaded && (
+          <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, height: 64,
+            border: '1px solid #E8F5E9', display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#F0F0F0', flexShrink: 0 }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ height: 12, background: '#F0F0F0', borderRadius: 3, width: '50%', marginBottom: 6 }} />
+              <div style={{ height: 10, background: '#F0F0F0', borderRadius: 3, width: '70%' }} />
+            </div>
+          </div>
+        )}
         {refill && refill.item_count > 0 && (
           <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, overflow: 'hidden', border: '1px solid #E8F5E9' }}>
             {/* Header */}
@@ -463,18 +490,18 @@ export default function HomePage() {
                 )}
 
                 {/* Items for active tab */}
-                {(refill.grouped[refillTab]?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).length === 0 ? (
+                {(refill.grouped[refillTab]?.items ?? []).length === 0 ? (
                   <div style={{ padding: '16px 14px', textAlign: 'center' }}>
                     <span style={{ fontSize: 11, color: '#aaa' }}>No items in this frequency</span>
                   </div>
                 ) : (
-                  (refill.grouped[refillTab]?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).map((item, i, arr) => {
+                  (refill.grouped[refillTab]?.items ?? []).map((item, i) => {
                     const cartItem = cart.find(c => c.product.id === item.id);
                     const qty = cartItem?.quantity ?? 0;
                     return (
                       <div key={item.id} style={{
                         display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px',
-                        borderBottom: i === arr.length - 1 ? 'none' : '1px solid #F5F5F5',
+                        borderBottom: i === items.length - 1 ? 'none' : '1px solid #F5F5F5',
                       }}>
                         <div style={{ width: 36, height: 36, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#FAFAFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -622,14 +649,14 @@ export default function HomePage() {
         </div>
         {cartCount > 0 ? (
           <button
-            onClick={() => setShowCheckout(true)}
+            onClick={() => router.push('/cart')}
             style={{
               background: '#ffd814', color: 'black',
               border: 'none', borderRadius: 8, padding: '10px 24px',
               fontWeight: 700, fontSize: 14, cursor: 'pointer',
             }}
           >
-            Proceed →
+            View Cart →
           </button>
         ) : (
           <div style={{ display: 'flex', gap: 16 }}>

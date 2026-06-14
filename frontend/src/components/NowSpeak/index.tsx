@@ -47,7 +47,7 @@ export function NowSpeak({ onProductSelect }: Props) {
         {messages.length === 0 && (
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center',
-            justifyContent: 'center', height: '100%', textAlign: 'center', paddingTop: 48,
+            justifyContent: 'flex-start', height: '100%', textAlign: 'center', paddingTop: 20,
           }}>
             <div style={{
               width: 72, height: 72, borderRadius: '50%', background: '#FFF3E0',

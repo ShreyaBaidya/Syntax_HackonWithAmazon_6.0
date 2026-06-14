@@ -17,5 +17,14 @@ class Settings(BaseSettings):
     dynamodb_orders_table: str = "amazon-now-orders"
     cors_origins: list[str] = ["http://localhost:3000", "http://localhost:3001"]
 
+    # Google Calendar — Service Account (Option B, no user login required)
+    google_service_account_json: str = ""   # path to JSON key file OR raw JSON string
+    google_calendar_id: str = ""            # e.g. abc@group.calendar.google.com
+
+    # Google OAuth2 (Option A, user-specific calendar)
+    google_client_id: str = ""
+    google_client_secret: str = ""
+    google_redirect_uri: str = "http://localhost:3000/auth/google-callback"
+
 
 settings = Settings()
