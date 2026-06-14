@@ -111,6 +111,34 @@ async def remove_item(
     return state
 
 
+@router.post(
+    "/cart/{cart_id}/leave",
+    response_model=CartState,
+    summary="Leave a shared cart (quit as participant)",
+    tags=["Shared Cart"],
+)
+async def leave_cart(
+    body: JoinCartRequest,
+    cart_id: str = Path(...),
+):
+    state = await cart_service.leave_cart(cart_id.upper(), body.participant_name)
+    if not state:
+        raise HTTPException(status_code=404, detail="Cart not found")
+    return state
+
+
+@router.delete(
+    "/cart/{cart_id}",
+    summary="Delete a shared cart (owner only)",
+    tags=["Shared Cart"],
+)
+async def delete_cart(cart_id: str = Path(...)):
+    success = await cart_service.delete_cart(cart_id.upper())
+    if not success:
+        raise HTTPException(status_code=404, detail="Cart not found")
+    return {"status": "deleted", "cart_id": cart_id.upper()}
+
+
 @router.get(
     "/cart/{cart_id}/stream",
     summary="SSE stream — real-time cart updates",

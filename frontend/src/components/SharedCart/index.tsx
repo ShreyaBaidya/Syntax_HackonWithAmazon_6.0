@@ -5,6 +5,7 @@ import {
   CartState, CartItem, CartSSEEvent, Product,
   openCartStream, addToSharedCart, updateCartItemQty, removeFromSharedCart,
   joinSharedCart, placeOrder, searchProducts, getProductsByCategory, getRecommendations,
+  leaveSharedCart, deleteSharedCart,
 } from '@/lib/api';
 
 interface Props {
@@ -296,9 +297,56 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
         </div>
       </div>
 
+      {/* ── Quit / Delete Cart ── */}
+      <div style={{ margin: '12px 8px 0', display: 'flex', gap: 8 }}>
+        {/* Quit Cart — available to everyone */}
+        <button
+          onClick={async () => {
+            if (!confirm('Are you sure you want to leave this cart?')) return;
+            try {
+              await leaveSharedCart(cartId, participantName);
+              sessionStorage.removeItem(`cart_name_${cartId}`);
+              window.location.href = '/';
+            } catch { alert('Could not leave cart'); }
+          }}
+          style={{
+            flex: 1, padding: '10px', borderRadius: 8,
+            border: '1px solid #DDD', background: 'white',
+            fontWeight: 600, fontSize: 12, cursor: 'pointer', color: '#555',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          }}
+        >
+          🚪 Quit Cart
+        </button>
+
+        {/* Delete Cart — owner only */}
+        {isOwner && (
+          <button
+            onClick={async () => {
+              if (!confirm('Delete this cart for everyone? This cannot be undone.')) return;
+              try {
+                await deleteSharedCart(cartId);
+                sessionStorage.removeItem(`cart_name_${cartId}`);
+                window.location.href = '/';
+              } catch { alert('Could not delete cart'); }
+            }}
+            style={{
+              flex: 1, padding: '10px', borderRadius: 8,
+              border: '1px solid #FCA5A5', background: '#FEF2F2',
+              fontWeight: 600, fontSize: 12, cursor: 'pointer', color: '#DC2626',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            }}
+          >
+            🗑️ Delete Cart
+          </button>
+        )}
+      </div>
+
       {/* ── Sticky checkout bar ── */}
       <div style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0,
+        position: 'fixed', bottom: 0,
+        left: '50%', transform: 'translateX(-50%)',
+        width: '100%', maxWidth: 800,
         background: 'white', borderTop: '1px solid #F0F0F0',
         padding: '12px 16px',
         boxShadow: '0 -4px 12px rgba(0,0,0,0.08)',
@@ -499,10 +547,32 @@ function CatalogOverlay({
   const isSearching = searchQuery.trim().length >= 2;
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 60,
-      background: '#F7F7F7', display: 'flex', flexDirection: 'column',
-    }}>
+    <>
+      {/* Blurred backdrop */}
+      <div style={{
+        position: 'fixed',
+        top: 0, bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100%',
+        maxWidth: 800,
+        zIndex: 59,
+        background: 'rgba(0,0,0,0.4)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
+      }} onClick={onClose} />
+
+      {/* Catalog panel */}
+      <div style={{
+        position: 'fixed',
+        top: 0, bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100%',
+        maxWidth: 800,
+        zIndex: 60,
+        background: '#F7F7F7', display: 'flex', flexDirection: 'column',
+      }}>
       {/* Header */}
       <div style={{
         background: '#0F1111', padding: '10px 12px',
@@ -516,7 +586,7 @@ function CatalogOverlay({
             <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
           </svg>
         </button>
-        <div style={{ flex: 1 }}>
+        <div className="blur-overlay" style={{ flex: 1 , backfaceVisibility: 'hidden'}}>
           <p style={{ color: 'white', fontWeight: 700, fontSize: 14, margin: 0 }}>
             Add to Shared Cart
           </p>
@@ -705,5 +775,6 @@ function CatalogOverlay({
         </button>
       </div>
     </div>
+    </>
   );
 }

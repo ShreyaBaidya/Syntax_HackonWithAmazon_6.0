@@ -48,13 +48,18 @@ export default function NowSpeakPage() {
 
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ color: '#FF9900', fontWeight: 700, fontSize: 15, fontStyle: 'italic' }}>amazon</span>
-            <span style={{
-              background: '#067D62', color: 'white',
-              fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 3,
-            }}>now</span>
-            <span style={{ color: '#FF9900', fontSize: 10 }}>⚡</span>
-            <span style={{ color: '#aaa', fontSize: 11 }}>· NowSpeak™</span>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <span style={{ color: 'white', fontWeight: 700, fontSize: 16, letterSpacing: '-0.5px', lineHeight: 1 }}>amazon</span>
+              <svg width="46" height="7" viewBox="0 0 46 7">
+                <path d="M1 2 Q12 7 23 6 Q34 5 45 2" stroke="#FF9900" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                <polygon points="41,1 45,3 42,5" fill="#FF9900"/>
+              </svg>
+            </div>
+            {/* cyan "now" badge */}
+            <div style={{ background: '#00C2E0', borderRadius: 3, padding: '2px 7px 3px', display: 'flex', alignItems: 'center' }}>
+              <span style={{ fontSize: 15, fontWeight: 800, color: '#0F1111', fontStyle: 'italic' }}>now</span>
+            </div>
           </div>
           <p style={{ color: '#67B0D1', fontSize: 10, margin: 0 }}>
             Voice + AI · 30-min delivery
@@ -85,6 +90,13 @@ export default function NowSpeakPage() {
           cart={cart}
           onOrderComplete={handleOrderComplete}
           onClose={() => setShowCheckout(false)}
+          onUpdateQty={(productId, qty) => {
+            if (qty <= 0) {
+              setCart(prev => prev.filter(i => i.product.id !== productId));
+            } else {
+              setCart(prev => prev.map(i => i.product.id === productId ? { ...i, quantity: qty } : i));
+            }
+          }}
         />
       )}
     </div>

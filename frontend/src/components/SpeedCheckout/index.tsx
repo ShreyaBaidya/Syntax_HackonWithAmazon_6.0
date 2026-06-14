@@ -9,11 +9,12 @@ interface Props {
   cart: CartItem[];
   onOrderComplete: (order: Order) => void;
   onClose: () => void;
+  onUpdateQty?: (productId: string, qty: number) => void;
 }
 
 type Phase = 'review' | 'biometric' | 'confirmed';
 
-export function SpeedCheckout({ cart, onOrderComplete, onClose }: Readonly<Props>) {
+export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty }: Readonly<Props>) {
   const [phase, setPhase] = useState<Phase>('review');
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState('');
@@ -101,7 +102,7 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose }: Readonly<Props
         </div>
 
         {/* Items */}
-        <div className="space-y-3 mb-5">
+        <div className="space-y-3 mb-5" style={{ maxHeight: '40vh', overflowY: 'auto' }}>
           {cart.map(item => (
             <div key={item.product.id} className="flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -114,9 +115,35 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose }: Readonly<Props
                 <p className="text-sm font-medium text-gray-900 leading-tight truncate">
                   {item.product.name}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">Qty: {item.quantity}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{item.product.unit}</p>
               </div>
-              <p className="font-semibold text-gray-900 flex-shrink-0">
+              {/* Qty stepper */}
+              {onUpdateQty ? (
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 0,
+                  background: '#FFD814', borderRadius: 20,
+                  border: '1px solid #F0C000', overflow: 'hidden',
+                }}>
+                  <button
+                    onClick={() => onUpdateQty(item.product.id, item.quantity - 1)}
+                    style={{ width: 26, height: 26, background: 'none', border: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 700 }}
+                  >
+                    {item.quantity === 1 ? '🗑' : '−'}
+                  </button>
+                  <span style={{ minWidth: 16, textAlign: 'center', fontSize: 12, fontWeight: 700 }}>
+                    {item.quantity}
+                  </span>
+                  <button
+                    onClick={() => onUpdateQty(item.product.id, item.quantity + 1)}
+                    style={{ width: 26, height: 26, background: 'none', border: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 700 }}
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
+                <p className="text-xs text-gray-400">×{item.quantity}</p>
+              )}
+              <p className="font-semibold text-gray-900 flex-shrink-0" style={{ minWidth: 44, textAlign: 'right' }}>
                 ₹{(item.product.price * item.quantity).toFixed(0)}
               </p>
             </div>

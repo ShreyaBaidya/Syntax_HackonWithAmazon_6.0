@@ -176,14 +176,36 @@ async def join_cart(cart_id: str, participant_name: str) -> Optional[CartState]:
     return _to_state(cart)
 
 
-async def leave_cart(cart_id: str, participant_name: str) -> None:
+async def leave_cart(cart_id: str, participant_name: str) -> Optional[CartState]:
     cart = _CARTS.get(cart_id)
     if not cart:
-        return
+        return None
     if participant_name in cart["participants"]:
         cart["participants"].remove(participant_name)
-    await _broadcast(cart_id, "participant_left",
-                     f"{participant_name} left the cart")
+        await _broadcast(cart_id, "participant_left",
+                         f"{participant_name} left the cart")
+    return _to_state(cart)
+
+
+async def delete_cart(cart_id: str) -> bool:
+    """Delete a cart entirely. Only the owner should call this."""
+    cart = _CARTS.pop(cart_id, None)
+    if not cart:
+        return False
+    # Notify all connected streams that the cart is gone
+    payload = json.dumps({
+        "type": "checkout",
+        "cart": None,
+        "message": "Cart has been deleted by the owner",
+    })
+    data = f"data: {payload}\n\n"
+    for q in list(_STREAMS.get(cart_id, [])):
+        try:
+            q.put_nowait(data)
+        except asyncio.QueueFull:
+            pass
+    _STREAMS.pop(cart_id, None)
+    return True
 
 
 async def stream_cart(cart_id: str):

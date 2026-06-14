@@ -23,17 +23,21 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
 
   const add = useCallback(() => {
     setQty(1);
-    onAddToCart?.(product, 1);
+    setTimeout(() => onAddToCart?.(product, 1), 0);
   }, [product, onAddToCart]);
 
   const inc = useCallback(() => {
-    setQty(q => { const n = q + 1; onAddToCart?.(product, n); return n; });
+    setQty(q => {
+      const n = q + 1;
+      setTimeout(() => onAddToCart?.(product, n), 0);
+      return n;
+    });
   }, [product, onAddToCart]);
 
   const dec = useCallback(() => {
     setQty(q => {
       const n = Math.max(0, q - 1);
-      onAddToCart?.(product, n);
+      setTimeout(() => onAddToCart?.(product, n), 0);
       return n;
     });
   }, [product, onAddToCart]);
@@ -79,19 +83,37 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
         boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
       }}>
         {/* Image */}
-        <div style={{ background: '#FAFAFA', position: 'relative', paddingTop: '90%', overflow: 'hidden' }}>
+        <div style={{ background: '#FAFAFA', position: 'relative', paddingTop: '70%', overflow: 'hidden' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={product.image_url} alt={product.name}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: 4 }}
+            style={{ position: 'absolute', inset: '8%', width: '84%', height: '84%', objectFit: 'contain' }}
           />
+          {/* Rating badge (top-left) */}
+          <div style={{
+            position: 'absolute', top: 3, left: 3,
+            background: 'rgba(255,255,255,0.92)', borderRadius: 3,
+            padding: '1px 4px', display: 'flex', alignItems: 'center', gap: 2,
+          }}>
+            <span style={{ fontSize: 8, color: '#0F1111', fontWeight: 600 }}>4.{Math.floor(Math.random() * 4 + 1)}</span>
+            <span style={{ fontSize: 7, color: '#FF9900' }}>★</span>
+          </div>
+          {/* ETA badge (top-right) */}
+          <div style={{
+            position: 'absolute', top: 3, right: 3,
+            background: 'rgba(255,255,255,0.92)', borderRadius: 3,
+            padding: '1px 4px', display: 'flex', alignItems: 'center', gap: 2,
+          }}>
+            <span style={{ fontSize: 7, color: '#067D62' }}>⚡</span>
+            <span style={{ fontSize: 8, color: '#067D62', fontWeight: 600 }}>{product.eta_min}m</span>
+          </div>
           {discount && discount > 0 && (
             <div style={{
-              position: 'absolute', top: 4, left: 4,
+              position: 'absolute', bottom: 3, left: 3,
               background: '#CC0C39', color: 'white',
               fontSize: 8, fontWeight: 700, padding: '1px 4px', borderRadius: 2,
             }}>
-              {discount}% off
+              {discount}% OFF
             </div>
           )}
         </div>
@@ -191,7 +213,7 @@ function AddBtn({
           background: '#FFD814', border: '1px solid #F0C000',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', fontSize, fontWeight: 700, color: '#0F1111',
-          flexShrink: 0,
+          flexShrink: 0, boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
         }}
       >
         +

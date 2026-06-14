@@ -141,8 +141,8 @@ export function RecommendationFeed({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginTop: 8 }}>
-      <div style={{ background: 'white', padding: '12px 12px 0' }}>
-        <h2 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#0F1111', paddingBottom: 10 }}>
+      <div style={{ background: 'white', padding: '14px 12px 0' }}>
+        <h2 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#0F1111', paddingBottom: 10 }}>
           {title}
         </h2>
       </div>
@@ -159,7 +159,7 @@ function ProductGrid4({ products, onProductSelect }: {
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
       gap: 8,
       padding: '8px 10px 12px',
     }}>

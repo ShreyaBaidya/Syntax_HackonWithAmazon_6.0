@@ -1,115 +1,227 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { CartItem } from '@/components/SpeedCheckout';
+import { searchProducts, Product } from '@/lib/api';
+import logo from './logo.png' ;
 
 interface Props {
   cart: CartItem[];
   onCartClick: () => void;
+  onProductSelect?: (product: Product, qty: number) => void;
 }
 
-export function AmazonHeader({ cart, onCartClick }: Props) {
+export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
   const router = useRouter();
-  const cartTotal = cart.reduce((s, i) => s + i.product.price * i.quantity, 0);
-  const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<Product[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Debounced search
+  useEffect(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    const q = query.trim();
+    if (q.length < 2) { setResults([]); setSearching(false); return; }
+    setSearching(true);
+    timerRef.current = setTimeout(async () => {
+      try {
+        const res = await searchProducts(q, 8);
+        setResults(res);
+      } catch { setResults([]); }
+      finally { setSearching(false); }
+    }, 300);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [query]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(e.target as Node) &&
+        inputRef.current && !inputRef.current.contains(e.target as Node)
+      ) {
+        setFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleAdd = useCallback((product: Product) => {
+    onProductSelect?.(product, 1);
+    setQuery('');
+    setResults([]);
+    setFocused(false);
+    inputRef.current?.blur();
+  }, [onProductSelect]);
+
+  const showDropdown = focused && query.trim().length >= 2;
 
   return (
-    <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'white' }}>
+    <header style={{ position: 'sticky', top: 0, zIndex: 50 }}>
 
-      {/* ── Row 1: ETA + Location strip (yellow) ─────────────────────── */}
+      {/* ── Row 1: Teal top bar ── */}
       <div style={{
-        background: '#FFD814',
-        padding: '5px 12px',
-        display: 'flex', alignItems: 'center', gap: 5,
+        background: 'white',
+        padding: '8px 12px',
+        display: 'flex', alignItems: 'center',
       }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: '#0F1111' }}>⚡ 30 mins</span>
-        <span style={{ fontSize: 11, color: '#565959', margin: '0 4px' }}>·</span>
-        <svg width="10" height="12" fill="#0F1111" viewBox="0 0 24 24">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-        </svg>
-        <span style={{ fontSize: 11, color: '#0F1111', fontWeight: 500 }}>
-          Deliver to <strong>Your Location</strong>
-        </span>
-        <span style={{ fontSize: 10, color: '#0F1111' }}>▾</span>
+        {/* Profile icon */}
+        <div
+          onClick={() => router.push('/orders')}
+          style={{
+            width: 32, height: 32, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.2)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0, cursor: 'pointer',
+          }}
+        >
+          <svg width="18" height="18" fill="white" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </div>
+
+        {/* Centered logo — matches Amazon Now brand */}
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+          <img
+            src={logo.src}
+            alt="Amazon Now"
+            style={{ height: 25 }}/>
+        </div>
+
+        {/* Notification icon */}
+        <div style={{
+          width: 32, height: 32, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.15)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+        }}>
+          <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+          </svg>
+        </div>
       </div>
 
-      {/* ── Row 2: Logo + Search + Cart ──────────────────────────────── */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        padding: '8px 10px', borderBottom: '1px solid #E8E8E8',
-      }}>
-        {/* Amazon Now logo */}
-        <button
-          onClick={() => router.push('/')}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0 }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{
-                fontFamily: 'Amazon Ember, Georgia, serif',
-                fontSize: 18, fontWeight: 400, color: '#0F1111', letterSpacing: '-0.5px',
-              }}>amazon</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 2, marginTop: -2 }}>
-              <span style={{
-                fontSize: 13, fontWeight: 700, color: '#067D62', letterSpacing: '0px',
-              }}>now</span>
-              <div style={{
-                width: 14, height: 14, background: '#067D62', borderRadius: '50%',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <span style={{ color: 'white', fontSize: 8, lineHeight: 1 }}>✓</span>
-              </div>
-            </div>
-          </div>
-        </button>
+      {/* ── Row 2: Delivery address ── */}
+      <div style={{ background: '#E0F2F1', padding: '5px 12px', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ background: '#FFD814', borderRadius: 5, padding: '2px 7px', display: 'flex', gap: 2, flexShrink: 0 }}>
+          <span style={{ fontSize: 10, fontWeight: 800, color: '#0F1111' }}>⚡8</span>
+          <span style={{ fontSize: 10, color: '#0F1111', fontWeight: 600 }}>mins</span>
+        </div>
+        <svg width="10" height="12" fill="#00695C" viewBox="0 0 24 24">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        <span style={{ fontSize: 10, color: '#004D40', fontWeight: 500, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          Deliver to <strong>Flat no-301, Geetanjali Aristocracy, Whitefield, Bengaluru</strong>
+        </span>
+        <span style={{ fontSize: 10, color: '#00695C', fontWeight: 700 }}>▾</span>
+      </div>
 
-        {/* Search bar */}
-        <button
-          onClick={() => router.push('/nowspeak')}
-          style={{
-            flex: 1, display: 'flex', alignItems: 'center', gap: 8,
-            background: '#F3F3F3', border: '1px solid #DDD',
-            borderRadius: 6, padding: '8px 12px', cursor: 'pointer',
-            textAlign: 'left',
-          }}
-        >
-          <svg width="16" height="16" fill="#999" viewBox="0 0 24 24">
+      {/* ── Row 3: Real search input with dropdown ── */}
+      <div style={{ background: 'white', padding: '8px 12px', borderBottom: '1px solid #E0E0E0', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid', borderColor: focused ? '#00695C' : '#CCC', borderRadius: 8, overflow: 'hidden', background: 'white' }}>
+          {/* Search icon */}
+          <svg style={{ marginLeft: 10, flexShrink: 0 }} width="16" height="16" fill="#888" viewBox="0 0 24 24">
             <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
           </svg>
-          <span style={{ color: '#999', fontSize: 13 }}>Search for...</span>
-        </button>
 
-        {/* Cart */}
-        <button
-          onClick={onCartClick}
-          style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 4, padding: 4,
-          }}
-        >
-          <div style={{ position: 'relative' }}>
-            <svg width="26" height="26" fill="#0F1111" viewBox="0 0 24 24">
-              <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59L5.25 14c-.16.28-.25.61-.25.96C5 16.1 5.9 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03L23 6H5.21l-.67-4H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
-            {cartCount > 0 && (
-              <span style={{
-                position: 'absolute', top: -4, right: -4,
-                background: '#FF9900', color: 'white',
-                borderRadius: '50%', width: 16, height: 16,
-                fontSize: 9, fontWeight: 700,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                {cartCount}
-              </span>
-            )}
-          </div>
-          {cartTotal > 0 && (
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#0F1111' }}>
-              ₹{cartTotal.toFixed(0)}
-            </span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onFocus={() => setFocused(true)}
+            placeholder='Search for "Atta", "Milk", "Medicine"…'
+            style={{
+              flex: 1, border: 'none', outline: 'none',
+              fontSize: 13, padding: '9px 0', color: '#0F1111', background: 'transparent',
+            }}
+          />
+
+          {/* Clear button */}
+          {query.length > 0 && (
+            <button
+              onClick={() => { setQuery(''); setResults([]); inputRef.current?.focus(); }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 6px', color: '#888', fontSize: 16 }}
+            >
+              ✕
+            </button>
           )}
-        </button>
+
+          {/* Mic — opens NowSpeak for voice */}
+          <button
+            onClick={() => router.push('/nowspeak')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 10px 0 4px', fontSize: 16 }}
+            title="Voice search"
+          >
+            🎤
+          </button>
+        </div>
+
+        {/* Search dropdown */}
+        {showDropdown && (
+          <div
+            ref={dropdownRef}
+            style={{
+              position: 'absolute', top: '100%', left: 12, right: 12,
+              background: 'white', borderRadius: '0 0 8px 8px',
+              border: '1.5px solid #00695C', borderTop: 'none',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+              zIndex: 100, maxHeight: 320, overflowY: 'auto',
+            }}
+          >
+            {searching && (
+              <div style={{ padding: '12px 16px', fontSize: 12, color: '#888', textAlign: 'center' }}>
+                Searching…
+              </div>
+            )}
+            {!searching && results.length === 0 && (
+              <div style={{ padding: '12px 16px', fontSize: 12, color: '#888', textAlign: 'center' }}>
+                No products found for &quot;{query}&quot;
+              </div>
+            )}
+            {!searching && results.map((product, i) => (
+              <div
+                key={product.id}
+                onClick={() => handleAdd(product)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '10px 14px', cursor: 'pointer',
+                  borderBottom: i === results.length - 1 ? 'none' : '1px solid #F5F5F5',
+                  background: 'white',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#F7FAF7')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'white')}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={product.image_url} alt={product.name}
+                  style={{ width: 40, height: 40, objectFit: 'contain', borderRadius: 6, background: '#FAFAFA', flexShrink: 0 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ margin: 0, fontSize: 12, fontWeight: 500, color: '#0F1111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {product.name}
+                  </p>
+                  <p style={{ margin: '2px 0 0', fontSize: 10, color: '#888' }}>{product.unit} · ⚡{product.eta_min} min</p>
+                </div>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#0F1111' }}>₹{product.price}</p>
+                </div>
+                <button
+                  onClick={e => { e.stopPropagation(); handleAdd(product); }}
+                  style={{
+                    background: '#FFD814', border: '1px solid #F0C000', borderRadius: 6,
+                    padding: '4px 10px', fontWeight: 700, fontSize: 11, cursor: 'pointer', flexShrink: 0,
+                  }}
+                >
+                  + Add
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   );

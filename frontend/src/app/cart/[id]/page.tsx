@@ -33,7 +33,11 @@ export default function CartPage() {
           setStep('name');
         }
       })
-      .catch(() => setStep('error'));
+      .catch(() => {
+        // Cart not found — clean up stale session data
+        sessionStorage.removeItem(`cart_name_${cartId}`);
+        setStep('error');
+      });
   }, [cartId]);
 
   const handleJoin = async () => {

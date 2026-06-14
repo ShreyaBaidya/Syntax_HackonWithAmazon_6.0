@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getRecommendations, Recommendations, Product, Order, createSharedCart, getSharedCart } from '@/lib/api';
+import { getRecommendations, Recommendations, Product, Order, createSharedCart, getSharedCart, getRefillSuggestions, RefillSuggestions } from '@/lib/api';
 import { RecommendationFeed } from '@/components/RecommendationFeed';
 import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
 import { AmazonHeader } from '@/components/AmazonHeader';
@@ -12,7 +12,23 @@ export default function HomePage() {
   const [recs, setRecs] = useState<Recommendations | null>(null);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
+
+  // Load cart from localStorage on mount (client-only)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('amazon_now_cart');
+      if (saved) setCart(JSON.parse(saved));
+    } catch { /* ignore */ }
+  }, []);
+
+  // Persist cart to localStorage on every change
+  useEffect(() => {
+    localStorage.setItem('amazon_now_cart', JSON.stringify(cart));
+  }, [cart]);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [refill, setRefill] = useState<RefillSuggestions | null>(null);
+  const [refillExpanded, setRefillExpanded] = useState(false);
+  const [refillTab, setRefillTab] = useState<'daily' | 'weekly' | 'biweekly' | 'monthly'>('weekly');
   const [startingSharedCart, setStartingSharedCart] = useState(false);
   const [showJoinInput, setShowJoinInput] = useState(false);
   const [joinLink, setJoinLink] = useState('');
@@ -26,14 +42,18 @@ export default function HomePage() {
     const cartKey = keys.find(k => k.startsWith('cart_name_'));
     if (cartKey) {
       const id = cartKey.replace('cart_name_', '');
-      setActiveSharedCartId(id);
-      // Fetch latest cart state for the total
+      // Verify the cart still exists on the backend
       getSharedCart(id)
         .then(c => {
+          setActiveSharedCartId(id);
           setSharedCartTotal(c.total);
           setSharedCartItemCount(c.item_count);
         })
-        .catch(() => { /* cart may have expired */ });
+        .catch(() => {
+          // Cart expired or backend restarted — clean up stale session
+          sessionStorage.removeItem(cartKey);
+          setActiveSharedCartId(null);
+        });
     }
   }, []);
 
@@ -73,6 +93,9 @@ export default function HomePage() {
       .then(setRecs)
       .catch(console.error)
       .finally(() => setLoading(false));
+    getRefillSuggestions(undefined, cart.map(i => i.product.name))
+      .then(setRefill)
+      .catch(console.error);
   }, []);
 
   const handleProductSelect = useCallback((product: Product, qty: number) => {
@@ -89,15 +112,23 @@ export default function HomePage() {
     setTimeout(() => setShowCheckout(false), 3200);
   };
 
+  const handleAddAllRefill = useCallback(() => {
+    if (!refill) return;
+    refill.items.forEach(item => {
+      handleProductSelect(item as unknown as Product, 1);
+    });
+  }, [refill, handleProductSelect]);
+
   const cartTotal = cart.reduce((s, i) => s + i.product.price * i.quantity, 0);
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   return (
-    <div style={{ background: '#F7F7F7', minHeight: '100vh', paddingBottom: cartCount > 0 ? 72 : 0 }}>
+    <div style={{ background: '#F7F7F7', minHeight: '100vh', paddingBottom: 60 }}>
       {/* Amazon Now white header */}
       <AmazonHeader
         cart={cart}
         onCartClick={() => cartCount > 0 && setShowCheckout(true)}
+        onProductSelect={handleProductSelect}
       />
 
       {/* NowSpeak CTA banner */}
@@ -127,7 +158,8 @@ export default function HomePage() {
         </svg>
       </div>
 
-      {/* Shared Cart CTAs — Start & Join */}
+      {/* Shared Cart CTAs — Start & Join (hidden when a cart is active) */}
+      {!activeSharedCartId && (
       <div style={{ margin: '6px 10px 0', display: 'flex', gap: 8 }}>
         {/* Start a new cart */}
         <div
@@ -182,6 +214,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Join Cart modal/input */}
       {showJoinInput && (
@@ -255,40 +288,220 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Assured cashback strip */}
+      {/* Cashback & offers strip — Amazon Now style */}
       <div style={{
-        background: 'white', margin: '8px 0 0', padding: '10px 14px',
-        display: 'flex', alignItems: 'center', gap: 12,
+        background: 'white', margin: '8px 0 0', padding: '10px 12px',
         borderTop: '1px solid #F0F0F0', borderBottom: '1px solid #F0F0F0',
-        overflowX: 'auto',
+        display: 'flex', alignItems: 'center', gap: 8, overflowX: 'auto',
       }}>
-        {[
-          { icon: '🏅', label: 'Assured\ncashback' },
-          { icon: '🔄', label: '0% Extra\nFees' },
-          { icon: '⚡', label: '30 min\nDelivery' },
-          { icon: '🛡️', label: '100%\nSafe' },
-          { icon: '↩️', label: 'Easy\nReturns' },
-        ].map(item => (
-          <div key={item.label} style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center',
-            gap: 3, flexShrink: 0, minWidth: 52,
-          }}>
-            <div style={{
-              width: 36, height: 36, background: '#FFF8E1',
-              borderRadius: '50%', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', fontSize: 18,
-            }}>
-              {item.icon}
-            </div>
-            <span style={{ fontSize: 9, color: '#565959', textAlign: 'center', whiteSpace: 'pre-line', lineHeight: 1.2 }}>
-              {item.label}
-            </span>
-          </div>
-        ))}
+        <div style={{
+          flexShrink: 0, background: '#FFFBEB', border: '1.5px solid #FDE68A',
+          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 90,
+        }}>
+          <p style={{ margin: 0, fontSize: 9, fontWeight: 700, color: '#92400E' }}>Assured</p>
+          <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: '#B45309' }}>cashback</p>
+          <p style={{ margin: 0, fontSize: 9, color: '#92400E', fontStyle: 'italic' }}>every time</p>
+        </div>
+        <div style={{
+          flexShrink: 0, background: '#FFF7ED', border: '1.5px solid #FED7AA',
+          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 80,
+        }}>
+          <p style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#EA580C' }}>₹50</p>
+          <p style={{ margin: 0, fontSize: 9, color: '#9A3412' }}>above ₹399</p>
+        </div>
+        <div style={{
+          flexShrink: 0, background: '#EFF6FF', border: '1.5px solid #BFDBFE',
+          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 80,
+        }}>
+          <p style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#2563EB' }}>₹100</p>
+          <p style={{ margin: 0, fontSize: 9, color: '#1E40AF' }}>above ₹749</p>
+        </div>
+        <div style={{
+          flexShrink: 0, background: '#F0FDF4', border: '1.5px solid #BBF7D0',
+          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 80,
+        }}>
+          <p style={{ margin: '0 0 1px', fontSize: 8, fontWeight: 600, color: '#065F46' }}>✓ prime</p>
+          <p style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#059669' }}>₹200</p>
+          <p style={{ margin: 0, fontSize: 9, color: '#065F46' }}>above ₹1399</p>
+        </div>
       </div>
 
       {/* Products */}
       <div style={{ marginTop: 0 }}>
+
+        {/* Home Refill Card */}
+        {refill && refill.item_count > 0 && (
+          <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, overflow: 'hidden', border: '1px solid #E8F5E9' }}>
+            {/* Header */}
+            <div
+              onClick={() => setRefillExpanded(!refillExpanded)}
+              style={{
+                padding: '12px 14px',
+                background: 'linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%)',
+                display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+              }}
+            >
+              <div style={{
+                width: 40, height: 40, background: 'white',
+                borderRadius: '50%', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontSize: 20, flexShrink: 0,
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              }}>🏠</div>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontWeight: 800, fontSize: 13, color: '#0F1111' }}>
+                  Home Refill Ready
+                </p>
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#555' }}>
+                  {refillExpanded && refill.grouped
+                    ? (() => {
+                        const tabItems = refill.grouped[refillTab]?.items ?? [];
+                        // Count how many tab items are in cart and their total
+                        const inCartItems = tabItems.filter(i => cart.find(c => c.product.id === i.id));
+                        const tabCartTotal = tabItems.reduce((s, i) => {
+                          const cartItem = cart.find(c => c.product.id === i.id);
+                          return s + (cartItem ? cartItem.product.price * cartItem.quantity : 0);
+                        }, 0);
+                        const tabStaticTotal = tabItems.reduce((s, i) => s + i.price, 0);
+                        const tabLabels: Record<string, string> = { daily: 'Daily', weekly: 'Weekly', biweekly: 'Bi-weekly', monthly: 'Monthly' };
+                        return (
+                          <>
+                            {tabLabels[refillTab]} · {tabItems.length} items · <strong>₹{tabStaticTotal.toFixed(0)}</strong>
+                            {inCartItems.length > 0 && (
+                              <span style={{ color: '#067D62', marginLeft: 6 }}>
+                                · {inCartItems.length} in cart ₹{tabCartTotal.toFixed(0)}
+                              </span>
+                            )}
+                          </>
+                        );
+                      })()
+                    : <>{refill.item_count} items likely running low · <strong>₹{refill.total.toFixed(0)}</strong></>
+                  }
+                </p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (refillExpanded && refill.grouped) {
+                    // Add only the active tab's items
+                    const tabItems = refill.grouped[refillTab]?.items ?? [];
+                    tabItems.forEach(item => handleProductSelect(item as unknown as Product, 1));
+                  } else {
+                    handleAddAllRefill();
+                  }
+                }}
+                style={{
+                  background: '#FFD814', color: '#0F1111', border: 'none',
+                  borderRadius: 6, padding: '7px 14px', fontWeight: 700,
+                  fontSize: 11, cursor: 'pointer', whiteSpace: 'nowrap',
+                }}
+              >
+                Add All →
+              </button>
+            </div>
+
+            {/* Tabs + item list */}
+            {refillExpanded && refill.grouped && (
+              <div style={{ borderTop: '1px solid #E8F5E9' }}>
+                {/* Tab bar */}
+                <div style={{ display: 'flex', borderBottom: '1px solid #E8F5E9', background: '#FAFEF8' }}>
+                  {(['daily', 'weekly', 'biweekly', 'monthly'] as const).map(tab => {
+                    const group = refill.grouped[tab];
+                    const count = group?.items?.length ?? 0;
+                    const labels: Record<string, string> = {
+                      daily: '🛒 Daily', weekly: '📅 Weekly',
+                      biweekly: '🗓️ Bi-weekly', monthly: '📦 Monthly',
+                    };
+                    return (
+                      <button
+                        key={tab}
+                        onClick={() => setRefillTab(tab)}
+                        style={{
+                          flex: 1, padding: '8px 4px', border: 'none', cursor: 'pointer',
+                          background: refillTab === tab ? 'white' : 'transparent',
+                          borderBottom: refillTab === tab ? '2px solid #067D62' : '2px solid transparent',
+                          fontSize: 10, fontWeight: refillTab === tab ? 700 : 400,
+                          color: refillTab === tab ? '#067D62' : '#888',
+                        }}
+                      >
+                        {labels[tab]}
+                        {count > 0 && (
+                          <span style={{
+                            marginLeft: 3, background: refillTab === tab ? '#067D62' : '#DDD',
+                            color: refillTab === tab ? 'white' : '#666',
+                            borderRadius: 8, padding: '0 4px', fontSize: 9,
+                          }}>{count}</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Active tab sublabel */}
+                {refill.grouped[refillTab]?.sublabel && (
+                  <div style={{ padding: '4px 14px', background: '#F9FFF9' }}>
+                    <span style={{ fontSize: 9, color: '#888' }}>{refill.grouped[refillTab].sublabel}</span>
+                  </div>
+                )}
+
+                {/* Items for active tab */}
+                {(refill.grouped[refillTab]?.items ?? []).length === 0 ? (
+                  <div style={{ padding: '16px 14px', textAlign: 'center' }}>
+                    <span style={{ fontSize: 11, color: '#aaa' }}>No items in this frequency</span>
+                  </div>
+                ) : (
+                  (refill.grouped[refillTab]?.items ?? []).map((item, i) => {
+                    const cartItem = cart.find(c => c.product.id === item.id);
+                    const qty = cartItem?.quantity ?? 0;
+                    const items = refill.grouped[refillTab].items;
+                    return (
+                      <div key={item.id} style={{
+                        display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px',
+                        borderBottom: i === items.length - 1 ? 'none' : '1px solid #F5F5F5',
+                      }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#FAFAFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={item.image_url} alt={item.name} style={{ width: 32, height: 32, objectFit: 'contain' }} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ margin: 0, fontSize: 11, fontWeight: 500, color: '#0F1111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {item.name}
+                          </p>
+                          <p style={{ margin: '1px 0 0', fontSize: 9, color: '#F59E0B' }}>
+                            {item.ai_reason || item.refill_info.reason}
+                          </p>
+                        </div>
+                        <span style={{ fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
+                          {qty > 1 ? (
+                            <>₹{(item.price * qty).toFixed(0)} <span style={{ fontSize: 9, color: '#888', textDecoration: 'line-through' }}>₹{item.price.toFixed(0)}</span></>
+                          ) : `₹${item.price.toFixed(2)}`}
+                        </span>
+                        {qty === 0 ? (
+                          <button onClick={() => handleProductSelect(item as unknown as Product, 1)} style={{ background: '#FFD814', border: '1px solid #F0C000', borderRadius: '50%', width: 26, height: 26, fontSize: 16, fontWeight: 700, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
+                            <button onClick={() => handleProductSelect(item as unknown as Product, 0)} style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '50%', width: 24, height: 24, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DC2626' }}>🗑</button>
+                            <div style={{ display: 'flex', alignItems: 'center', background: '#FFD814', borderRadius: 20, border: '1px solid #F0C000', overflow: 'hidden' }}>
+                              <button onClick={() => handleProductSelect(item as unknown as Product, qty - 1)} style={{ width: 24, height: 24, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>−</button>
+                              <span style={{ minWidth: 16, textAlign: 'center', fontSize: 11, fontWeight: 700 }}>{qty}</span>
+                              <button onClick={() => handleProductSelect(item as unknown as Product, qty + 1)} style={{ width: 24, height: 24, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>+</button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+
+            {/* Tap to expand hint */}
+            {!refillExpanded && (
+              <div style={{ padding: '6px 14px', textAlign: 'center' }}>
+                <span style={{ fontSize: 10, color: '#888' }}>Tap to see items ▼</span>
+              </div>
+            )}
+          </div>
+        )}
         {loading ? (
           <LoadingSkeleton />
         ) : recs ? (
@@ -315,89 +528,96 @@ export default function HomePage() {
           onClick={() => router.push(`/cart/${activeSharedCartId}`)}
           style={{
             position: 'fixed',
-            bottom: cartCount > 0 && !showCheckout ? 108 : 52,
+            bottom: 58,
             left: '50%', transform: 'translateX(-50%)',
             zIndex: 41,
-            background: 'linear-gradient(135deg, #065F46 0%, #059669 100%)',
-            color: 'white',
+            background: '#FFD814',
+            color: '#0F1111',
             borderRadius: 24, padding: '8px 18px',
             display: 'flex', alignItems: 'center', gap: 8,
             cursor: 'pointer',
-            boxShadow: '0 4px 14px rgba(5,150,105,0.4)',
+            boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
             transition: 'bottom 0.2s ease',
           }}
         >
           <span style={{ fontSize: 16 }}>👥</span>
-          <span style={{ fontSize: 12, fontWeight: 700 }}>Shared Cart</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#0F1111' }}>Shared Cart</span>
           {sharedCartItemCount > 0 ? (
             <span style={{
-              background: 'rgba(255,255,255,0.25)', borderRadius: 10,
+              background: '#0F1111', color: 'white', borderRadius: 10,
               padding: '2px 8px', fontSize: 11, fontWeight: 700,
             }}>₹{sharedCartTotal.toFixed(0)} · {sharedCartItemCount} items</span>
           ) : (
             <span style={{
-              background: 'rgba(255,255,255,0.25)', borderRadius: 10,
+              background: '#0F1111', color: 'white', borderRadius: 10,
               padding: '2px 8px', fontSize: 11, fontWeight: 600,
             }}>View</span>
           )}
-          <svg width="14" height="14" fill="white" viewBox="0 0 24 24">
+          <svg width="14" height="14" fill="#0F1111" viewBox="0 0 24 24">
             <path d="M10 17l5-5-5-5v10z"/>
           </svg>
         </div>
       )}
 
-      {/* Amazon-style bottom nav */}
+      {/* Amazon-style bottom nav — sticky cart bar */}
       <nav style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0,
+        position: 'fixed', bottom: 0,
+        left: '50%', transform: 'translateX(-50%)',
+        width: '100%', maxWidth: 800,
         background: 'white', borderTop: '1px solid #E0E0E0',
-        display: 'flex', justifyContent: 'space-around', alignItems: 'center',
-        padding: '6px 0 8px', zIndex: 40,
+        padding: '8px 12px', zIndex: 40,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        <NavTab icon="🏠" label="Home" active />
-        <NavTab icon="🔍" label="Search" onClick={() => router.push('/nowspeak')} />
-        <NavTab icon="🛒" label="Cart" badge={cartCount} onClick={() => cartCount > 0 && setShowCheckout(true)} />
-        <NavTab icon="👤" label="Account" />
-      </nav>
-
-      {/* Bottom cart proceed bar (when items in cart) */}
-      {cartCount > 0 && !showCheckout && (
-        <div style={{
-          position: 'fixed', bottom: 56, left: 0, right: 0, zIndex: 39,
-          background: 'white', borderTop: '1px solid #E0E0E0',
-          padding: '8px 12px',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button onClick={() => router.push('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+            <svg width="22" height="22" fill="#0F1111" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <div style={{ position: 'relative' }}>
-              <svg width="24" height="24" fill="#0F1111" viewBox="0 0 24 24">
+              <svg width="22" height="22" fill="#0F1111" viewBox="0 0 24 24">
                 <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59L5.25 14c-.16.28-.25.61-.25.96C5 16.1 5.9 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03L23 6H5.21l-.67-4H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
               </svg>
-              <span style={{
-                position: 'absolute', top: -3, right: -3,
-                background: '#FF9900', color: 'white', borderRadius: '50%',
-                width: 14, height: 14, fontSize: 8, fontWeight: 700,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>{cartCount}</span>
+              {cartCount > 0 && (
+                <span style={{
+                  position: 'absolute', top: -4, right: -4,
+                  background: '#FF9900', color: 'white', borderRadius: '50%',
+                  width: 14, height: 14, fontSize: 8, fontWeight: 700,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>{cartCount}</span>
+              )}
             </div>
-            <div>
-              <p style={{ fontSize: 11, color: '#0F1111', margin: 0, fontWeight: 500 }}>
-                ₹{cartTotal.toFixed(0)} · {cartCount} item{cartCount > 1 ? 's' : ''}
-              </p>
-            </div>
+            {cartCount > 0 && (
+              <div>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: '#0F1111' }}>₹{cartTotal.toFixed(0)}</p>
+                <p style={{ margin: 0, fontSize: 9, color: '#888' }}>{cartCount} item{cartCount > 1 ? 's' : ''}</p>
+              </div>
+            )}
           </div>
+        </div>
+        {cartCount > 0 ? (
           <button
             onClick={() => setShowCheckout(true)}
             style={{
-              background: '#FFD814', color: '#0F1111',
-              border: 'none', borderRadius: 8, padding: '8px 20px',
+              background: '#ffd814', color: 'black',
+              border: 'none', borderRadius: 8, padding: '10px 24px',
               fontWeight: 700, fontSize: 14, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 6,
             }}
           >
             Proceed →
           </button>
-        </div>
-      )}
+        ) : (
+          <div style={{ display: 'flex', gap: 16 }}>
+            <button onClick={() => router.push('/nowspeak')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+              <svg width="20" height="20" fill="#888" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <span style={{ fontSize: 9, color: '#888' }}>Search</span>
+            </button>
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+              <svg width="20" height="20" fill="#888" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              <span style={{ fontSize: 9, color: '#888' }}>Account</span>
+            </button>
+          </div>
+        )}
+      </nav>
 
       {/* Checkout modal */}
       {showCheckout && cart.length > 0 && (
@@ -405,37 +625,16 @@ export default function HomePage() {
           cart={cart}
           onOrderComplete={handleOrderComplete}
           onClose={() => setShowCheckout(false)}
+          onUpdateQty={(productId, qty) => {
+            if (qty <= 0) {
+              setCart(prev => prev.filter(i => i.product.id !== productId));
+            } else {
+              setCart(prev => prev.map(i => i.product.id === productId ? { ...i, quantity: qty } : i));
+            }
+          }}
         />
       )}
     </div>
-  );
-}
-
-function NavTab({ icon, label, active, badge, onClick }: {
-  icon: string; label: string; active?: boolean; badge?: number; onClick?: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        gap: 2, background: 'none', border: 'none',
-        cursor: 'pointer', position: 'relative', padding: '2px 16px',
-      }}
-    >
-      <span style={{ fontSize: 20 }}>{icon}</span>
-      {badge !== undefined && badge > 0 && (
-        <span style={{
-          position: 'absolute', top: 0, right: 8,
-          background: '#CC0C39', color: 'white', borderRadius: '50%',
-          width: 14, height: 14, fontSize: 8, fontWeight: 700,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>{badge}</span>
-      )}
-      <span style={{ fontSize: 10, fontWeight: active ? 700 : 400, color: active ? '#0F1111' : '#888' }}>
-        {label}
-      </span>
-    </button>
   );
 }
 

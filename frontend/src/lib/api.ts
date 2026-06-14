@@ -62,6 +62,50 @@ export type Order = {
   total_amount: number;
 };
 
+export type OrderHistoryItem = {
+  order_id: string;
+  status: string;
+  estimated_delivery: string;
+  eta_minutes: number;
+  total_amount: number;
+  items: { product_id: string; quantity: number }[];
+  delivery_address: string;
+  created_at: string;
+  payment_method?: string;
+};
+
+export type RefillItem = Product & {
+  refill_info: {
+    avg_gap_days: number;
+    days_since_last: number;
+    urgency: number;
+    frequency: 'daily' | 'weekly' | 'biweekly' | 'monthly';
+    reason: string;
+    last_purchased: string;
+  };
+  ai_reason?: string;
+};
+
+export type RefillGroup = {
+  label: string;
+  sublabel: string;
+  items: RefillItem[];
+};
+
+export type RefillSuggestions = {
+  bundle_name: string;
+  subtitle: string;
+  total: number;
+  item_count: number;
+  items: RefillItem[];
+  grouped: {
+    daily: RefillGroup;
+    weekly: RefillGroup;
+    biweekly: RefillGroup;
+    monthly: RefillGroup;
+  };
+};
+
 // ── API calls ─────────────────────────────────────────────────────────────────
 
 export async function getProductsByCategory(
@@ -91,6 +135,18 @@ export async function getRecommendations(userId?: string): Promise<Recommendatio
   return res.json();
 }
 
+export async function getRefillSuggestions(userId?: string, cartItemNames?: string[]): Promise<RefillSuggestions> {
+  const params = new URLSearchParams();
+  if (userId) params.set('user_id', userId);
+  if (cartItemNames && cartItemNames.length > 0) {
+    params.set('cart_items', cartItemNames.join(','));
+  }
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const res = await fetch(`${API_BASE}/api/v1/refill-suggestions${query}`);
+  if (!res.ok) throw new Error(`Refill suggestions fetch failed: ${res.status}`);
+  return res.json();
+}
+
 export async function placeOrder(payload: {
   user_id: string;
   items: { product_id: string; quantity: number }[];
@@ -103,6 +159,13 @@ export async function placeOrder(payload: {
   });
   if (!res.ok) throw new Error(`Order failed: ${res.status}`);
   return res.json();
+}
+
+export async function getOrderHistory(userId = 'demo_user'): Promise<OrderHistoryItem[]> {
+  const res = await fetch(`${API_BASE}/api/v1/orders?user_id=${encodeURIComponent(userId)}`);
+  if (!res.ok) throw new Error(`Order history failed: ${res.status}`);
+  const data = await res.json();
+  return data.orders ?? [];
 }
 
 // ── Shared Cart API ───────────────────────────────────────────────────────────
@@ -175,6 +238,23 @@ export async function removeFromSharedCart(
 
 export function openCartStream(cartId: string): EventSource {
   return new EventSource(`${API_BASE}/api/v1/cart/${cartId}/stream`);
+}
+
+export async function leaveSharedCart(cartId: string, participantName: string): Promise<CartState> {
+  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/leave`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ participant_name: participantName }),
+  });
+  if (!res.ok) throw new Error(`Leave cart failed: ${res.status}`);
+  return res.json();
+}
+
+export async function deleteSharedCart(cartId: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error(`Delete cart failed: ${res.status}`);
 }
 
 /**
