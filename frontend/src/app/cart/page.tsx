@@ -133,8 +133,17 @@ export default function CartPage() {
     setPhase('biometric');
     await new Promise(r => setTimeout(r, 1800));
     try {
+      let userId = 'demo_user';
+      try {
+        const stored = localStorage.getItem('amazon_now_user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          userId = parsed.user_id || 'demo_user';
+        }
+      } catch { /* ignore */ }
+
       const result = await placeOrder({
-        user_id: 'demo_user',
+        user_id: userId,
         items: items.map(i => ({ product_id: i.product.id, quantity: i.quantity })),
         delivery_address: 'B-42, Sector 18, Noida, UP 201301',
       });

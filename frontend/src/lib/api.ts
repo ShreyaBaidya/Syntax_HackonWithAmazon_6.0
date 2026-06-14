@@ -1,3 +1,4 @@
+import type { CartResponse, IntentRequest, OccasionRequest, OutcomeRequest, URLPromptRequest, Occasion } from '@/types';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 
 // ── Coupon types (mirrors backend app/models/coupon.py) ───────────────────────
@@ -331,7 +332,9 @@ export async function loginWithEmail(email: string, password: string): Promise<A
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail ?? 'Invalid email or password');
-import type { CartResponse, IntentRequest, OccasionRequest, OutcomeRequest, URLPromptRequest, Occasion } from '@/types';
+  }
+  return res.json();
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -357,6 +360,10 @@ export async function loginWithGoogle(googleEmail: string, googleName?: string):
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail ?? 'Google login failed');
+  }
+  return res.json();
+}
+
 export async function buildCartFromIntent(request: IntentRequest): Promise<CartResponse> {
   return post('/api/v1/cart/intent', request);
 }
@@ -386,6 +393,8 @@ export function openChatStream(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, session_id: sessionId, user_id: userId }),
   });
+}
+
 export async function buildCartFromURL(request: URLPromptRequest): Promise<CartResponse> {
   return post('/api/v1/cart/url', request);
 }

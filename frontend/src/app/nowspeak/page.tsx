@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { NowSpeak } from '@/components/NowSpeak';
 import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
@@ -11,11 +11,24 @@ export default function NowSpeakPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCheckout, setShowCheckout] = useState(false);
 
+  // Load cart on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('amazon_now_cart');
+      if (saved) setCart(JSON.parse(saved));
+    } catch { /* ignore */ }
+  }, []);
+
   const addToCart = (product: Product) => {
     setCart(prev => {
       const existing = prev.find(i => i.product.id === product.id);
-      if (existing) return prev.map(i => i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
-      return [...prev, { product, quantity: 1 }];
+      const updated = existing
+        ? prev.map(i => i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i)
+        : [...prev, { product, quantity: 1 }];
+      try {
+        localStorage.setItem('amazon_now_cart', JSON.stringify(updated));
+      } catch { /* ignore */ }
+      return updated;
     });
   };
 

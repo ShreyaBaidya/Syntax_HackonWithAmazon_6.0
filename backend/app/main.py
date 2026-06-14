@@ -78,6 +78,7 @@ app.include_router(cart.router,            prefix="/api/v1", tags=["Shared Cart"
 app.include_router(profile.router,         prefix="/api/v1", tags=["Profile"])
 app.include_router(refill.router,          prefix="/api/v1", tags=["Recommendations"])
 app.include_router(coupon.router,          prefix="/api/v1", tags=["Coupons"])
+app.include_router(calendar_api.router,    prefix="/api/v1", tags=["Calendar"])
 app.include_router(auth.router,            prefix="/api/v1", tags=["Auth"])
 
 # ── AI Shopping Assistant routers (merged from shopping-assistantAI branch) ──

@@ -19,6 +19,7 @@ interface Props {
 
 export function NowSpeak({ onProductSelect }: Props) {
   const [inputText, setInputText] = useState('');
+  const [mounted, setMounted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, isStreaming, sendMessage } = useNowSpeak();
 
@@ -35,6 +36,10 @@ export function NowSpeak({ onProductSelect }: Props) {
     sendMessage(inputText.trim());
     setInputText('');
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -161,7 +166,7 @@ export function NowSpeak({ onProductSelect }: Props) {
             }}
           />
 
-          {isSupported && (
+          {mounted && isSupported && (
             <button
               type="button"
               onClick={isListening ? stopListening : startListening}
