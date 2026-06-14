@@ -1,5 +1,5 @@
 import type { CartResponse, IntentRequest, OccasionRequest, OutcomeRequest, URLPromptRequest, Occasion } from '@/types';
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 // ── Coupon types (mirrors backend app/models/coupon.py) ───────────────────────
 
@@ -336,7 +336,7 @@ export async function loginWithEmail(email: string, password: string): Promise<A
   return res.json();
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 async function post<T>(path: string, body: object): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
