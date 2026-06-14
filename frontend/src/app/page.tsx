@@ -13,8 +13,10 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Load cart from localStorage on mount (client-only)
+  // Load cart from localStorage on mount (client-only).
+  // Scroll to top to prevent scroll-restoration artefacts from back-navigation.
   useEffect(() => {
+    window.scrollTo(0, 0);
     try {
       const saved = localStorage.getItem('amazon_now_cart');
       if (saved) setCart(JSON.parse(saved));
@@ -25,6 +27,7 @@ export default function HomePage() {
   // to avoid a persist useEffect firing with cart=[] on mount and wiping localStorage.
   const [showCheckout, setShowCheckout] = useState(false);
   const [refill, setRefill] = useState<RefillSuggestions | null>(null);
+  const [refillLoaded, setRefillLoaded] = useState(false);  // false = show skeleton to reserve space
   const [refillExpanded, setRefillExpanded] = useState(false);
   const [refillTab, setRefillTab] = useState<'daily' | 'weekly' | 'biweekly' | 'monthly'>('weekly');
   const [dismissedRefillIds, setDismissedRefillIds] = useState<Set<string>>(new Set());
@@ -103,9 +106,20 @@ export default function HomePage() {
       .catch(console.error)
       .finally(() => setLoading(false));
 
+    // Load refill from sessionStorage cache first (no layout shift on back-nav).
+    try {
+      const cachedRefill = sessionStorage.getItem('refill_cache');
+      if (cachedRefill) { setRefill(JSON.parse(cachedRefill)); setRefillLoaded(true); }
+    } catch { /* ignore */ }
+
+    // Fetch refill from API; update cache for next visit.
     getRefillSuggestions(undefined, cart.map(i => i.product.name))
-      .then(setRefill)
-      .catch(console.error);
+      .then(data => {
+        setRefill(data);
+        setRefillLoaded(true);
+        try { sessionStorage.setItem('refill_cache', JSON.stringify(data)); } catch { /* ignore */ }
+      })
+      .catch(() => setRefillLoaded(true)); // mark loaded even on error (removes skeleton)
   }, []);
 
   const handleProductSelect = useCallback((product: Product, qty: number) => {
@@ -345,7 +359,17 @@ export default function HomePage() {
       {/* Products */}
       <div style={{ marginTop: 0 }}>
 
-        {/* Home Refill Card */}
+        {/* Home Refill Card — skeleton reserves space until data arrives (prevents layout shift) */}
+        {!refillLoaded && (
+          <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, height: 64,
+            border: '1px solid #E8F5E9', display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#F0F0F0', flexShrink: 0 }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ height: 12, background: '#F0F0F0', borderRadius: 3, width: '50%', marginBottom: 6 }} />
+              <div style={{ height: 10, background: '#F0F0F0', borderRadius: 3, width: '70%' }} />
+            </div>
+          </div>
+        )}
         {refill && refill.item_count > 0 && (
           <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, overflow: 'hidden', border: '1px solid #E8F5E9' }}>
             {/* Header */}

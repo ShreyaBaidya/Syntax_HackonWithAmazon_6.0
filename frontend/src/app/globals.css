@@ -42,7 +42,19 @@ body > div:first-child {
   position: relative;
 }
 
-/* Scrollbar hide for category strip */
+/* ── Smooth page transitions ─────────────────────────────────────────────────
+   Every new page fades in over 150ms, preventing the abrupt "enlarged" flash
+   that appears when navigating between the dense home and sparser inner pages. */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+body > div > div {
+  animation: pageFadeIn 0.15s ease-out;
+}
+
+/* ── Scrollbar hide for category strip */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -94,8 +106,9 @@ div[style*="cursor:pointer"]:active {
   filter: brightness(0.85);
 }
 
-/* Keep fixed/sticky elements inside the centered column */
-header[style*="position: sticky"],
+/* Keep FIXED elements inside the centered column.
+   Sticky elements (AmazonHeader) are already inside the centered column div
+   and must NOT get left:50%/transform — that mis-positions them after navigation. */
 nav[style*="position: fixed"] {
   max-width: 800px;
   left: 50% !important;

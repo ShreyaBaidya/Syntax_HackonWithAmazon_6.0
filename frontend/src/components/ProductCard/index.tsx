@@ -128,9 +128,11 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
           </p>
           <p style={{ fontSize: 9, color: '#888', margin: '2px 0 4px' }}>{product.unit}</p>
 
-          {/* Price + Add button */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
-            <div>
+          {/* Price + Add button — minHeight 28px reserves space so card height
+              stays constant whether showing "+" (26px) or "–1+" stepper (26px pill). */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginTop: 'auto', minHeight: 28 }}>
+            <div style={{ minWidth: 0, flex: 1, marginRight: 4 }}>
               <span style={{ fontSize: 12, fontWeight: 700, color: '#0F1111' }}>₹{product.price}</span>
               {origPrice && (
                 <span style={{ fontSize: 9, color: '#888', textDecoration: 'line-through', marginLeft: 3 }}>

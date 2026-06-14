@@ -240,7 +240,7 @@ export default function CartPage() {
 
       {/* Header */}
       <div className="bg-[#131921] px-4 py-3 flex items-center gap-3 sticky top-0 z-10 shadow-md">
-        <button onClick={() => router.back()} className="text-white hover:text-[#FFD814] transition-colors p-1">
+        <button onClick={() => router.push('/')} className="text-white hover:text-[#FFD814] transition-colors p-1">
           <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
             <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
           </svg>
