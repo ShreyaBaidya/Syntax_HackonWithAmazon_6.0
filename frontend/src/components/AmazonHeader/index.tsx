@@ -140,23 +140,23 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
       </div>
 
       {/* ── Row 2: Delivery address ── */}
-      <div style={{ background: '#E0F2F1', padding: '5px 12px', display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ background: '#37475A', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6 }}>
         <div style={{ background: '#FFD814', borderRadius: 5, padding: '2px 7px', display: 'flex', gap: 2, flexShrink: 0 }}>
           <span style={{ fontSize: 10, fontWeight: 800, color: '#0F1111' }}>⚡8</span>
           <span style={{ fontSize: 10, color: '#0F1111', fontWeight: 600 }}>mins</span>
         </div>
-        <svg width="10" height="12" fill="#00695C" viewBox="0 0 24 24">
+        <svg width="12" height="14" fill="white" viewBox="0 0 24 24">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
         </svg>
-        <span style={{ fontSize: 10, color: '#004D40', fontWeight: 500, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          Deliver to <strong>Flat no-301, Geetanjali Aristocracy, Whitefield, Bengaluru</strong>
+        <span style={{ fontSize: 11, color: 'white', fontWeight: 400, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          Deliver to <strong style={{ fontWeight: 700 }}>Flat no-301, Geetanjali Aristocracy, Whitefield, Bengaluru</strong>
         </span>
-        <span style={{ fontSize: 10, color: '#00695C', fontWeight: 700 }}>▾</span>
+        <span style={{ fontSize: 11, color: '#CCCCCC', fontWeight: 700 }}>▾</span>
       </div>
 
       {/* ── Row 3: Real search input with dropdown ── */}
       <div style={{ background: 'white', padding: '8px 12px', borderBottom: '1px solid #E0E0E0', position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid', borderColor: focused ? '#00695C' : '#CCC', borderRadius: 8, overflow: 'hidden', background: 'white' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid', borderColor: focused ? '#FF9900' : '#CCC', borderRadius: 8, overflow: 'hidden', background: 'white' }}>
           {/* Search icon */}
           <svg style={{ marginLeft: 10, flexShrink: 0 }} width="16" height="16" fill="#888" viewBox="0 0 24 24">
             <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
@@ -202,7 +202,7 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
             style={{
               position: 'absolute', top: '100%', left: 12, right: 12,
               background: 'white', borderRadius: '0 0 8px 8px',
-              border: '1.5px solid #00695C', borderTop: 'none',
+              border: '1.5px solid #FF9900', borderTop: 'none',
               boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
               zIndex: 100, maxHeight: 320, overflowY: 'auto',
             }}
