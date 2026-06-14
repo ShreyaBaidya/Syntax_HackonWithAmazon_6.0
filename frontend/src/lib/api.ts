@@ -1,6 +1,6 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+gitconst API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 
-// ── Coupon types ──────────────────────────────────────────────────────────────
+// ── Coupon types (mirrors backend app/models/coupon.py) ───────────────────────
 
 export type CouponType = 'flat' | 'percent' | 'delivery';
 
@@ -9,13 +9,14 @@ export type CouponResult = {
   label: string;
   description: string;
   type: CouponType;
-  min_subtotal: number;
-  savings: number;
+  min_subtotal: number;     // minimum cart value for eligibility
+  savings: number;          // pre-computed for the requested subtotal (use computeCouponSavings for live updates)
   eligible: boolean;
   badge?: string | null;
-  discount_amount?: number | null;
-  discount_rate?:   number | null;
-  discount_cap?:    number | null;
+  // Raw params — lets the frontend recompute savings on every qty change with zero latency
+  discount_amount?: number | null;  // flat / delivery: fixed saving
+  discount_rate?:   number | null;  // percent: rate (e.g. 0.20)
+  discount_cap?:    number | null;  // percent: maximum saving cap
 };
 
 export type CouponsResponse = {
@@ -23,7 +24,10 @@ export type CouponsResponse = {
   all: CouponResult[];
 };
 
-export async function fetchCoupons(subtotal: number, userId?: string): Promise<CouponsResponse> {
+export async function fetchCoupons(
+  subtotal: number,
+  userId?: string,
+): Promise<CouponsResponse> {
   const params = new URLSearchParams({ subtotal: subtotal.toFixed(2) });
   if (userId) params.set('user_id', userId);
   const res = await fetch(`${API_BASE}/api/v1/coupons/best?${params}`);
@@ -145,18 +149,27 @@ export type RefillSuggestions = {
 
 // ── API calls ─────────────────────────────────────────────────────────────────
 
-export async function getProductsByCategory(category: string, limit = 20, userId?: string): Promise<Product[]> {
+export async function getProductsByCategory(
+  category: string,
+  limit = 20,
+  userId?: string,
+): Promise<Product[]> {
   const params = new URLSearchParams({ category, limit: String(limit) });
-  if (userId) params.set('user_id', userId);
+  if (userId) {
+    params.set('user_id', userId);
+  }
   const res = await fetch(`${API_BASE}/api/v1/products?${params}`);
   if (!res.ok) throw new Error(`Products fetch failed: ${res.status}`);
   const data = await res.json();
+  // Backend returns { products: [...], total: N }
   return Array.isArray(data) ? data : (data.products ?? []);
 }
 
 export async function searchProducts(query: string, limit = 8, userId?: string): Promise<Product[]> {
   const params = new URLSearchParams({ q: query, limit: String(limit) });
-  if (userId) params.set('user_id', userId);
+  if (userId) {
+    params.set('user_id', userId);
+  }
   const res = await fetch(`${API_BASE}/api/v1/products?${params}`);
   if (!res.ok) throw new Error(`Product search failed: ${res.status}`);
   const data = await res.json();
@@ -168,15 +181,21 @@ export async function getRecommendations(userId?: string, query?: string): Promi
   if (userId) params.set('user_id', userId);
   if (query) params.set('query', query);
   const qs = params.toString() ? `?${params.toString()}` : '';
-  const res = await fetch(`${API_BASE}/api/v1/recommendations${qs}`);
+  const url = `${API_BASE}/api/v1/recommendations${qs}`;
+  console.log('[API] getRecommendations →', url);
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`Recommendations fetch failed: ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  console.log('[API] getRecommendations response — now_suggestions:', data.now_suggestions?.length, ', trending:', data.trending?.length);
+  return data;
 }
 
 export async function getRefillSuggestions(userId?: string, cartItemNames?: string[]): Promise<RefillSuggestions> {
   const params = new URLSearchParams();
   if (userId) params.set('user_id', userId);
-  if (cartItemNames && cartItemNames.length > 0) params.set('cart_items', cartItemNames.join(','));
+  if (cartItemNames && cartItemNames.length > 0) {
+    params.set('cart_items', cartItemNames.join(','));
+  }
   const query = params.toString() ? `?${params.toString()}` : '';
   const res = await fetch(`${API_BASE}/api/v1/refill-suggestions${query}`);
   if (!res.ok) throw new Error(`Refill suggestions fetch failed: ${res.status}`);
@@ -232,7 +251,12 @@ export async function joinSharedCart(cartId: string, participantName: string): P
   return res.json();
 }
 
-export async function addToSharedCart(cartId: string, productId: string, participantName: string, quantity = 1): Promise<CartState> {
+export async function addToSharedCart(
+  cartId: string,
+  productId: string,
+  participantName: string,
+  quantity = 1,
+): Promise<CartState> {
   const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/items`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -242,7 +266,11 @@ export async function addToSharedCart(cartId: string, productId: string, partici
   return res.json();
 }
 
-export async function updateCartItemQty(cartId: string, productId: string, quantity: number): Promise<CartState> {
+export async function updateCartItemQty(
+  cartId: string,
+  productId: string,
+  quantity: number,
+): Promise<CartState> {
   const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/items/${productId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -252,8 +280,13 @@ export async function updateCartItemQty(cartId: string, productId: string, quant
   return res.json();
 }
 
-export async function removeFromSharedCart(cartId: string, productId: string): Promise<CartState> {
-  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/items/${productId}`, { method: 'DELETE' });
+export async function removeFromSharedCart(
+  cartId: string,
+  productId: string,
+): Promise<CartState> {
+  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/items/${productId}`, {
+    method: 'DELETE',
+  });
   if (!res.ok) throw new Error(`Remove from cart failed: ${res.status}`);
   return res.json();
 }
@@ -273,7 +306,9 @@ export async function leaveSharedCart(cartId: string, participantName: string): 
 }
 
 export async function deleteSharedCart(cartId: string): Promise<void> {
-  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}`, { method: 'DELETE' });
+  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}`, {
+    method: 'DELETE',
+  });
   if (!res.ok) throw new Error(`Delete cart failed: ${res.status}`);
 }
 
@@ -296,6 +331,19 @@ export async function loginWithEmail(email: string, password: string): Promise<A
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail ?? 'Invalid email or password');
+import type { CartResponse, IntentRequest, OccasionRequest, OutcomeRequest, URLPromptRequest, Occasion } from '@/types';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+async function post<T>(path: string, body: object): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw { response: { data } };
   }
   return res.json();
 }
@@ -309,117 +357,49 @@ export async function loginWithGoogle(googleEmail: string, googleName?: string):
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail ?? 'Google login failed');
+export async function buildCartFromIntent(request: IntentRequest): Promise<CartResponse> {
+  return post('/api/v1/cart/intent', request);
+}
+
+export async function buildCartFromImage(file: File): Promise<CartResponse> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch(`${API_URL}/api/v1/cart/image`, { method: 'POST', body: formData });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw { response: { data } };
   }
   return res.json();
 }
 
 /**
  * Opens an SSE stream to the NowSpeak chat endpoint.
+ * Returns the raw Response so callers can consume the ReadableStream.
  */
-export function openChatStream(message: string, sessionId: string, userId?: string): Promise<Response> {
+export function openChatStream(
+  message: string,
+  sessionId: string,
+  userId?: string,
+): Promise<Response> {
   return fetch(`${API_BASE}/api/v1/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, session_id: sessionId, user_id: userId }),
   });
+export async function buildCartFromURL(request: URLPromptRequest): Promise<CartResponse> {
+  return post('/api/v1/cart/url', request);
 }
 
-// ── AI Shopping Agent types (from shopping-assistantAI) ──────────────────────
-
-export type BudgetTier = 'budget' | 'standard' | 'premium';
-
-export type AICartItem = {
-  name: string;
-  quantity: string;
-  category: 'essential' | 'recommended' | 'optional';
-  estimated_price?: number;
-  substitute_available?: boolean;
-  substitutes?: string[];
-};
-
-export type NutritionInfo = {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  fiber?: number;
-};
-
-export type AICartResponse = {
-  intent: string;
-  description: string;
-  items: AICartItem[];
-  total_estimated_price?: number;
-  nutrition?: NutritionInfo;
-  budget_tier: BudgetTier;
-};
-
-export type Occasion = {
-  id: string;
-  name: string;
-  icon: string;
-  description: string;
-};
-
-// ── AI Shopping Agent API calls ───────────────────────────────────────────────
-
-async function _aiPost<T>(path: string, body: object): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data.detail ?? `Request failed: ${res.status}`);
-  }
-  return res.json();
+export async function buildCartForOccasion(request: OccasionRequest): Promise<CartResponse> {
+  return post('/api/v1/cart/occasion', request);
 }
 
-export async function buildCartFromIntent(
-  query: string,
-  budgetTier: BudgetTier = 'standard',
-  dietaryPreferences: string[] = [],
-): Promise<AICartResponse> {
-  return _aiPost('/api/v1/cart/intent', { query, budget_tier: budgetTier, dietary_preferences: dietaryPreferences });
-}
-
-export async function buildCartFromImage(file: File): Promise<AICartResponse> {
-  const formData = new FormData();
-  formData.append('file', file);
-  const res = await fetch(`${API_BASE}/api/v1/cart/image`, { method: 'POST', body: formData });
-  if (!res.ok) throw new Error(`Image cart failed: ${res.status}`);
-  return res.json();
-}
-
-export async function buildCartFromURL(
-  url: string,
-  prompt?: string,
-  budgetTier: BudgetTier = 'standard',
-): Promise<AICartResponse> {
-  return _aiPost('/api/v1/cart/url', { url, prompt, budget_tier: budgetTier });
-}
-
-export async function buildCartForOccasion(
-  occasion: string,
-  guests = 2,
-  budgetTier: BudgetTier = 'standard',
-  dietaryPreferences: string[] = [],
-): Promise<AICartResponse> {
-  return _aiPost('/api/v1/cart/occasion', { occasion, guests, budget_tier: budgetTier, dietary_preferences: dietaryPreferences });
-}
-
-export async function buildCartForOutcome(
-  goal: string,
-  budgetTier: BudgetTier = 'standard',
-  dietaryPreferences: string[] = [],
-): Promise<AICartResponse> {
-  return _aiPost('/api/v1/cart/outcome', { goal, budget_tier: budgetTier, dietary_preferences: dietaryPreferences });
+export async function buildCartForOutcome(request: OutcomeRequest): Promise<CartResponse> {
+  return post('/api/v1/cart/outcome', request);
 }
 
 export async function getOccasions(): Promise<Occasion[]> {
-  const res = await fetch(`${API_BASE}/api/v1/occasions`);
-  if (!res.ok) throw new Error(`Occasions fetch failed: ${res.status}`);
+  const res = await fetch(`${API_URL}/api/v1/occasions`);
   const data = await res.json();
   return data.occasions;
 }
