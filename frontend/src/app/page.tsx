@@ -10,6 +10,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { ProfileBanner } from '@/components/ProfileBanner';
 import { SmartFridgeWidget } from '@/components/SmartFridgeWidget';
 import { CalendarWidget } from '@/components/CalendarWidget';
+import { OccasionBundlesWidget } from '@/components/OccasionBundlesWidget';
 
 export default function HomePage() {
   const router = useRouter();
@@ -634,6 +635,9 @@ export default function HomePage() {
             )}
           </div>
         )}
+        
+        <OccasionBundlesWidget />
+
         {loading ? (
           <LoadingSkeleton />
         ) : recs ? (
@@ -741,6 +745,10 @@ export default function HomePage() {
           </button>
         ) : (
           <div style={{ display: 'flex', gap: 16 }}>
+            <button onClick={() => router.push('/pantry')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+              <svg width="20" height="20" fill="#888" viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm8 3c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
+              <span style={{ fontSize: 9, color: '#888' }}>Pantry</span>
+            </button>
             <button onClick={() => router.push('/nowspeak')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
               <svg width="20" height="20" fill="#888" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
               <span style={{ fontSize: 9, color: '#888' }}>Search</span>
