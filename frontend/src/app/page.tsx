@@ -45,7 +45,6 @@ export default function HomePage() {
   // to avoid a persist useEffect firing with cart=[] on mount and wiping localStorage.
   const [showCheckout, setShowCheckout] = useState(false);
   const [refill, setRefill] = useState<RefillSuggestions | null>(null);
-  const [refillLoaded, setRefillLoaded] = useState(false);  // false = show skeleton to reserve space
   const [refillExpanded, setRefillExpanded] = useState(false);
   const [refillTab, setRefillTab] = useState<'weekly' | 'biweekly' | 'monthly'>('weekly');
   const [dismissedRefillIds, setDismissedRefillIds] = useState<Set<string>>(new Set());
@@ -131,88 +130,6 @@ export default function HomePage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [userId, chatIntent]);
-
-
-  const [chatIntent, setChatIntent] = useState<string | null>(null);
-
-  // Read initial intent from sessionStorage on mount
-  useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem('last_chat_intent');
-      if (stored) {
-        console.log('[HomePage] Initial intent from sessionStorage:', stored);
-        setChatIntent(stored);
-      }
-    } catch { /* sessionStorage unavailable */ }
-  }, []);
-
-  // Re-sync intent when page becomes visible (user navigates back from NowSpeak)
-  useEffect(() => {
-    const syncIntent = () => {
-      try {
-        const stored = sessionStorage.getItem('last_chat_intent') || null;
-        setChatIntent(prev => {
-          if (prev !== stored) {
-            console.log('[HomePage] Intent changed on focus/visibility:', prev, '→', stored);
-            return stored;
-          }
-          return prev;
-        });
-      } catch { /* sessionStorage unavailable */ }
-    };
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') syncIntent();
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-    window.addEventListener('focus', syncIntent);
-    // Also listen for custom event dispatched by useNowSpeak
-    window.addEventListener('chat-intent-changed', syncIntent);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
-      window.removeEventListener('focus', syncIntent);
-      window.removeEventListener('chat-intent-changed', syncIntent);
-    };
-  }, []);
-
-  // ── Fetch recommendations whenever userId or chatIntent changes ─────────
-  useEffect(() => {
-    console.log('[Recommendations] React state — userId:', userId, 'chatIntent:', chatIntent);
-
-    getRecommendations(userId ?? undefined, chatIntent ?? undefined)
-      .then(data => {
-        console.log('[Recommendations] Response — now_suggestions:', data.now_suggestions.length, ', trending:', data.trending.length);
-        setRecs(data);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [userId, chatIntent]);
-
-  const [showJoinInput, setShowJoinInput] = useState(false);
-  const [joinLink, setJoinLink] = useState('');
-  const [activeSharedCartId, setActiveSharedCartId] = useState<string | null>(null);
-  const [sharedCartTotal, setSharedCartTotal] = useState(0);
-  const [sharedCartItemCount, setSharedCartItemCount] = useState(0);
-
-  // Check sessionStorage for an active shared cart on mount and fetch its total
-  useEffect(() => {
-    const keys = Object.keys(sessionStorage);
-    const cartKey = keys.find(k => k.startsWith('cart_name_'));
-    if (cartKey) {
-      const id = cartKey.replace('cart_name_', '');
-      // Verify the cart still exists on the backend
-      getSharedCart(id)
-        .then(c => {
-          setActiveSharedCartId(id);
-          setSharedCartTotal(c.total);
-          setSharedCartItemCount(c.item_count);
-        })
-        .catch(() => {
-          // Cart expired or backend restarted — clean up stale session
-          sessionStorage.removeItem(cartKey);
-          setActiveSharedCartId(null);
-        });
-    }
-  }, []);
 
   
 
@@ -303,13 +220,6 @@ export default function HomePage() {
         cart={cart}
         onCartClick={() => cartCount > 0 && router.push('/cart')}
         onProductSelect={handleProductSelect}
-      />
-
-      {/* Dietary Profile Banner */}
-      <ProfileBanner
-        dietTags={profile?.diet_tags ?? []}
-        allergenTags={profile?.allergen_tags ?? []}
-        hasProfile={!!profile}
       />
 
       {/* Dietary Profile Banner */}
@@ -517,17 +427,6 @@ export default function HomePage() {
       {/* Products */}
       <div style={{ marginTop: 0 }}>
 
-        {/* Home Refill Card — skeleton reserves space until data arrives (prevents layout shift) */}
-        {!refillLoaded && (
-          <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, height: 64,
-            border: '1px solid #E8F5E9', display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10 }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#F0F0F0', flexShrink: 0 }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ height: 12, background: '#F0F0F0', borderRadius: 3, width: '50%', marginBottom: 6 }} />
-              <div style={{ height: 10, background: '#F0F0F0', borderRadius: 3, width: '70%' }} />
-            </div>
-          </div>
-        )}
         {refill && refill.item_count > 0 && (
           <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, overflow: 'hidden', border: '1px solid #E8F5E9' }}>
             {/* Header */}

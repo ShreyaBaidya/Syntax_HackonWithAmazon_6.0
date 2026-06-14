@@ -34,10 +34,10 @@ _USERS: dict[str, dict] = {
     "user_002": {
         "user_id": "user_002",
         "customer_id": "C002",          # links to order_store._ORDER_HISTORY customer C002
-        "name": "Shreya",
-        "email": "shreya",
+        "name": "Shreya Sharma",
+        "email": "shreya@example.com",
         "password_hash": _sha256("Prime#456"),
-        "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",
+        "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Shreya",
         "phone": "+91 91234 56789",
     },
 }
