@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.api import chat, recommendations, products, orders, cart, refill
+from app.api import chat, recommendations, products, orders, cart, refill, coupon
 
 _DESCRIPTION = """
 
@@ -45,6 +45,10 @@ _TAGS_METADATA = [
         "description": "Checkout — create and confirm orders",
     },
     {
+        "name": "Coupons",
+        "description": "Server-side coupon evaluation — best coupon + full list with eligibility.",
+    },
+    {
         "name": "Health",
         "description": "Liveness probe for load-balancer / CI checks.",
     },
@@ -73,6 +77,7 @@ app.include_router(products.router,        prefix="/api/v1", tags=["Products"])
 app.include_router(orders.router,          prefix="/api/v1", tags=["Orders"])
 app.include_router(cart.router,            prefix="/api/v1", tags=["Shared Cart"])
 app.include_router(refill.router,          prefix="/api/v1", tags=["Recommendations"])
+app.include_router(coupon.router,          prefix="/api/v1", tags=["Coupons"])
 
 
 @app.get("/health", tags=["Health"])

@@ -21,14 +21,13 @@ export default function HomePage() {
     } catch { /* ignore */ }
   }, []);
 
-  // Persist cart to localStorage on every change
-  useEffect(() => {
-    localStorage.setItem('amazon_now_cart', JSON.stringify(cart));
-  }, [cart]);
+  // NOTE: cart is persisted directly inside handleProductSelect / handleOrderComplete
+  // to avoid a persist useEffect firing with cart=[] on mount and wiping localStorage.
   const [showCheckout, setShowCheckout] = useState(false);
   const [refill, setRefill] = useState<RefillSuggestions | null>(null);
   const [refillExpanded, setRefillExpanded] = useState(false);
   const [refillTab, setRefillTab] = useState<'daily' | 'weekly' | 'biweekly' | 'monthly'>('weekly');
+  const [dismissedRefillIds, setDismissedRefillIds] = useState<Set<string>>(new Set());
   const [startingSharedCart, setStartingSharedCart] = useState(false);
   const [showJoinInput, setShowJoinInput] = useState(false);
   const [joinLink, setJoinLink] = useState('');
@@ -89,10 +88,21 @@ export default function HomePage() {
   }, [joinLink, router]);
 
   useEffect(() => {
+    // Serve cached recommendations instantly (avoids skeleton flash on back-nav).
+    try {
+      const cached = sessionStorage.getItem('recs_cache');
+      if (cached) { setRecs(JSON.parse(cached)); setLoading(false); }
+    } catch { /* ignore */ }
+
+    // Always re-fetch in background to keep data fresh.
     getRecommendations()
-      .then(setRecs)
+      .then(data => {
+        setRecs(data);
+        try { sessionStorage.setItem('recs_cache', JSON.stringify(data)); } catch { /* ignore */ }
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
+
     getRefillSuggestions(undefined, cart.map(i => i.product.name))
       .then(setRefill)
       .catch(console.error);
@@ -100,15 +110,21 @@ export default function HomePage() {
 
   const handleProductSelect = useCallback((product: Product, qty: number) => {
     setCart(prev => {
-      if (qty === 0) return prev.filter(i => i.product.id !== product.id);
-      const exists = prev.find(i => i.product.id === product.id);
-      if (exists) return prev.map(i => i.product.id === product.id ? { ...i, quantity: qty } : i);
-      return [...prev, { product, quantity: qty }];
+      const updated =
+        qty === 0 ? prev.filter(i => i.product.id !== product.id)
+        : prev.find(i => i.product.id === product.id)
+          ? prev.map(i => i.product.id === product.id ? { ...i, quantity: qty } : i)
+          : [...prev, { product, quantity: qty }];
+      // Persist immediately in the handler (not via a useEffect) to avoid the
+      // mount-time wipe where useEffect fires with cart=[] before the load effect.
+      localStorage.setItem('amazon_now_cart', JSON.stringify(updated));
+      return updated;
     });
   }, []);
 
   const handleOrderComplete = (_order: Order) => {
     setCart([]);
+    localStorage.removeItem('amazon_now_cart');
     setTimeout(() => setShowCheckout(false), 3200);
   };
 
@@ -127,7 +143,7 @@ export default function HomePage() {
       {/* Amazon Now white header */}
       <AmazonHeader
         cart={cart}
-        onCartClick={() => cartCount > 0 && setShowCheckout(true)}
+        onCartClick={() => cartCount > 0 && router.push('/cart')}
         onProductSelect={handleProductSelect}
       />
 
@@ -406,7 +422,7 @@ export default function HomePage() {
                 <div style={{ display: 'flex', borderBottom: '1px solid #E8F5E9', background: '#FAFEF8' }}>
                   {(['daily', 'weekly', 'biweekly', 'monthly'] as const).map(tab => {
                     const group = refill.grouped[tab];
-                    const count = group?.items?.length ?? 0;
+                    const count = (group?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).length;
                     const labels: Record<string, string> = {
                       daily: '🛒 Daily', weekly: '📅 Weekly',
                       biweekly: '🗓️ Bi-weekly', monthly: '📦 Monthly',
@@ -444,19 +460,18 @@ export default function HomePage() {
                 )}
 
                 {/* Items for active tab */}
-                {(refill.grouped[refillTab]?.items ?? []).length === 0 ? (
+                {(refill.grouped[refillTab]?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).length === 0 ? (
                   <div style={{ padding: '16px 14px', textAlign: 'center' }}>
                     <span style={{ fontSize: 11, color: '#aaa' }}>No items in this frequency</span>
                   </div>
                 ) : (
-                  (refill.grouped[refillTab]?.items ?? []).map((item, i) => {
+                  (refill.grouped[refillTab]?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).map((item, i, arr) => {
                     const cartItem = cart.find(c => c.product.id === item.id);
                     const qty = cartItem?.quantity ?? 0;
-                    const items = refill.grouped[refillTab].items;
                     return (
                       <div key={item.id} style={{
                         display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px',
-                        borderBottom: i === items.length - 1 ? 'none' : '1px solid #F5F5F5',
+                        borderBottom: i === arr.length - 1 ? 'none' : '1px solid #F5F5F5',
                       }}>
                         <div style={{ width: 36, height: 36, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#FAFAFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -476,7 +491,15 @@ export default function HomePage() {
                           ) : `₹${item.price.toFixed(2)}`}
                         </span>
                         {qty === 0 ? (
-                          <button onClick={() => handleProductSelect(item as unknown as Product, 1)} style={{ background: '#FFD814', border: '1px solid #F0C000', borderRadius: '50%', width: 26, height: 26, fontSize: 16, fontWeight: 700, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                            {/* Dismiss from refill list */}
+                            <button
+                              onClick={() => setDismissedRefillIds(prev => new Set([...prev, item.id]))}
+                              title="Remove from suggestions"
+                              style={{ background: 'none', border: '1px solid #DDD', borderRadius: '50%', width: 22, height: 22, fontSize: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#AAA', flexShrink: 0 }}
+                            >✕</button>
+                            <button onClick={() => handleProductSelect(item as unknown as Product, 1)} style={{ background: '#FFD814', border: '1px solid #F0C000', borderRadius: '50%', width: 26, height: 26, fontSize: 16, fontWeight: 700, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                          </div>
                         ) : (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
                             <button onClick={() => handleProductSelect(item as unknown as Product, 0)} style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '50%', width: 24, height: 24, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DC2626' }}>🗑</button>
@@ -596,14 +619,14 @@ export default function HomePage() {
         </div>
         {cartCount > 0 ? (
           <button
-            onClick={() => setShowCheckout(true)}
+            onClick={() => router.push('/cart')}
             style={{
               background: '#ffd814', color: 'black',
               border: 'none', borderRadius: 8, padding: '10px 24px',
               fontWeight: 700, fontSize: 14, cursor: 'pointer',
             }}
           >
-            Proceed →
+            View Cart →
           </button>
         ) : (
           <div style={{ display: 'flex', gap: 16 }}>
