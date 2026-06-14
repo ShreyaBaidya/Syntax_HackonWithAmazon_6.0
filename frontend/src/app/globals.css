@@ -42,6 +42,19 @@ body > div:first-child {
   position: relative;
 }
 
+/* Spinner animation used on auth page */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Auth page input focus */
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+  border-color: #E77600 !important;
+  box-shadow: 0 0 0 3px rgba(228, 121, 17, 0.5) !important;
+}
+
 /* Scrollbar hide for category strip */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

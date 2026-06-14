@@ -149,7 +149,16 @@ export default function OrdersPage() {
   const [error, setError]     = useState<string | null>(null);
 
   useEffect(() => {
-    getOrderHistory('demo_user')
+    let userId = 'demo_user';
+    try {
+      const stored = localStorage.getItem('amazon_now_user');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        userId = parsed.user_id || 'demo_user';
+      }
+    } catch { /* ignore */ }
+
+    getOrderHistory(userId)
       .then(setOrders)
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));

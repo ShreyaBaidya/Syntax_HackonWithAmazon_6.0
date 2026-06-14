@@ -99,7 +99,6 @@ export type RefillSuggestions = {
   item_count: number;
   items: RefillItem[];
   grouped: {
-    daily: RefillGroup;
     weekly: RefillGroup;
     biweekly: RefillGroup;
     monthly: RefillGroup;
@@ -255,6 +254,42 @@ export async function deleteSharedCart(cartId: string): Promise<void> {
     method: 'DELETE',
   });
   if (!res.ok) throw new Error(`Delete cart failed: ${res.status}`);
+}
+
+// ── Auth API ──────────────────────────────────────────────────────────────────
+
+export type AuthUser = {
+  token: string;
+  user_id: string;
+  name: string;
+  email: string;
+  avatar: string;
+};
+
+export async function loginWithEmail(email: string, password: string): Promise<AuthUser> {
+  const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail ?? 'Invalid email or password');
+  }
+  return res.json();
+}
+
+export async function loginWithGoogle(googleEmail: string, googleName?: string): Promise<AuthUser> {
+  const res = await fetch(`${API_BASE}/api/v1/auth/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ google_email: googleEmail, google_name: googleName }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail ?? 'Google login failed');
+  }
+  return res.json();
 }
 
 /**

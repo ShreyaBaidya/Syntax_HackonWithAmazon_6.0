@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CartItem } from '@/components/SpeedCheckout';
 import { searchProducts, Product } from '@/lib/api';
-import logo from './logo.png' ;
+import logo from './logo.png';
+import gcalLogo from './gcal-logo.png';
 
 interface Props {
   cart: CartItem[];
@@ -96,14 +97,45 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
         </div>
 
         {/* Notification icon */}
-        <div style={{
-          width: 32, height: 32, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.15)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-        }}>
-          <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
-            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-          </svg>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {/* Google Calendar link button */}
+          <button
+            onClick={() => {
+              const userId = typeof localStorage !== 'undefined'
+                ? (JSON.parse(localStorage.getItem('amazon_now_user') || '{}').user_id || 'demo_user')
+                : 'demo_user';
+              fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'}/api/v1/calendar/auth-url?user_id=${userId}`)
+                .then(r => r.json())
+                .then(data => {
+                  if (data.auth_url) {
+                    window.open(data.auth_url, '_blank', 'width=500,height=600');
+                  } else {
+                    alert('Google Calendar: ' + (data.error || 'Not configured') + '\n\n' + (data.setup_hint || ''));
+                  }
+                })
+                .catch(() => alert('Could not connect to backend'));
+            }}
+            title="Link Google Calendar"
+            style={{
+              background: 'rgba(255,255,255,0.15)',
+              border: 'none', borderRadius: 6,
+              padding: '2px', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: 5,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={gcalLogo.src} alt="Google Calendar" style={{ width: 200, height: 40, objectFit: 'contain' }} />
+          </button>
+
+          <div style={{
+            width: 32, height: 32, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.15)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+          }}>
+            <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+            </svg>
+          </div>
         </div>
       </div>
 

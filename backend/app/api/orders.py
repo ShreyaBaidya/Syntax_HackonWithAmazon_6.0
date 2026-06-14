@@ -70,53 +70,55 @@ async def get_order_history(user_id: str = Query(default="demo_user")):
     """
     Returns order history. Handles two formats:
     1. Flat format: list of order dicts with user_id (from place_order)
-    2. Customer format: [{customer_id, orders: [{order_id, products, ...}]}]
+    2. Customer format: [{"customers": [{customer_id, user_id, orders: [...]}]}]
     """
     result = []
 
     for entry in _ORDER_HISTORY:
         # ── Format 1: flat order dict (from place_order) ──────────────────
-        if "order_id" in entry and "products" not in entry:
-            if entry.get("user_id") == user_id:
-                result.append(entry)
+        if "order_id" in entry and entry.get("user_id") == user_id:
+            result.append(entry)
 
-        # ── Format 2: customer wrapper with nested orders ─────────────────
-        elif "customer_id" in entry and "orders" in entry:
-            for order in entry.get("orders", []):
-                products = order.get("products", [])
-                date_str = order.get("order_date", "2026-01-01")
-                time_str = order.get("order_time", "00:00:00")
-                created_at = f"{date_str}T{time_str}Z"
+        # ── Format 2: wrapper with "customers" list ───────────────────────
+        elif "customers" in entry:
+            for customer in entry["customers"]:
+                if customer.get("user_id") != user_id:
+                    continue
+                for order in customer.get("orders", []):
+                    products = order.get("products", [])
+                    date_str = order.get("order_date", "2026-01-01")
+                    time_str = order.get("order_time", "00:00:00")
+                    created_at = f"{date_str}T{time_str}Z"
 
-                def clean_url(url: str) -> str:
-                    """Extract plain URL from markdown [text](url) format."""
-                    m = re.search(r'\(https?://[^\)]+\)', url)
-                    if m:
-                        return m.group()[1:-1]  # strip surrounding ( )
-                    return url
+                    def clean_url(url: str) -> str:
+                        """Extract plain URL from markdown [text](url) format."""
+                        m = re.search(r'\(https?://[^\)]+\)', url)
+                        if m:
+                            return m.group()[1:-1]  # strip surrounding ( )
+                        return url
 
-                result.append({
-                    "order_id":           order.get("order_id", ""),
-                    "user_id":            user_id,
-                    "status":             "confirmed",
-                    "estimated_delivery": created_at,
-                    "eta_minutes":        15,
-                    "total_amount":       0.0,
-                    "items": [
-                        {
-                            "product_id": p.get("product_id", ""),
-                            "quantity":   p.get("quantity", 1),
-                            "title":      p.get("title", ""),
-                            "image_url":  clean_url(p.get("imageUrl", "")),
-                            "brand":      p.get("brand", ""),
-                            "category":   p.get("category", ""),
-                        }
-                        for p in products
-                    ],
-                    "delivery_address":  "Bengaluru",
-                    "created_at":        created_at,
-                    "payment_method":    order.get("payment_method", "UPI"),
-                })
+                    result.append({
+                        "order_id":           order.get("order_id", ""),
+                        "user_id":            user_id,
+                        "status":             "confirmed",
+                        "estimated_delivery": created_at,
+                        "eta_minutes":        15,
+                        "total_amount":       0.0,
+                        "items": [
+                            {
+                                "product_id": p.get("product_id", ""),
+                                "quantity":   p.get("quantity", 1),
+                                "title":      p.get("title", ""),
+                                "image_url":  clean_url(p.get("imageUrl", "")),
+                                "brand":      p.get("brand", ""),
+                                "category":   p.get("category", ""),
+                            }
+                            for p in products
+                        ],
+                        "delivery_address":  "Bengaluru",
+                        "created_at":        created_at,
+                        "payment_method":    order.get("payment_method", "UPI"),
+                    })
 
     # Most recent first
     result.sort(key=lambda o: o.get("created_at", ""), reverse=True)

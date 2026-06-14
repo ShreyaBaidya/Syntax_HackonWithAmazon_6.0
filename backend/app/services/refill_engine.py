@@ -35,11 +35,35 @@ def _clean_url(raw: str) -> str:
     return m.group() if m else raw
 
 
-def _extract_history() -> list[dict]:
+def _extract_history(user_id: Optional[str] = None) -> list[dict]:
     from app.db.order_store import _ORDER_HISTORY
     flat: list[dict] = []
     for entry in _ORDER_HISTORY:
-        if "orders" in entry:
+        # ── Format 1: wrapper with "customers" list ───────────────────────
+        if "customers" in entry:
+            for customer in entry["customers"]:
+                # Filter by user_id if provided
+                if user_id and customer.get("user_id") != user_id:
+                    continue
+                for order in customer.get("orders", []):
+                    date_str = order.get("order_date", "")
+                    if not date_str:
+                        continue
+                    for product in order.get("products", []):
+                        flat.append({
+                            "product_id": product.get("product_id", ""),
+                            "date":       date_str,
+                            "title":      product.get("title", ""),
+                            "brand":      product.get("brand", ""),
+                            "category":   product.get("category", ""),
+                            "image_url":  _clean_url(product.get("imageUrl", "")),
+                            "price":      float(product.get("price", 0)),
+                        })
+
+        # ── Format 2: legacy flat customer dict with "orders" key ─────────
+        elif "orders" in entry:
+            if user_id and entry.get("user_id") != user_id:
+                continue
             for order in entry["orders"]:
                 date_str = order.get("order_date", "")
                 if not date_str:
@@ -54,7 +78,11 @@ def _extract_history() -> list[dict]:
                         "image_url":  _clean_url(product.get("imageUrl", "")),
                         "price":      float(product.get("price", 0)),
                     })
+
+        # ── Format 3: flat order dict (from place_order) ──────────────────
         elif "order_id" in entry:
+            if user_id and entry.get("user_id") != user_id:
+                continue
             date_str = entry.get("created_at", "")[:10]
             if not date_str:
                 continue
@@ -286,7 +314,6 @@ Apply the rules. Return JSON array."""
 # ── Step 5: Classify and build reasons ───────────────────────────────────────
 
 def _classify(avg_gap: float) -> str:
-    if avg_gap <= 4:   return "daily"
     if avg_gap <= 10:  return "weekly"
     if avg_gap <= 20:  return "biweekly"
     return "monthly"
@@ -306,19 +333,20 @@ def _reason(name: str, p: dict) -> str:
 def get_refill_suggestions(
     user_id: Optional[str] = None,
     cart_item_names: list[str] | None = None,
+    access_token: Optional[str] = None,
 ) -> dict:
     """
     Returns an LLM-optimized Home Refill bundle.
 
-    cart_item_names: list of product names already in the customer's
-    current cart — used to avoid redundant suggestions.
+    cart_item_names: product names already in cart (avoid redundant suggestions).
+    access_token: Google OAuth token for fetching real calendar events.
     """
     cart_item_names = cart_item_names or []
 
-    history  = _extract_history()
+    history  = _extract_history(user_id=user_id)
     patterns = _compute_patterns(history)
 
-    # Phase 1: algorithmic candidates
+    # Phase 1: algorithmic candidates (weekly / biweekly / monthly)
     candidates: list[dict] = []
     for pid, pattern in patterns.items():
         if pattern["urgency"] < REFILL_THRESHOLD:
@@ -343,26 +371,36 @@ def get_refill_suggestions(
 
     # Phase 2: LLM deduplication + preference analysis
     suggestions = _llm_deduplicate(candidates, cart_item_names)
-
-    # Re-sort after LLM filtering (LLM may reorder)
     suggestions.sort(key=lambda x: x.get("refill_info", {}).get("urgency", 0), reverse=True)
 
-    daily     = [s for s in suggestions if s["refill_info"]["frequency"] == "daily"]
-    weekly    = [s for s in suggestions if s["refill_info"]["frequency"] == "weekly"]
-    biweekly  = [s for s in suggestions if s["refill_info"]["frequency"] == "biweekly"]
-    monthly   = [s for s in suggestions if s["refill_info"]["frequency"] == "monthly"]
-    total     = round(sum(s["price"] for s in suggestions), 2)
+    # Phase 3: Google Calendar event-based suggestions (today tab)
+    today_items: list[dict] = []
+    try:
+        from app.services.google_calendar import get_today_events
+        from app.services.event_planner import suggest_for_events
+        events = get_today_events(access_token=access_token)
+        if events:
+            today_items = suggest_for_events(events, history)
+    except Exception:
+        pass
+
+    all_items = today_items + suggestions
+    today    = [s for s in all_items if s["refill_info"]["frequency"] == "today"]
+    weekly   = [s for s in all_items if s["refill_info"]["frequency"] == "weekly"]
+    biweekly = [s for s in all_items if s["refill_info"]["frequency"] == "biweekly"]
+    monthly  = [s for s in all_items if s["refill_info"]["frequency"] == "monthly"]
+    total    = round(sum(s["price"] for s in all_items), 2)
 
     return {
         "bundle_name": "🏠 Home Refill",
-        "subtitle":    f"{len(suggestions)} items likely running low",
+        "subtitle":    f"{len(all_items)} items likely running low",
         "total":       total,
-        "item_count":  len(suggestions),
-        "items":       suggestions,
+        "item_count":  len(all_items),
+        "items":       all_items,
         "grouped": {
-            "daily":    {"label": "🛒 Daily Essentials",  "sublabel": "Every 2–4 days",  "items": daily},
-            "weekly":   {"label": "📅 Weekly Restock",    "sublabel": "Every 5–10 days", "items": weekly},
-            "biweekly": {"label": "🗓️ Bi-weekly",        "sublabel": "Every 11–20 days","items": biweekly},
-            "monthly":  {"label": "📦 Monthly Pantry",    "sublabel": "Every 3–4 weeks", "items": monthly},
+            "today":    {"label": "📅 Today's Planner",  "sublabel": "Based on your calendar events", "items": today},
+            "weekly":   {"label": "📅 Weekly Restock",   "sublabel": "Every 5–10 days",  "items": weekly},
+            "biweekly": {"label": "🗓️ Bi-weekly",       "sublabel": "Every 11–20 days", "items": biweekly},
+            "monthly":  {"label": "📦 Monthly Pantry",   "sublabel": "Every 3–4 weeks",  "items": monthly},
         },
     }

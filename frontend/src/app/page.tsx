@@ -13,6 +13,14 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
 
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    try {
+      const user = localStorage.getItem('amazon_now_user');
+      if (!user) router.replace('/auth');
+    } catch { /* ignore */ }
+  }, [router]);
+
   // Load cart from localStorage on mount (client-only)
   useEffect(() => {
     try {
@@ -28,7 +36,7 @@ export default function HomePage() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [refill, setRefill] = useState<RefillSuggestions | null>(null);
   const [refillExpanded, setRefillExpanded] = useState(false);
-  const [refillTab, setRefillTab] = useState<'daily' | 'weekly' | 'biweekly' | 'monthly'>('weekly');
+  const [refillTab, setRefillTab] = useState<'weekly' | 'biweekly' | 'monthly'>('weekly');
   const [dismissedRefillIds, setDismissedRefillIds] = useState<Set<string>>(new Set());
   const [startingSharedCart, setStartingSharedCart] = useState(false);
   const [showJoinInput, setShowJoinInput] = useState(false);
@@ -90,11 +98,17 @@ export default function HomePage() {
   }, [joinLink, router]);
 
   useEffect(() => {
+    let userId: string | undefined;
+    try {
+      const stored = localStorage.getItem('amazon_now_user');
+      if (stored) userId = JSON.parse(stored).user_id;
+    } catch { /* ignore */ }
+
     getRecommendations()
       .then(setRecs)
       .catch(console.error)
       .finally(() => setLoading(false));
-    getRefillSuggestions(undefined, cart.map(i => i.product.name))
+    getRefillSuggestions(userId, cart.map(i => i.product.name))
       .then(setRefill)
       .catch(console.error);
   }, []);
@@ -367,7 +381,7 @@ export default function HomePage() {
                         }, 0);
                         const tabItemsInCart = tabItems.filter(i => cart.find(c => c.product.id === i.id)).length;
                         const tabStaticTotal = tabItems.reduce((s, i) => s + i.price, 0);
-                        const tabLabels: Record<string, string> = { daily: 'Daily', weekly: 'Weekly', biweekly: 'Bi-weekly', monthly: 'Monthly' };
+                        const tabLabels: Record<string, string> = { weekly: 'Weekly', biweekly: 'Bi-weekly', monthly: 'Monthly' };
                         return (
                           <>
                             {tabLabels[refillTab]} · {tabItems.length} items · <strong>₹{tabStaticTotal.toFixed(0)}</strong>
@@ -409,11 +423,11 @@ export default function HomePage() {
               <div style={{ borderTop: '1px solid #E8F5E9' }}>
                 {/* Tab bar */}
                 <div style={{ display: 'flex', borderBottom: '1px solid #E8F5E9', background: '#FAFEF8' }}>
-                  {(['daily', 'weekly', 'biweekly', 'monthly'] as const).map(tab => {
+                  {(['weekly', 'biweekly', 'monthly'] as const).map(tab => {
                     const group = refill.grouped[tab];
                     const count = (group?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).length;
                     const labels: Record<string, string> = {
-                      daily: '🛒 Daily', weekly: '📅 Weekly',
+                      weekly: '📅 Weekly',
                       biweekly: '🗓️ Bi-weekly', monthly: '📦 Monthly',
                     };
                     return (

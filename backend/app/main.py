@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.api import chat, recommendations, products, orders, cart, refill
+from app.api import calendar as calendar_api, auth
 
 _DESCRIPTION = """
 
@@ -73,6 +74,8 @@ app.include_router(products.router,        prefix="/api/v1", tags=["Products"])
 app.include_router(orders.router,          prefix="/api/v1", tags=["Orders"])
 app.include_router(cart.router,            prefix="/api/v1", tags=["Shared Cart"])
 app.include_router(refill.router,          prefix="/api/v1", tags=["Recommendations"])
+app.include_router(calendar_api.router,    prefix="/api/v1", tags=["Calendar"])
+app.include_router(auth.router,            prefix="/api/v1", tags=["Auth"])
 
 
 @app.get("/health", tags=["Health"])
