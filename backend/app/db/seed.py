@@ -189,6 +189,10 @@ PRODUCTS: list[dict] = [
      "tags": "screen protector mobile phone tempered glass"},
 
     # ── Grocery Staples ───────────────────────────────────────────────────────
+    {"id": "p051", "name": "Barilla Penne Pasta 500g", "category": "grocery",
+     "price": 150.0, "unit": "pack", "eta_min": 25, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Pasta",
+     "tags": "pasta italian cooking penne macaroni"},
     {"id": "p042", "name": "Aashirvaad Whole Wheat Atta 5kg", "category": "grocery",
      "price": 279.0, "unit": "bag", "eta_min": 30, "in_stock": True,
      "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Atta",

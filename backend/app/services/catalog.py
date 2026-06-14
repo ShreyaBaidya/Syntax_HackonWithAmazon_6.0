@@ -148,7 +148,8 @@ def search_products(
 
 def _search_memory(query: str, category: str | None, limit: int) -> list[dict]:
     q = query.lower() if query else ""
-    words = [w for w in q.split() if len(w) >= 3]  # meaningful words only
+    stop_words = {"for", "the", "and", "with", "group", "some", "need", "want", "make", "can", "you", "please"}
+    words = [w for w in q.split() if len(w) >= 3 and w not in stop_words]
     out = []
     for p in ALL_PRODUCTS:
         if not p.get("in_stock"):
@@ -169,14 +170,6 @@ def _search_memory(query: str, category: str | None, limit: int) -> list[dict]:
                 out.append(_format(p))
         else:
             out.append(_format(p))
-
-    # If we still have nothing and a category was specified, return category items
-    if not out and category:
-        out = [_format(p) for p in ALL_PRODUCTS if p.get("in_stock") and p.get("category") == category]
-
-    # Last resort: return top in-stock products (safety net)
-    if not out:
-        out = [_format(p) for p in ALL_PRODUCTS if p.get("in_stock")]
 
     return out[:limit]
 

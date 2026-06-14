@@ -10,14 +10,37 @@ interface Props {
   onOrderComplete: (order: Order) => void;
   onClose: () => void;
   onUpdateQty?: (productId: string, qty: number) => void;
+  onAddProduct?: (product: Product) => void;
 }
 
 type Phase = 'review' | 'biometric' | 'confirmed';
 
-export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty }: Readonly<Props>) {
+export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onAddProduct }: Readonly<Props>) {
   const [phase, setPhase] = useState<Phase>('review');
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState('');
+  const [upsells, setUpsells] = useState<Product[]>([]);
+  import('@/lib/api').then(({ getRecommendations }) => {
+    // Only fetch once when phase is review
+  });
+
+  import('react').then(({ useEffect }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      if (cart.length > 0 && phase === 'review') {
+        const intentQuery = cart.map(i => i.product.name).join(', ');
+        import('@/lib/api').then(({ getRecommendations }) => {
+          getRecommendations('demo_user', `I am buying ${intentQuery}. What goes well with this?`)
+            .then(data => {
+              // filter out products already in cart
+              const inCartIds = new Set(cart.map(c => c.product.id));
+              const suggestions = data.now_suggestions.filter(p => !inCartIds.has(p.id));
+              setUpsells(suggestions.slice(0, 2));
+            }).catch(() => {});
+        });
+      }
+    }, [cart, phase]);
+  });
 
   const total = cart.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
   const maxEta = cart.length ? Math.max(...cart.map(i => i.product.eta_min)) : 28;
@@ -161,6 +184,29 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty }: R
             <p className="text-2xl font-bold text-green-600">{maxEta} min</p>
           </div>
         </div>
+
+        {upsells.length > 0 && (
+          <div className="mb-5 bg-gradient-to-r from-indigo-50 to-purple-50 p-3 rounded-xl border border-indigo-100">
+            <p className="text-xs font-bold text-indigo-900 mb-2 flex items-center gap-1">✨ AI Suggests you might need:</p>
+            {upsells.map(u => (
+              <div key={u.id} className="flex justify-between items-center bg-white p-2 rounded-lg mb-2 shadow-sm">
+                <div className="flex items-center gap-2 min-w-0">
+                  <img src={u.image_url} alt={u.name} className="w-8 h-8 object-contain bg-gray-50 rounded" />
+                  <p className="text-xs font-medium truncate">{u.name}</p>
+                </div>
+                <button 
+                  onClick={() => {
+                    if (onAddProduct) onAddProduct(u);
+                    setUpsells(prev => prev.filter(p => p.id !== u.id));
+                  }}
+                  className="bg-[#FFD814] text-black font-bold text-xs px-2 py-1 rounded whitespace-nowrap ml-2 border border-[#F0C000]"
+                >
+                  + Add ₹{u.price}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {error && (
           <p className="text-sm text-red-500 text-center mb-3">{error}</p>

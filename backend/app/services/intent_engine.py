@@ -172,9 +172,6 @@ def stream_nowspeak(
     if not found_products:
         # Broaden: try without category filter
         found_products = _catalog_search(query=intent["query"], category=None, limit=5)
-    if not found_products:
-        # Last resort: return top trending
-        found_products = _catalog_search(query="", limit=4)
 
     # ── Dietary profile filtering ─────────────────────────────────────────────
     exclusion_set = get_exclusion_set(user_id)
@@ -187,6 +184,8 @@ def stream_nowspeak(
         found_products = found_products[:5]
 
     product_names = ", ".join(p["name"] for p in found_products[:3])
+    if not product_names:
+        product_names = "None (could not find any matching products in our catalog)"
 
     # ── Phase 3: Stream warm conversational reply ─────────────────────────────
     # Augment system prompt with diet context

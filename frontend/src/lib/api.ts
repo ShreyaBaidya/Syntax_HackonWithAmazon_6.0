@@ -412,3 +412,28 @@ export async function getOccasions(): Promise<Occasion[]> {
   const data = await res.json();
   return data.occasions;
 }
+
+export type FridgeStatus = {
+  status: string;
+  last_sync: string;
+  alerts: number;
+  auto_cart: {
+    id: string;
+    name: string;
+    suggested_qty: number;
+    reason: string;
+  }[];
+};
+
+export async function getFridgeStatus(): Promise<FridgeStatus> {
+  const res = await fetch(`${API_URL}/api/v1/iot/fridge/status`);
+  if (!res.ok) throw new Error(`Fridge status failed: ${res.status}`);
+  return res.json();
+}
+
+export async function getUpcomingEvents(userId: string) {
+  const res = await fetch(`${API_URL}/api/v1/calendar/events?user_id=${userId}`);
+  if (!res.ok) throw new Error(`Calendar fetch failed: ${res.status}`);
+  return res.json();
+}
+

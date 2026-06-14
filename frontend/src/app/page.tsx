@@ -8,6 +8,8 @@ import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
 import { AmazonHeader } from '@/components/AmazonHeader';
 import { useProfile } from '@/hooks/useProfile';
 import { ProfileBanner } from '@/components/ProfileBanner';
+import { SmartFridgeWidget } from '@/components/SmartFridgeWidget';
+import { CalendarWidget } from '@/components/CalendarWidget';
 
 export default function HomePage() {
   const router = useRouter();
@@ -426,6 +428,28 @@ export default function HomePage() {
 
       {/* Products */}
       <div style={{ marginTop: 0 }}>
+      
+        <SmartFridgeWidget 
+          onAddAll={(items) => {
+            // Need to map the mock items to real products or just trigger product fetching.
+            // For now, we simulate adding by creating dummy Product objects.
+            items.forEach(item => {
+              // Create a dummy Product object to satisfy the handler. Price=0 because we don't have it, but for a demo it's fine
+              const dummyProduct = {
+                id: item.id,
+                name: item.name,
+                price: item.price || 50,
+                unit: "unit",
+                image_url: "",
+                eta_min: 15,
+                category: "grocery"
+              } as Product;
+              handleProductSelect(dummyProduct, item.quantity);
+            });
+          }}
+        />
+
+        <CalendarWidget userId={userId || 'demo_user'} />
 
         {refill && refill.item_count > 0 && (
           <div style={{ margin: '8px 10px 0', background: 'white', borderRadius: 10, overflow: 'hidden', border: '1px solid #E8F5E9' }}>
@@ -741,6 +765,9 @@ export default function HomePage() {
             } else {
               setCart(prev => prev.map(i => i.product.id === productId ? { ...i, quantity: qty } : i));
             }
+          }}
+          onAddProduct={(product) => {
+            handleProductSelect(product, 1);
           }}
         />
       )}

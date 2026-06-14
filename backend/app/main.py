@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.api import chat, recommendations, products, orders, cart, refill, coupon, profile
-from app.api import calendar as calendar_api, auth, profile
-from app.api import ai_routes
+from app.api import calendar as calendar_api, auth
+from app.api import ai_routes, iot
 
 _DESCRIPTION = """
 
@@ -80,6 +80,7 @@ app.include_router(refill.router,          prefix="/api/v1", tags=["Recommendati
 app.include_router(coupon.router,          prefix="/api/v1", tags=["Coupons"])
 app.include_router(calendar_api.router,    prefix="/api/v1", tags=["Calendar"])
 app.include_router(auth.router,            prefix="/api/v1", tags=["Auth"])
+app.include_router(iot.router,             prefix="/api/v1", tags=["IoT Refrigerator"])
 
 # ── AI Shopping Assistant routers (merged from shopping-assistantAI branch) ──
 app.include_router(ai_routes.router)
