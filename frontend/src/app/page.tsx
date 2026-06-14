@@ -495,13 +495,13 @@ export default function HomePage() {
                     <span style={{ fontSize: 11, color: '#aaa' }}>No items in this frequency</span>
                   </div>
                 ) : (
-                  (refill.grouped[refillTab]?.items ?? []).map((item, i) => {
+                  (refill.grouped[refillTab]?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).map((item, i, arr) => {
                     const cartItem = cart.find(c => c.product.id === item.id);
                     const qty = cartItem?.quantity ?? 0;
                     return (
                       <div key={item.id} style={{
                         display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px',
-                        borderBottom: i === items.length - 1 ? 'none' : '1px solid #F5F5F5',
+                        borderBottom: i === arr.length - 1 ? 'none' : '1px solid #F5F5F5',
                       }}>
                         <div style={{ width: 36, height: 36, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#FAFAFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
