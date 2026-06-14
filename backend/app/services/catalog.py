@@ -19,9 +19,18 @@ ALL_PRODUCTS: list[dict] = AMAZON_PRODUCTS + FOOD_ENHANCED_PRODUCTS + PRODUCTS
 
 
 def _infer_dietary_tags(p: dict) -> list[str]:
-    """Infer dietary tags for legacy products that don't have structured metadata."""
+    """Infer dietary tags for legacy products that don't have structured metadata.
+    Only applies to food-related categories — non-food items get no dietary tags."""
     if p.get("dietary_tags"):
         return p["dietary_tags"]
+    
+    # Only infer for food categories
+    FOOD_CATEGORIES = {"fruits", "vegetables", "fresh", "dairy", "beverages", "snacks", 
+                       "grocery", "breakfast", "plant_based", "high_protein", 
+                       "allergy_friendly", "ready_to_eat", "medicine"}
+    category = p.get("category", "")
+    if category not in FOOD_CATEGORIES:
+        return []
     
     tags_lower = p.get("tags", "").lower()
     name_lower = p.get("name", "").lower()
@@ -40,7 +49,6 @@ def _infer_dietary_tags(p: dict) -> list[str]:
             inferred.append("Vegan")
     
     # Category-based inferences
-    category = p.get("category", "")
     if category in ("fruits", "vegetables", "fresh"):
         if "Vegan" not in inferred:
             inferred.append("Vegan")

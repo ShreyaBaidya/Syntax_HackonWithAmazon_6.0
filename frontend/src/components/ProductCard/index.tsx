@@ -78,10 +78,10 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
 
   // ── Grid card (4-column compact, matches Amazon Now) ──────────────────────
   if (grid) {
-    // Task 8.1: Dietary badges (max 3, green chips)
+    // Task 8.1: Dietary badges (max 3, green chips) - only show for food items
     const dietaryBadges = (product.dietary_tags || []).slice(0, 3);
-    // Task 8.2: Allergen safety badge (blue chip when allergen_tags exists and is empty)
-    const showAllergenSafe = product.allergen_tags !== undefined && product.allergen_tags.length === 0;
+    // Task 8.2: Allergen safety badge - only show when product has dietary_tags (i.e., it's a food item)
+    const showAllergenSafe = dietaryBadges.length > 0 && product.allergen_tags !== undefined && product.allergen_tags.length === 0;
     // Task 8.3: Reason text truncated at 120 chars
     const reasonText = product.reason
       ? (product.reason.length > 120 ? product.reason.slice(0, 120) + '…' : product.reason)
@@ -291,7 +291,7 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
         )}
 
         {/* Allergen safe badge */}
-        {product.allergen_tags !== undefined && product.allergen_tags.length === 0 && (
+        {(product.dietary_tags && product.dietary_tags.length > 0) && product.allergen_tags !== undefined && product.allergen_tags.length === 0 && (
           <div style={{ margin: '3px 0 0' }}>
             <span style={{
               fontSize: 9, color: '#1565C0', background: '#E3F2FD', border: '1px solid #90CAF9',
