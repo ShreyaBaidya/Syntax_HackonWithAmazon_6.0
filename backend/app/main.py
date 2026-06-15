@@ -8,11 +8,10 @@ from app.api import (
     products,
     orders,
     cart,
-    refill,
     coupon,
     profile,
 )
-from app.api import calendar as calendar_api, auth, profile
+from app.api import calendar as calendar_api, auth
 from app.api import ai_routes
 
 
@@ -98,7 +97,6 @@ app.include_router(products.router, prefix="/api/v1", tags=["Products"])
 app.include_router(orders.router, prefix="/api/v1", tags=["Orders"])
 app.include_router(cart.router, prefix="/api/v1", tags=["Shared Cart"])
 app.include_router(profile.router, prefix="/api/v1", tags=["Profile"])
-app.include_router(refill.router, prefix="/api/v1", tags=["Recommendations"])
 app.include_router(coupon.router, prefix="/api/v1", tags=["Coupons"])
 app.include_router(calendar_api.router, prefix="/api/v1", tags=["Calendar"])
 

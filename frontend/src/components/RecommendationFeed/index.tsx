@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Product, getProductsByCategory } from "@/lib/api";
 import { ProductCard } from "@/components/ProductCard";
-import { CategoryStrip } from "@/components/CategoryStrip";
 
 interface Props {
   nowSuggestions: Product[];
@@ -243,9 +242,6 @@ export function RecommendationFeed({
 
   return (
     <div style={{ background: "#F7F7F7" }}>
-      {/* Category icon strip */}
-      <CategoryStrip active={activeCategory} onChange={handleCategoryChange} />
-
       {/* Sub-category pill chips */}
       <div style={{ background: "white", borderBottom: "1px solid #F0F0F0" }}>
         <div

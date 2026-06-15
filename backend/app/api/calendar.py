@@ -99,25 +99,11 @@ async def event_recommendations(
 
     token = _GOOGLE_TOKENS.get(user_id)
     events = get_today_events(access_token=token, date_str=date)
-    if not events:
-        return {"enabled": True, "events": [], "recommendations": []}
-
-    from app.services.refill_engine import _extract_history
-    from app.services.event_planner import suggest_for_events
-
-    history = _extract_history(user_id=user_id)
-    recommendations = suggest_for_events(events, history)
-
-    # ProductCard renders the grey reason line from `reason`; the planner sets
-    # `ai_reason`, so mirror it onto `reason` for display.
-    for product in recommendations:
-        if not product.get("reason"):
-            product["reason"] = product.get("ai_reason", "For your event today")
 
     return {
         "enabled": True,
         "events": events,
-        "recommendations": recommendations,
+        "recommendations": [],
     }
 
 

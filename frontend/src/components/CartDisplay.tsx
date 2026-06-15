@@ -2,8 +2,6 @@
 import { ShoppingCart, RefreshCw } from "lucide-react";
 import type { CartResponse, CartItem } from "@/types";
 import { formatPrice } from "@/lib/utils";
-import NutritionCard from "./NutritionCard";
-import AddToCartButton from "./AddToCartButton";
 import Toast, { useToast } from "./Toast";
 
 export default function CartDisplay({
@@ -74,7 +72,7 @@ export default function CartDisplay({
           )}
         </div>
         <div className="space-y-4">
-          {cart.nutrition && <NutritionCard nutrition={cart.nutrition} />}
+          {/* Nutrition summary removed */}
         </div>
       </div>
       <Toast
@@ -123,7 +121,6 @@ function ItemSection({
                   {formatPrice(item.estimated_price)}
                 </p>
               )}
-              <AddToCartButton item={item} onAdded={() => onAdded(item.name)} />
             </div>
           </div>
         ))}
