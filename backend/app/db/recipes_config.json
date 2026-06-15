@@ -49,7 +49,7 @@
     {
       "id": "biryani",
       "name": "Chicken Biryani",
-      "image_url": "https://images.unsplash.com/photo-1563379091339-03b21ab4a104?w=300&h=200&fit=crop",
+      "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=200&fit=crop",
       "keywords": ["biryani", "hyderabadi", "dum pukht"],
       "url_patterns": ["biryani", "ndtv.*biryani", "tarla.*biryani"],
       "image_patterns": ["biryani", "rice.*chicken", "hyderabadi"],
@@ -176,7 +176,7 @@
     {
       "id": "paneer_tikka",
       "name": "Paneer Tikka",
-      "image_url": "https://images.unsplash.com/photo-1599599810694-b5ac4dd94b61?w=300&h=200&fit=crop",
+      "image_url": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&h=200&fit=crop",
       "keywords": ["paneer tikka", "paneer", "tandoori"],
       "url_patterns": ["paneer.*tikka", "tandoori"],
       "image_patterns": ["paneer", "tikka", "tandoori"],
