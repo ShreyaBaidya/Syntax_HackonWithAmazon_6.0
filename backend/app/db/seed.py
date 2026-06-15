@@ -18,7 +18,7 @@ PRODUCTS: list[dict] = [
         "unit": "strip",
         "eta_min": 28,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/EEF2FF/4F46E5?text=Paracetamol",
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "fever headache pain relief tablet",
     },
     {
@@ -29,7 +29,7 @@ PRODUCTS: list[dict] = [
         "unit": "strip",
         "eta_min": 28,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/EEF2FF/4F46E5?text=Ibuprofen",
+        "image_url": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "pain inflammation fever ibuprofen",
     },
     {
@@ -40,7 +40,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 28,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/EEF2FF/4F46E5?text=ORS",
+        "image_url": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "dehydration electrolytes diarrhea rehydration",
     },
     {
@@ -51,7 +51,7 @@ PRODUCTS: list[dict] = [
         "unit": "piece",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/EEF2FF/4F46E5?text=Thermometer",
+        "image_url": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "fever temperature thermometer",
     },
     {
@@ -62,7 +62,7 @@ PRODUCTS: list[dict] = [
         "unit": "strip",
         "eta_min": 28,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/EEF2FF/4F46E5?text=Cold+Flu",
+        "image_url": "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "cold flu cough runny nose sore throat",
     },
     # ── Beverages ─────────────────────────────────────────────────────────────
@@ -74,7 +74,7 @@ PRODUCTS: list[dict] = [
         "unit": "jar",
         "eta_min": 22,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF7ED/EA580C?text=Nescafe",
+        "image_url": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "coffee morning caffeine instant nescafe",
     },
     {
@@ -85,7 +85,7 @@ PRODUCTS: list[dict] = [
         "unit": "bottle",
         "eta_min": 22,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF7ED/EA580C?text=Pepsi",
+        "image_url": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "soft drink soda party cold pepsi drinks",
     },
     {
@@ -96,7 +96,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 22,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF7ED/EA580C?text=OJ",
+        "image_url": "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "juice orange vitamin c healthy morning",
     },
     {
@@ -107,7 +107,7 @@ PRODUCTS: list[dict] = [
         "unit": "can",
         "eta_min": 22,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF7ED/EA580C?text=RedBull",
+        "image_url": "https://images.unsplash.com/photo-1622543956221-a39670b95d21?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "energy caffeine late night work focus",
     },
     {
@@ -118,7 +118,7 @@ PRODUCTS: list[dict] = [
         "unit": "box",
         "eta_min": 22,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF7ED/EA580C?text=GreenTea",
+        "image_url": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "tea healthy antioxidant calm relaxing",
     },
     # ── Dairy ─────────────────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ PRODUCTS: list[dict] = [
         "unit": "packet",
         "eta_min": 18,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0FDF4/16A34A?text=Milk",
+        "image_url": "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "milk dairy morning breakfast amul",
     },
     {
@@ -141,7 +141,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 18,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0FDF4/16A34A?text=Bread",
+        "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "bread breakfast toast sandwich",
     },
     {
@@ -152,7 +152,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 18,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0FDF4/16A34A?text=Butter",
+        "image_url": "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "butter toast cooking baking",
     },
     {
@@ -163,7 +163,7 @@ PRODUCTS: list[dict] = [
         "unit": "cup",
         "eta_min": 18,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0FDF4/16A34A?text=Yogurt",
+        "image_url": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "yogurt healthy protein morning probiotic",
     },
     {
@@ -174,7 +174,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 18,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0FDF4/16A34A?text=Cheese",
+        "image_url": "https://images.unsplash.com/photo-1486887396153-fa416525c108?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "cheese sandwich toast burger",
     },
     # ── Snacks ────────────────────────────────────────────────────────────────
@@ -186,7 +186,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 20,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FEFCE8/CA8A04?text=Lays",
+        "image_url": "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "chips snacks party crisps lays",
     },
     {
@@ -197,7 +197,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 20,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FEFCE8/CA8A04?text=Oreo",
+        "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "cookies biscuits snacks party oreo",
     },
     {
@@ -208,7 +208,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 20,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FEFCE8/CA8A04?text=Kurkure",
+        "image_url": "https://images.unsplash.com/photo-1599490659213-e2b9527ec087?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "snacks masala crunchy party kurkure",
     },
     {
@@ -219,7 +219,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 20,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FEFCE8/CA8A04?text=Maggi",
+        "image_url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "noodles quick meal hunger maggi comfort",
     },
     {
@@ -230,7 +230,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 20,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FEFCE8/CA8A04?text=ParleG",
+        "image_url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "biscuits tea snack parle glucose",
     },
     # ── Personal Care ─────────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ PRODUCTS: list[dict] = [
         "unit": "bottle",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FDF4FF/9333EA?text=Dettol",
+        "image_url": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "antiseptic wound cut cleaning hygiene dettol",
     },
     {
@@ -253,7 +253,7 @@ PRODUCTS: list[dict] = [
         "unit": "box",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FDF4FF/9333EA?text=BandAid",
+        "image_url": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "bandage wound cut first aid plaster",
     },
     {
@@ -264,7 +264,7 @@ PRODUCTS: list[dict] = [
         "unit": "jar",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FDF4FF/9333EA?text=Vicks",
+        "image_url": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "cold congestion breathing cough blocked nose vicks",
     },
     {
@@ -275,7 +275,7 @@ PRODUCTS: list[dict] = [
         "unit": "tube",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FDF4FF/9333EA?text=Colgate",
+        "image_url": "https://images.unsplash.com/photo-1559599189-fe84dea4eb79?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "toothpaste dental hygiene morning colgate",
     },
     {
@@ -286,7 +286,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FDF4FF/9333EA?text=Dove",
+        "image_url": "https://images.unsplash.com/photo-1607006342440-b7095a8e0f22?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "soap bath hygiene shower dove",
     },
     # ── Cleaning ──────────────────────────────────────────────────────────────
@@ -298,7 +298,7 @@ PRODUCTS: list[dict] = [
         "unit": "bottle",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0F9FF/0284C7?text=Colin",
+        "image_url": "https://images.unsplash.com/photo-1585421514738-ee9479e3a786?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "glass cleaner cleaning spray colin",
     },
     {
@@ -309,7 +309,7 @@ PRODUCTS: list[dict] = [
         "unit": "bottle",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0F9FF/0284C7?text=Harpic",
+        "image_url": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "toilet cleaner bathroom cleaning harpic",
     },
     {
@@ -320,7 +320,7 @@ PRODUCTS: list[dict] = [
         "unit": "bottle",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0F9FF/0284C7?text=Lizol",
+        "image_url": "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "floor cleaner disinfectant cleaning lizol",
     },
     {
@@ -331,7 +331,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0F9FF/0284C7?text=Scrub",
+        "image_url": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "scrub pad kitchen cleaning dishes utensils",
     },
     {
@@ -342,7 +342,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F0F9FF/0284C7?text=SurfExcel",
+        "image_url": "https://images.unsplash.com/photo-1610557892470-55d9e80e0b96?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "laundry detergent washing clothes surf excel",
     },
     # ── Baby Care ─────────────────────────────────────────────────────────────
@@ -354,7 +354,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF1F2/E11D48?text=Pampers",
+        "image_url": "https://images.unsplash.com/photo-1595254555192-b4b3b8915655?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "diapers baby nappy pampers",
     },
     {
@@ -365,7 +365,7 @@ PRODUCTS: list[dict] = [
         "unit": "bottle",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF1F2/E11D48?text=BabyPowder",
+        "image_url": "https://images.unsplash.com/photo-1515488042361-404e9250afef?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "baby powder skin care johnson",
     },
     {
@@ -376,7 +376,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF1F2/E11D48?text=MamyPoko",
+        "image_url": "https://images.unsplash.com/photo-1595254555192-b4b3b8915655?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "diapers pants baby toddler mamy poko",
     },
     # ── Home & Emergency ──────────────────────────────────────────────────────
@@ -388,7 +388,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F7F7F7/374151?text=Batteries",
+        "image_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "batteries power outage emergency torch aa",
     },
     {
@@ -399,7 +399,7 @@ PRODUCTS: list[dict] = [
         "unit": "piece",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F7F7F7/374151?text=Torch",
+        "image_url": "https://images.unsplash.com/photo-1554189097-ffe88e998a2b?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "torch flashlight power outage emergency light",
     },
     {
@@ -410,7 +410,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F7F7F7/374151?text=Candles",
+        "image_url": "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "candles power outage light emergency",
     },
     {
@@ -421,7 +421,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F7F7F7/374151?text=Plates",
+        "image_url": "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "plates party disposable guests",
     },
     {
@@ -432,7 +432,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/F7F7F7/374151?text=Cups",
+        "image_url": "https://images.unsplash.com/photo-1594897030264-ab7d87efc473?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "cups party disposable drinks guests",
     },
     # ── Electronics ───────────────────────────────────────────────────────────
@@ -444,7 +444,7 @@ PRODUCTS: list[dict] = [
         "unit": "piece",
         "eta_min": 40,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/ECFDF5/059669?text=PowerBank",
+        "image_url": "https://images.unsplash.com/photo-1609592424109-dd77884d59a8?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "power bank charging mobile emergency battery",
     },
     {
@@ -455,7 +455,7 @@ PRODUCTS: list[dict] = [
         "unit": "piece",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/ECFDF5/059669?text=Cable",
+        "image_url": "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "charger cable usb type-c mobile android",
     },
     {
@@ -466,7 +466,7 @@ PRODUCTS: list[dict] = [
         "unit": "piece",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/ECFDF5/059669?text=ScreenGuard",
+        "image_url": "https://images.unsplash.com/photo-1581090700227-13617d9d92e8?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "screen protector mobile phone tempered glass",
     },
     # ── Grocery Staples ───────────────────────────────────────────────────────
@@ -478,7 +478,7 @@ PRODUCTS: list[dict] = [
         "unit": "bag",
         "eta_min": 30,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Atta",
+        "image_url": "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "wheat flour cooking roti chapati atta",
     },
     {
@@ -489,7 +489,7 @@ PRODUCTS: list[dict] = [
         "unit": "bottle",
         "eta_min": 28,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Oil",
+        "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "cooking oil sunflower fortune",
     },
     {
@@ -500,7 +500,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 22,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Salt",
+        "image_url": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "salt cooking basic essential tata",
     },
     {
@@ -511,7 +511,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Masala",
+        "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "spice masala cooking garam mdh",
     },
     {
@@ -522,7 +522,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 25,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Soup",
+        "image_url": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "soup chicken sick comfort food knorr warm",
     },
     # ── Fresh Produce ─────────────────────────────────────────────────────────
@@ -534,7 +534,7 @@ PRODUCTS: list[dict] = [
         "unit": "bunch",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FEFCE8/A16207?text=Bananas",
+        "image_url": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "fruit banana healthy morning breakfast energy",
     },
     {
@@ -545,7 +545,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFF1F2/BE123C?text=Tomatoes",
+        "image_url": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "vegetable tomato cooking fresh salad",
     },
     {
@@ -556,7 +556,7 @@ PRODUCTS: list[dict] = [
         "unit": "bag",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FFFBEB/B45309?text=Onions",
+        "image_url": "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "vegetable onion cooking basic essential",
     },
     {
@@ -567,7 +567,7 @@ PRODUCTS: list[dict] = [
         "unit": "pack",
         "eta_min": 35,
         "in_stock": True,
-        "image_url": "https://placehold.co/200x200/FEFCE8/A16207?text=Lemons",
+        "image_url": "https://images.unsplash.com/photo-1590502593747-42a996133562?auto=format&fit=crop&w=400&h=400&q=80",
         "tags": "lemon citrus vitamin c fresh juice nimbu",
     },
 ]
