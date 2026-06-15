@@ -59,10 +59,12 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
 
   // ── Compact (horizontal) ──────────────────────────────────────────────────
   if (compact) {
+    const warnBg = warningType === 'allergen' ? '#FEE2E2' : '#FFF7ED';
+    const warnText = warningType === 'allergen' ? '#991B1B' : '#9A3412';
     return (
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
-        padding: '10px 12px', background: 'white',
+        padding: '10px 12px', background: allergyWarning ? warnBg : 'white',
         borderBottom: '1px solid #F0F0F0',
       }}>
         <div style={{
@@ -77,6 +79,11 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {product.name}
           </p>
+          {allergyWarning && (
+            <p style={{ fontSize: 9, fontWeight: 700, color: warnText, margin: '1px 0 0' }}>
+              {allergyWarning}
+            </p>
+          )}
           <p style={{ fontSize: 10, color: '#888', margin: '2px 0 0' }}>{product.unit}</p>
           <p style={{ fontSize: 13, fontWeight: 700, color: '#0F1111', margin: '3px 0 0' }}>₹{product.price}</p>
         </div>

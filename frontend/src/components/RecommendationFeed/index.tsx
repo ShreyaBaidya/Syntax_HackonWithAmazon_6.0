@@ -194,7 +194,7 @@ export function RecommendationFeed({
 
   // Apply client-side dietary safety check (warns, never removes)
   const { safe: safeProducts, removed: removedProducts, warnings: productWarnings } = filterProductsClient(filtered, dietTags, allergenTags);
-  const { safe: safeReorder } = filterProductsClient(filteredReorder, dietTags, allergenTags);
+  const { safe: safeReorder, warnings: reorderWarnings } = filterProductsClient(filteredReorder, dietTags, allergenTags);
 
   console.log('[RecommendationFeed] After filter:', {
     safe: safeProducts.length,
@@ -279,9 +279,12 @@ export function RecommendationFeed({
       {!isBrowsing && safeReorder.length > 0 && (
         <Section title="🔁 Buy Again">
           <div>
-            {safeReorder.map(p => (
-              <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} compact initialQty={getCartQty(p.id)} />
-            ))}
+            {safeReorder.map(p => {
+              const warn = reorderWarnings.get(p.id);
+              return (
+                <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} compact initialQty={getCartQty(p.id)} allergyWarning={warn?.message} warningType={warn?.type} />
+              );
+            })}
           </div>
         </Section>
       )}
