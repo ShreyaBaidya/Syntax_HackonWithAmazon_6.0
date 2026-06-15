@@ -16,6 +16,7 @@ import { RecommendationFeed } from "@/components/RecommendationFeed";
 import { SpeedCheckout, CartItem } from "@/components/SpeedCheckout";
 import { AmazonHeader } from "@/components/AmazonHeader";
 import { ProductCard } from "@/components/ProductCard";
+import { SmartFridgeWidget } from "@/components/SmartFridgeWidget";
 import { useProfile } from "@/hooks/useProfile";
 import { ProfileBanner } from "@/components/ProfileBanner";
 
@@ -309,6 +310,11 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
+      {/* Smart Fridge Widget */}
+      <div style={{ padding: "8px 10px 0" }}>
+        <SmartFridgeWidget onAddToCart={handleProductSelect} />
+      </div>
 
       {/* Recommendations Feed */}
       <div style={{ marginTop: 0 }}>
