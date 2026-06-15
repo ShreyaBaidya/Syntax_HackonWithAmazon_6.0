@@ -49,7 +49,43 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
   const [calEvents, setCalEvents] = useState<CalendarEvent[]>([]);
   const [calLoading, setCalLoading] = useState(false);
   const [calLinked, setCalLinked] = useState(false);
+  const [calMode, setCalMode] = useState<'oauth' | 'service_account' | 'mock'>('mock');
   const calPanelRef = useRef<HTMLDivElement>(null);
+
+  // ── Account menu state ───────────────────────────────────────────────────
+  const [acctOpen, setAcctOpen] = useState(false);
+  const [userName, setUserName] = useState('');
+  const acctRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('amazon_now_user');
+      if (stored) setUserName(JSON.parse(stored).name || '');
+    } catch { /* ignore */ }
+  }, []);
+
+  // Close account menu on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (acctRef.current && !acctRef.current.contains(e.target as Node)) setAcctOpen(false);
+    };
+    if (acctOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [acctOpen]);
+
+  const handleSignOut = () => {
+    try {
+      // Clear the auth session and all per-user cached state so the next
+      // sign-in starts clean (otherwise the previous user's cart, dietary
+      // profile, and cached recs would leak into the new account).
+      localStorage.removeItem('amazon_now_user');
+      localStorage.removeItem('my_name');
+      localStorage.removeItem('amazon_now_cart');
+      localStorage.removeItem('shared_cart_checkout');
+      sessionStorage.clear();
+    } catch { /* ignore */ }
+    router.replace('/auth');
+  };
 
   const getUserId = () => {
     try {
@@ -62,7 +98,7 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
     const uid = getUserId();
     fetch(`${API_BASE}/api/v1/calendar/status?user_id=${uid}`)
       .then(r => r.json())
-      .then(d => setCalLinked(d.linked))
+      .then(d => { setCalLinked(d.linked); setCalMode(d.mode ?? 'mock'); })
       .catch(() => {});
   }, []);
 
@@ -150,18 +186,55 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
       {/* ── Row 1: Top bar ── */}
       <div style={{ background: 'white', padding: '8px 12px', display: 'flex', alignItems: 'center' }}>
 
-        {/* Profile / orders icon */}
-        <div
-          onClick={() => router.push('/orders')}
-          style={{
-            width: 32, height: 32, borderRadius: '50%',
-            background: '#E2FAF9', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', cursor: 'pointer', flexShrink: 0,
-          }}
-        >
-          <svg width="18" height="18" fill="#00695C" viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
+        {/* Profile / account menu */}
+        <div ref={acctRef} style={{ position: 'relative', flexShrink: 0 }}>
+          <div
+            onClick={() => setAcctOpen(o => !o)}
+            style={{
+              width: 32, height: 32, borderRadius: '50%',
+              background: '#E2FAF9', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', cursor: 'pointer',
+            }}
+          >
+            <svg width="18" height="18" fill="#00695C" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+
+          {acctOpen && (
+            <div style={{
+              position: 'absolute', top: '120%', left: 0,
+              width: 200, background: 'white', borderRadius: 10,
+              border: '1px solid #E0E0E0', boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+              zIndex: 200, overflow: 'hidden',
+            }}>
+              {userName && (
+                <div style={{ padding: '10px 14px', borderBottom: '1px solid #F0F0F0' }}>
+                  <p style={{ margin: 0, fontSize: 10, color: '#888' }}>Signed in as</p>
+                  <p style={{ margin: '2px 0 0', fontSize: 13, fontWeight: 700, color: '#0F1111' }}>{userName}</p>
+                </div>
+              )}
+              <button
+                onClick={() => { setAcctOpen(false); router.push('/orders'); }}
+                style={{
+                  width: '100%', textAlign: 'left', background: 'none', border: 'none',
+                  padding: '10px 14px', fontSize: 13, color: '#0F1111', cursor: 'pointer',
+                  borderBottom: '1px solid #F0F0F0',
+                }}
+              >
+                📦 Your Orders
+              </button>
+              <button
+                onClick={handleSignOut}
+                style={{
+                  width: '100%', textAlign: 'left', background: 'none', border: 'none',
+                  padding: '10px 14px', fontSize: 13, color: '#CC0C39', fontWeight: 600, cursor: 'pointer',
+                }}
+              >
+                ↩ Sign out
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Logo */}
@@ -221,15 +294,16 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
                   </div>
                 </div>
                 <button
-                  onClick={handleLinkCalendar}
+                  onClick={calMode === 'service_account' ? undefined : handleLinkCalendar}
                   style={{
-                    background: calLinked ? 'rgba(255,255,255,0.15)' : '#FFD814',
+                    background: calLinked || calMode === 'service_account' ? 'rgba(255,255,255,0.15)' : '#FFD814',
                     border: 'none', borderRadius: 6, padding: '4px 8px',
-                    fontSize: 10, fontWeight: 700, cursor: 'pointer',
-                    color: calLinked ? 'white' : '#0F1111',
+                    fontSize: 10, fontWeight: 700,
+                    cursor: calMode === 'service_account' ? 'default' : 'pointer',
+                    color: calLinked || calMode === 'service_account' ? 'white' : '#0F1111',
                   }}
                 >
-                  {calLinked ? '✓ Linked' : 'Link →'}
+                  {calLinked ? '✓ Linked' : calMode === 'service_account' ? '🟢 Live' : 'Link →'}
                 </button>
               </div>
 
@@ -243,7 +317,7 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
                   <div style={{ padding: '20px', textAlign: 'center' }}>
                     <p style={{ margin: '0 0 4px', fontSize: 13, color: '#555' }}>No events today</p>
                     <p style={{ margin: 0, fontSize: 11, color: '#888' }}>
-                      {calLinked ? 'Your calendar is clear 🎉' : 'Link your Google Calendar to see events'}
+                      {calLinked || calMode === 'service_account' ? 'Your calendar is clear 🎉' : 'Link your Google Calendar to see events'}
                     </p>
                   </div>
                 ) : (

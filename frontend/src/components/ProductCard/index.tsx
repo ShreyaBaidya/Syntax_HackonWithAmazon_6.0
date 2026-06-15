@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { Product } from '@/lib/api';
+import { getAllergenLabel } from '@/lib/dietary';
 
 interface Props {
   product: Product;
@@ -16,6 +17,17 @@ interface Props {
   allergyWarning?: string;
   /** warningType = type of warning: 'allergen' (red) or 'diet' (orange) */
   warningType?: 'allergen' | 'diet';
+  /** showDietaryInfo = whether to render dietary/allergen badges. Set to true only
+   *  when the user has configured a dietary profile so badges aren't shown to
+   *  users who haven't expressed dietary preferences. Default: false. */
+  showDietaryInfo?: boolean;
+  /** userDietTags = the user's selected diet preferences (e.g. ["vegetarian"]).
+   *  Dietary badges on products are filtered to only those matching one of these
+   *  preferences. Informational "Contains X" tags are always shown. */
+  userDietTags?: string[];
+  /** userAllergenTags = the user's selected allergen sensitivities. The
+   *  "Allergen Safe" badge is only shown when this is non-empty. */
+  userAllergenTags?: string[];
 }
 
 // Mock original prices for some products to show discount
@@ -24,9 +36,16 @@ const ORIG: Record<string, number> = {
   p016: 25, p017: 49, p019: 75, p031: 649, p039: 999,
 };
 
-export function ProductCard({ product, onAddToCart, compact = false, grid = false, initialQty = 0, allergyWarning, warningType = 'allergen' }: Props) {
+export function ProductCard({ product, onAddToCart, compact = false, grid = false, initialQty = 0, allergyWarning, warningType = 'allergen', showDietaryInfo = false, userDietTags = [], userAllergenTags = [] }: Props) {
   const [qty, setQty] = useState(initialQty);
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
+
+  // Resolve the red allergen badge. An explicitly-passed allergyWarning (e.g.
+  // computed by RecommendationFeed) takes precedence; otherwise self-compute
+  // from the user's selected allergens so surfaces like NowSpeak that don't
+  // pre-compute warnings still show the "Contains <substance>" badge.
+  const resolvedWarning = allergyWarning
+    ?? (showDietaryInfo ? getAllergenLabel(product, userAllergenTags) : null);
 
   // Sync qty with initialQty when it changes (e.g., coming back from cart page)
   useEffect(() => {
@@ -64,7 +83,7 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
     return (
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
-        padding: '10px 12px', background: allergyWarning ? warnBg : 'white',
+        padding: '10px 12px', background: resolvedWarning ? warnBg : 'white',
         borderBottom: '1px solid #F0F0F0',
       }}>
         <div style={{
@@ -79,9 +98,9 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {product.name}
           </p>
-          {allergyWarning && (
+          {resolvedWarning && (
             <p style={{ fontSize: 9, fontWeight: 700, color: warnText, margin: '1px 0 0' }}>
-              {allergyWarning}
+              {resolvedWarning}
             </p>
           )}
           <p style={{ fontSize: 10, color: '#888', margin: '2px 0 0' }}>{product.unit}</p>
@@ -94,10 +113,15 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
 
   // ── Grid card (4-column compact, matches Amazon Now) ──────────────────────
   if (grid) {
-    // Task 8.1: Dietary badges (max 3, green chips) - only show for food items
-    const dietaryBadges = (product.dietary_tags || []).slice(0, 3);
-    // Task 8.2: Allergen safety badge - only show when product has dietary_tags (i.e., it's a food item)
-    const showAllergenSafe = dietaryBadges.length > 0 && product.allergen_tags !== undefined && product.allergen_tags.length === 0;
+    // Dietary badges: only show product tags that match the user's selected
+    // diet preferences (case-insensitive). No "Allergen Safe" badge, no
+    // "Contains X" info badges — just confirmation that the product fits one
+    // of the user's chosen preferences.
+    const userDietSet = new Set(userDietTags.map(t => t.toLowerCase()));
+    const allProductTags = product.dietary_tags || [];
+    const matchedTags = allProductTags.filter(tag => userDietSet.has(tag.toLowerCase()));
+    const dietaryBadges = showDietaryInfo ? matchedTags.slice(0, 3) : [];
+
     // Task 8.3: Reason text truncated at 120 chars
     const reasonText = product.reason
       ? (product.reason.length > 120 ? product.reason.slice(0, 120) + '…' : product.reason)
@@ -148,17 +172,6 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
               {discount}% OFF
             </div>
           )}
-          {allergyWarning && (
-            <div style={{
-              position: 'absolute', bottom: 0, left: 0, right: 0,
-              background: warningType === 'allergen' ? 'rgba(220, 38, 38, 0.92)' : 'rgba(234, 88, 12, 0.92)',
-              color: 'white',
-              fontSize: 8, fontWeight: 700, padding: '3px 4px',
-              textAlign: 'center', lineHeight: 1.3,
-            }}>
-              {allergyWarning}
-            </div>
-          )}
         </div>
 
         {/* Info */}
@@ -181,7 +194,8 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
             </p>
           )}
 
-          {/* Task 8.1: Dietary badges (green chips, max 3) */}
+          {/* Dietary preference badges (green chips, max 3). Only tags matching
+              the user's chosen preferences are passed in via dietaryBadges. */}
           {dietaryBadges.length > 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, margin: '0 0 4px' }}>
               {dietaryBadges.map(tag => (
@@ -195,14 +209,14 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
             </div>
           )}
 
-          {/* Task 8.2: Allergen safety badge (blue chip) */}
-          {showAllergenSafe && (
+          {/* Dietary conflict badge (red chip) — e.g. "Contains milk" */}
+          {resolvedWarning && (
             <div style={{ margin: '0 0 4px' }}>
               <span style={{
-                fontSize: 8, color: '#1565C0', background: '#E3F2FD', border: '1px solid #90CAF9',
-                borderRadius: 3, padding: '1px 4px', fontWeight: 500,
+                fontSize: 8, color: 'white', background: '#CC0C39', border: '1px solid #CC0C39',
+                borderRadius: 3, padding: '1px 5px', fontWeight: 700, whiteSpace: 'nowrap',
               }}>
-                ✓ Allergen Safe
+                {resolvedWarning}
               </span>
             </div>
           )}
@@ -320,28 +334,36 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
           </p>
         )}
 
-        {/* Dietary badges */}
-        {product.dietary_tags && product.dietary_tags.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, margin: '4px 0 0' }}>
-            {product.dietary_tags.slice(0, 3).map(tag => (
-              <span key={tag} style={{
-                fontSize: 9, color: '#067D62', background: '#E6F7F2', border: '1px solid #B2E8D9',
-                borderRadius: 3, padding: '1px 5px', fontWeight: 500,
-              }}>
-                ✓ {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Dietary preference badges — only tags matching the user's selected diet preferences */}
+        {showDietaryInfo && (() => {
+          const userDietSet = new Set(userDietTags.map(t => t.toLowerCase()));
+          const allTags = product.dietary_tags || [];
+          const filtered = allTags.filter(tag => userDietSet.has(tag.toLowerCase())).slice(0, 3);
+          if (filtered.length === 0) return null;
+          return (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, margin: '4px 0 0' }}>
+              {filtered.map(tag => (
+                <span key={tag} style={{
+                  fontSize: 9, color: '#067D62', background: '#E6F7F2', border: '1px solid #B2E8D9',
+                  borderRadius: 3, padding: '1px 5px', fontWeight: 500,
+                }}>
+                  ✓ {tag}
+                </span>
+              ))}
+            </div>
+          );
+        })()}
 
-        {/* Allergen safe badge */}
-        {(product.dietary_tags && product.dietary_tags.length > 0) && product.allergen_tags !== undefined && product.allergen_tags.length === 0 && (
+        {/* Allergen Safe badge intentionally omitted — only diet preference badges shown */}
+
+        {/* Dietary conflict badge (red chip) */}
+        {resolvedWarning && (
           <div style={{ margin: '3px 0 0' }}>
             <span style={{
-              fontSize: 9, color: '#1565C0', background: '#E3F2FD', border: '1px solid #90CAF9',
-              borderRadius: 3, padding: '1px 5px', fontWeight: 500,
+              fontSize: 9, color: 'white', background: '#CC0C39', border: '1px solid #CC0C39',
+              borderRadius: 3, padding: '1px 5px', fontWeight: 700,
             }}>
-              ✓ Allergen Safe
+              {resolvedWarning}
             </span>
           </div>
         )}

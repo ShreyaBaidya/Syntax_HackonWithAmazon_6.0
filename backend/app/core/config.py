@@ -1,5 +1,13 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# Populate os.environ from .env so modules using os.getenv() (e.g. the Google
+# Calendar service) see the same values pydantic loads into Settings.
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(

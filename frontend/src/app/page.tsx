@@ -2,10 +2,11 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getRecommendations, Recommendations, Product, Order, createSharedCart, getSharedCart, getRefillSuggestions, RefillSuggestions } from '@/lib/api';
+import { getRecommendations, Recommendations, Product, Order, createSharedCart, getSharedCart, getRefillSuggestions, RefillSuggestions, getEventRecommendations, EventRecommendations } from '@/lib/api';
 import { RecommendationFeed } from '@/components/RecommendationFeed';
 import { SpeedCheckout, CartItem } from '@/components/SpeedCheckout';
 import { AmazonHeader } from '@/components/AmazonHeader';
+import { ProductCard } from '@/components/ProductCard';
 import { useProfile } from '@/hooks/useProfile';
 import { ProfileBanner } from '@/components/ProfileBanner';
 
@@ -15,14 +16,7 @@ export default function HomePage() {
   const [recs, setRecs] = useState<Recommendations | null>(null);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
-
-  // Redirect to auth if not logged in
-  useEffect(() => {
-    try {
-      const user = localStorage.getItem('amazon_now_user');
-      if (!user) router.replace('/auth');
-    } catch { /* ignore */ }
-  }, [router]);
+  const [eventRecs, setEventRecs] = useState<EventRecommendations | null>(null);
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -119,17 +113,20 @@ export default function HomePage() {
   }, []);
 
   // ── Fetch recommendations whenever userId or chatIntent changes ─────────
+  // Also waits for profileLoading to resolve so userId is guaranteed to be populated
   useEffect(() => {
+    if (profileLoading) return; // Don't fetch until profile (and userId) are resolved
     console.log('[Recommendations] React state — userId:', userId, 'chatIntent:', chatIntent);
 
     getRecommendations(userId ?? undefined, chatIntent ?? undefined)
       .then(data => {
         console.log('[Recommendations] Response — now_suggestions:', data.now_suggestions.length, ', trending:', data.trending.length);
         setRecs(data);
+        try { sessionStorage.setItem('recs_cache', JSON.stringify(data)); } catch { /* ignore */ }
       })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [userId, chatIntent]);
+  }, [userId, chatIntent, profileLoading]);
 
   
 
@@ -164,23 +161,33 @@ export default function HomePage() {
     }
   }, [joinLink, router]);
 
+  // Fetch refill suggestions once userId is known (separate from recommendations fetch)
+  // Fetch refill suggestions once on mount. The refill engine keys off the AUTH
+  // user_id (e.g. "user_001"), which lives in localStorage under `amazon_now_user`.
+  // This is a different identifier from the dietary-profile `userId` returned by
+  // useProfile, so we must read the auth id here rather than reuse it.
   useEffect(() => {
-    let userId: string | undefined;
+    let authUserId: string | undefined;
     try {
       const stored = localStorage.getItem('amazon_now_user');
-      if (stored) userId = JSON.parse(stored).user_id;
+      if (stored) authUserId = JSON.parse(stored).user_id;
     } catch { /* ignore */ }
-
-    getRecommendations()
-      .then(data => {
-        setRecs(data);
-        try { sessionStorage.setItem('recs_cache', JSON.stringify(data)); } catch { /* ignore */ }
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-    getRefillSuggestions(userId, cart.map(i => i.product.name))
+    getRefillSuggestions(authUserId, cart.map(i => i.product.name))
       .then(setRefill)
       .catch(console.error);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Calendar-driven event recommendations — demo-enabled for Shreya (user_002) only.
+  useEffect(() => {
+    let authUserId: string | undefined;
+    try {
+      const stored = localStorage.getItem('amazon_now_user');
+      if (stored) authUserId = JSON.parse(stored).user_id;
+    } catch { /* ignore */ }
+    if (!authUserId) { setEventRecs(null); return; }
+    getEventRecommendations(authUserId)
+      .then(data => setEventRecs(data.enabled ? data : null))
+      .catch(() => setEventRecs(null));
   }, []);
 
   const handleProductSelect = useCallback((product: Product, qty: number) => {
@@ -389,44 +396,6 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Cashback & offers strip — Amazon Now style */}
-      <div style={{
-        background: 'white', margin: '8px 0 0', padding: '10px 12px',
-        borderTop: '1px solid #F0F0F0', borderBottom: '1px solid #F0F0F0',
-        display: 'flex', alignItems: 'center', gap: 8, overflowX: 'auto',
-      }}>
-        <div style={{
-          flexShrink: 0, background: '#FFFBEB', border: '1.5px solid #FDE68A',
-          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 90,
-        }}>
-          <p style={{ margin: 0, fontSize: 9, fontWeight: 700, color: '#92400E' }}>Assured</p>
-          <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: '#B45309' }}>cashback</p>
-          <p style={{ margin: 0, fontSize: 9, color: '#92400E', fontStyle: 'italic' }}>every time</p>
-        </div>
-        <div style={{
-          flexShrink: 0, background: '#FFF7ED', border: '1.5px solid #FED7AA',
-          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 80,
-        }}>
-          <p style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#EA580C' }}>₹50</p>
-          <p style={{ margin: 0, fontSize: 9, color: '#9A3412' }}>above ₹399</p>
-        </div>
-        <div style={{
-          flexShrink: 0, background: '#EFF6FF', border: '1.5px solid #BFDBFE',
-          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 80,
-        }}>
-          <p style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#2563EB' }}>₹100</p>
-          <p style={{ margin: 0, fontSize: 9, color: '#1E40AF' }}>above ₹749</p>
-        </div>
-        <div style={{
-          flexShrink: 0, background: '#F0FDF4', border: '1.5px solid #BBF7D0',
-          borderRadius: 10, padding: '8px 14px', textAlign: 'center', minWidth: 80,
-        }}>
-          <p style={{ margin: '0 0 1px', fontSize: 8, fontWeight: 600, color: '#065F46' }}>✓ prime</p>
-          <p style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#059669' }}>₹200</p>
-          <p style={{ margin: 0, fontSize: 9, color: '#065F46' }}>above ₹1399</p>
-        </div>
-      </div>
-
       {/* Products */}
       <div style={{ marginTop: 0 }}>
 
@@ -612,6 +581,52 @@ export default function HomePage() {
 
           </div>
         )}
+
+        {/* Calendar-driven event recommendations (Shreya / user_002 only) */}
+        {eventRecs && eventRecs.recommendations.length > 0 && (
+          <div style={{ margin: '8px 0 0', background: 'white' }}>
+            <div style={{
+              padding: '12px 14px',
+              background: 'linear-gradient(135deg, #EDE7F6 0%, #F3E5F5 100%)',
+              display: 'flex', alignItems: 'center', gap: 10,
+            }}>
+              <div style={{
+                width: 40, height: 40, background: 'white',
+                borderRadius: '50%', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontSize: 20, flexShrink: 0,
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              }}>🗓️</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ margin: 0, fontWeight: 800, fontSize: 13, color: '#0F1111' }}>
+                  For your events today
+                </p>
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#6A1B9A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {eventRecs.events.map(e => e.title).join(' · ') || 'Picked by AI from your calendar'}
+                </p>
+              </div>
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+              gap: 8,
+              padding: '8px 10px 12px',
+            }}>
+              {eventRecs.recommendations.map(p => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  onAddToCart={handleProductSelect}
+                  grid
+                  initialQty={cart.find(i => i.product.id === p.id)?.quantity ?? 0}
+                  showDietaryInfo={(profile?.diet_tags?.length ?? 0) > 0 || (profile?.allergen_tags?.length ?? 0) > 0}
+                  userDietTags={profile?.diet_tags ?? []}
+                  userAllergenTags={profile?.allergen_tags ?? []}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {loading ? (
           <LoadingSkeleton />
         ) : recs ? (

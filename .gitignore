@@ -16,6 +16,12 @@ backend/.env
 .env.local
 .env.*.local
 
+# Google Cloud service account keys — never commit
+syntax-project-*.json
+*-service-account*.json
+*service_account*.json
+backend/syntax-project-499415-2d618d262283.json
+
 # Node / Next.js
 node_modules/
 .next/

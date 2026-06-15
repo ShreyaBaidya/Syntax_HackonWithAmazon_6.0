@@ -1,0 +1,10 @@
+{
+  "name": "Amazon Now — Reimagining Urgent Shopping",
+  "short_name": "Amazon Now",
+  "description": "NowSpeak: Voice + AI urgent commerce with 30-min delivery",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0F1111",
+  "icons": []
+}

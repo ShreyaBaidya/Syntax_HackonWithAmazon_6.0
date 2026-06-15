@@ -5,6 +5,7 @@ import { useNowSpeak } from '@/hooks/useNowSpeak';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { ProductCard } from '@/components/ProductCard';
 import { Product } from '@/lib/api';
+import { useProfile } from '@/hooks/useProfile';
 
 const QUICK_PROMPTS = [
   { label: 'I have a fever 🤒', q: 'I have a fever and need medicine fast' },
@@ -21,6 +22,11 @@ export function NowSpeak({ onProductSelect }: Props) {
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, isStreaming, sendMessage } = useNowSpeak();
+  const { profile } = useProfile();
+  const hasProfile = !!profile && (
+    (profile.diet_tags?.length ?? 0) > 0 ||
+    (profile.allergen_tags?.length ?? 0) > 0
+  );
 
   const handleVoiceResult = (transcript: string) => {
     sendMessage(transcript);
@@ -128,7 +134,7 @@ export function NowSpeak({ onProductSelect }: Props) {
                         display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8,
                       }}>
                         {msg.products.map(p => (
-                          <ProductCard key={p.id} product={p} onAddToCart={(product, _qty) => onProductSelect?.(product)} />
+                          <ProductCard key={p.id} product={p} onAddToCart={(product, _qty) => onProductSelect?.(product)} showDietaryInfo={hasProfile} userDietTags={profile?.diet_tags ?? []} userAllergenTags={profile?.allergen_tags ?? []} />
                         ))}
                       </div>
                     )}

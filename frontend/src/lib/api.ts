@@ -106,6 +106,23 @@ export async function getRefillSuggestions(userId?: string, cartItemNames?: stri
   return res.json();
 }
 
+// Calendar-driven event recommendations (demo-enabled for user_002 only)
+export type CalendarEventLite = {
+  event_id: string; title: string; description: string; time: string; location: string; type: string;
+};
+export type EventRecommendations = {
+  enabled: boolean;
+  events: CalendarEventLite[];
+  recommendations: Product[];
+};
+export async function getEventRecommendations(userId: string, date?: string): Promise<EventRecommendations> {
+  const params = new URLSearchParams({ user_id: userId });
+  if (date) params.set('date', date);
+  const res = await fetch(`${API_BASE}/api/v1/calendar/event-recommendations?${params}`);
+  if (!res.ok) throw new Error(`Event recommendations fetch failed: ${res.status}`);
+  return res.json();
+}
+
 // Orders API
 export async function placeOrder(payload: {
   user_id: string; items: { product_id: string; quantity: number }[]; delivery_address: string;
