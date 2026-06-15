@@ -1,4 +1,5 @@
 import json
+import os
 from openai import OpenAI
 from app.core.config import settings
 from app.core.json_parser import safe_parse_json
@@ -27,7 +28,30 @@ class VisionAgent:
         return self._client
 
     async def analyze_image(self, image_base64: str) -> dict:
-        """Analyze image with vision model - tries multiple models."""
+        """Analyze image with vision model - tries multiple models. Has demo fallback."""
+
+        # Demo mode for testing without API
+        if os.getenv("VISION_DEMO_MODE"):
+            return {
+                "image_type": "fridge",
+                "detected_items": [
+                    {"name": "milk", "quantity": "1"},
+                    {"name": "eggs", "quantity": "1"},
+                    {"name": "butter", "quantity": "1"},
+                    {"name": "cheese", "quantity": "1"},
+                ],
+                "missing_suggestions": [
+                    "bread",
+                    "pasta",
+                    "olive oil",
+                    "chicken breast",
+                    "tomatoes",
+                    "onions",
+                    "garlic",
+                    "yogurt",
+                ],
+                "meal_suggestions": ["cheese omelette", "pasta carbonara", "quick breakfast"],
+            }
 
         prompt_text = """Look at this image carefully. Identify ALL food items, ingredients, groceries, or kitchen products visible.
 
