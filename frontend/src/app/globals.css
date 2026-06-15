@@ -37,10 +37,10 @@ body {
 }
 
 /* Center the app in a phone-width column on desktop */
-body > div:first-child {
-  max-width: 800px;
+.app-shell {
+  max-width: 480px;
   margin: 0 auto;
-  background: #e0f2f1;
+  background: #f7f7f7;
   min-height: 100vh;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
   position: relative;
@@ -137,7 +137,7 @@ div[style*="cursor:pointer"]:active {
 }
 
 nav[style*="position: fixed"] {
-  max-width: 800px;
+  max-width: 480px;
   left: 50% !important;
   transform: translateX(-50%);
   width: 100%;

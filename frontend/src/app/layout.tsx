@@ -29,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} style={{ background: "#EAEDED" }}>
-        {children}
+        <div className="app-shell">
+          {children}
+        </div>
       </body>
     </html>
   );

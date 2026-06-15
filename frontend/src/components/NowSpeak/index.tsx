@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNowSpeak } from "@/hooks/useNowSpeak";
 import { useVoiceInput } from "@/hooks/useVoiceInput";
 import { ProductCard } from "@/components/ProductCard";
-import { RecipeInput } from "@/components/RecipeInput";
-import { SmartFridge } from "@/components/SmartFridge";
+import { RecipeInput } from "@/components/RecipeInput/index";
 import { Product } from "@/lib/api";
 import { useProfile } from "@/hooks/useProfile";
 
@@ -23,7 +22,7 @@ interface Props {
 export function NowSpeak({ onProductSelect }: Props) {
   const [inputText, setInputText] = useState("");
   const [mounted, setMounted] = useState(false);
-  const [inputMode, setInputMode] = useState<"chat" | "recipe" | "fridge">("chat");
+  const [inputMode, setInputMode] = useState<"chat" | "recipe">("chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, isStreaming, sendMessage } = useNowSpeak();
   const { profile } = useProfile();
@@ -37,15 +36,6 @@ export function NowSpeak({ onProductSelect }: Props) {
   };
 
   const handleRecipeFound = (products: Product[], servings: number, recipeName: string) => {
-    products.forEach(product => {
-      if (onProductSelect) {
-        onProductSelect(product);
-      }
-    });
-    setInputText("");
-  };
-
-  const handleFridgeScanned = (products: Product[], description: string) => {
     products.forEach(product => {
       if (onProductSelect) {
         onProductSelect(product);
@@ -83,7 +73,7 @@ export function NowSpeak({ onProductSelect }: Props) {
     >
       {/* Tabs */}
       <div style={{ display: "flex", gap: 0, background: "white", borderBottom: "1px solid #DDD", paddingBottom: 0 }}>
-        {(["chat", "recipe", "fridge"] as const).map((mode) => (
+        {(["chat", "recipe"] as const).map((mode) => (
           <button
             key={mode}
             onClick={() => setInputMode(mode)}
@@ -100,7 +90,7 @@ export function NowSpeak({ onProductSelect }: Props) {
               transition: "all 0.2s",
             }}
           >
-            {mode === "chat" ? "🎙️ Chat" : mode === "recipe" ? "🍳 Recipe" : "🧊 Fridge"}
+            {mode === "chat" ? "🎙️ Chat" : "🍳 Recipe"}
           </button>
         ))}
       </div>
@@ -110,10 +100,6 @@ export function NowSpeak({ onProductSelect }: Props) {
         {inputMode === "recipe" ? (
           <div style={{ padding: "12px" }}>
             <RecipeInput onRecipeFound={handleRecipeFound} isLoading={isStreaming} />
-          </div>
-        ) : inputMode === "fridge" ? (
-          <div style={{ padding: "12px" }}>
-            <SmartFridge onFridgeScanned={handleFridgeScanned} isLoading={isStreaming} />
           </div>
         ) : messages.length === 0 ? (
           <div

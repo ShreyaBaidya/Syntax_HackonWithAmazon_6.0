@@ -194,6 +194,7 @@ def search_products(
     category: str | None = None,
     limit: int = 5,
     exclusion_set: set | None = None,
+    name_only: bool = False,
 ) -> list[dict]:
     """
     Search the product catalog.
@@ -206,21 +207,51 @@ def search_products(
     try:
         from app.db.dynamo import search_products_by_query, search_products_by_category
 
-        if category:
+        if category and query:
+            # Fetch broader set from category, then filter by query in-memory
+            # DynamoDB category search ignores query — we post-filter here
+            raw = search_products_by_category(category, max(fetch_limit * 5, 50))
+            if raw and query:
+                q_lower = query.lower()
+                words = [w for w in q_lower.split() if len(w) >= 3]
+                filtered = [
+                    p for p in raw
+                    if q_lower in (p.get("name", "") + " " + p.get("tags", "")).lower()
+                    or any(w in (p.get("name", "") + " " + p.get("tags", "")).lower() for w in words)
+                ]
+                results = filtered if filtered else None
+            else:
+                results = raw if raw else None
+        elif category:
             results = search_products_by_category(category, fetch_limit)
-            if not results and query:
-                results = search_products_by_query(query, fetch_limit)
         else:
             results = search_products_by_query(query, fetch_limit)
         if results:
             formatted = [_format(p) for p in results[:fetch_limit]]
-            if exclusion_set:
-                formatted = filter_products(formatted, exclusion_set)
-            return formatted[:limit]
+            # Validate results contain at least one query word — DynamoDB full-text search
+            # sometimes returns completely unrelated products (embedding/index mismatch).
+            if query:
+                q_words = [w for w in query.lower().split() if len(w) >= 3]
+                validated = [
+                    p for p in formatted
+                    if not q_words or any(
+                        w in (p.get("name", "") + " " + p.get("category", "")).lower()
+                        for w in q_words
+                    )
+                ]
+                if validated:
+                    if exclusion_set:
+                        validated = filter_products(validated, exclusion_set)
+                    return validated[:limit]
+                # DynamoDB returned irrelevant results — fall through to in-memory
+            else:
+                if exclusion_set:
+                    formatted = filter_products(formatted, exclusion_set)
+                return formatted[:limit]
     except Exception:
         pass  # DynamoDB unavailable — fall through to in-memory
 
-    results = _search_memory(query, category, fetch_limit)
+    results = _search_memory(query, category, fetch_limit, name_only=name_only)
 
     if exclusion_set:
         results = filter_products(results, exclusion_set)
@@ -228,7 +259,7 @@ def search_products(
     return results[:limit]
 
 
-def _search_memory(query: str, category: str | None, limit: int) -> list[dict]:
+def _search_memory(query: str, category: str | None, limit: int, name_only: bool = False) -> list[dict]:
     q = query.lower() if query else ""
     stop_words = {
         "for",
@@ -245,37 +276,42 @@ def _search_memory(query: str, category: str | None, limit: int) -> list[dict]:
         "please",
     }
     words = [w for w in q.split() if len(w) >= 3 and w not in stop_words]
-    out = []
+    scored: list[tuple[int, dict]] = []
     for p in ALL_PRODUCTS:
         if not p.get("in_stock"):
             continue
         if category and p.get("category") != category:
             continue
         if q:
-            searchable = f"{p.get('name', '')} {p.get('tags', '')} {p.get('category', '')}".lower()
-            # Match if full query is a substring OR any individual word matches
-            if q in searchable:
-                out.append(_format(p))
-            elif words and any(w in searchable for w in words):
-                out.append(_format(p))
-            elif not category:
-                continue  # skip non-matching items when no category filter
-            # If category matches but query doesn't, still include (browsing by category)
+            name = p.get("name", "").lower()
+            cat = p.get("category", "").lower()
+            if name_only:
+                searchable = name
             else:
-                out.append(_format(p))
+                searchable = f"{name} {p.get('tags', '')} {cat}".lower()
+            if q in searchable:
+                scored.append((len(words) + 1, _format(p)))  # exact phrase — highest score
+            elif words:
+                match_count = sum(1 for w in words if w in searchable)
+                if match_count > 0:
+                    scored.append((match_count, _format(p)))
         else:
-            out.append(_format(p))
+            scored.append((0, _format(p)))
 
-    # If we still have nothing and a category was specified, return category items
-    if not out and category:
+    # Sort by match score descending so best matches come first
+    scored.sort(key=lambda x: -x[0])
+    out = [item for _, item in scored]
+
+    # Category-only fallback: only when no query was given
+    if not out and category and not q:
         out = [
             _format(p)
             for p in ALL_PRODUCTS
             if p.get("in_stock") and p.get("category") == category
         ]
 
-    # Last resort: return top in-stock products (safety net)
-    if not out:
+    # Last resort: return top in-stock products (safety net, only when no query)
+    if not out and not q:
         out = [_format(p) for p in ALL_PRODUCTS if p.get("in_stock")]
 
     return out[:limit]

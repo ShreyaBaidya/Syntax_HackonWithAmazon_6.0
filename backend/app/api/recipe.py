@@ -77,6 +77,7 @@ async def get_recipe_products(
             query=ingredient["product_query"],
             category=ingredient.get("category"),
             limit=1,
+            name_only=True,
         )
 
         if search_results:

@@ -17,6 +17,7 @@ import { SpeedCheckout, CartItem } from "@/components/SpeedCheckout";
 import { AmazonHeader } from "@/components/AmazonHeader";
 import { ProductCard } from "@/components/ProductCard";
 import { SmartFridgeWidget } from "@/components/SmartFridgeWidget";
+import { ReorderWidget } from "@/components/ReorderWidget";
 import { useProfile } from "@/hooks/useProfile";
 import { ProfileBanner } from "@/components/ProfileBanner";
 
@@ -443,6 +444,11 @@ export default function HomePage() {
         <SmartFridgeWidget onAddToCart={handleProductSelect} />
       </div>
 
+      {/* Reorder Widget */}
+      <div style={{ padding: "8px 10px 0" }}>
+        <ReorderWidget onAddToCart={handleProductSelect} />
+      </div>
+
       {/* Recommendations Feed */}
       <div style={{ marginTop: 0 }}>
         {loading ? (
@@ -506,7 +512,7 @@ export default function HomePage() {
           left: "50%",
           transform: "translateX(-50%)",
           width: "100%",
-          maxWidth: 800,
+          maxWidth: 480,
           background: "white",
           borderTop: "1px solid #E0E0E0",
           padding: "8px 12px",

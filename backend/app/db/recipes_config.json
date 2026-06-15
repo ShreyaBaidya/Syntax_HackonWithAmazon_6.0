@@ -10,39 +10,39 @@
       "default_servings": 4,
       "ingredients": [
         {
-          "name": "Spaghetti Pasta",
+          "name": "Spaghetti / Pasta",
           "base_qty": 400,
           "base_unit": "g",
-          "category": "grocery",
-          "product_query": "spaghetti pasta"
+          "category": "allergy_friendly",
+          "product_query": "pasta penne"
         },
         {
-          "name": "Bacon/Guanciale",
+          "name": "Chicken / Bacon",
           "base_qty": 200,
           "base_unit": "g",
-          "category": "fresh",
-          "product_query": "bacon chicken"
+          "category": "high_protein",
+          "product_query": "chicken breast"
         },
         {
           "name": "Eggs",
-          "base_qty": 3,
+          "base_qty": 4,
           "base_unit": "pcs",
-          "category": "fresh",
-          "product_query": "eggs farm fresh"
+          "category": null,
+          "product_query": "eggs"
         },
         {
-          "name": "Parmesan Cheese",
+          "name": "Mozzarella Cheese",
           "base_qty": 100,
           "base_unit": "g",
           "category": "dairy",
-          "product_query": "parmesan cheese"
+          "product_query": "mozzarella cheese"
         },
         {
-          "name": "Black Pepper",
+          "name": "Black Pepper / Masala",
           "base_qty": 10,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "black pepper"
+          "product_query": "garam masala"
         }
       ]
     },
@@ -66,43 +66,43 @@
           "name": "Chicken (boneless)",
           "base_qty": 800,
           "base_unit": "g",
-          "category": "fresh",
-          "product_query": "chicken breast boneless"
+          "category": "high_protein",
+          "product_query": "chicken breast"
         },
         {
           "name": "Onions",
           "base_qty": 400,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "onion fresh"
+          "product_query": "onion"
         },
         {
-          "name": "Yogurt",
+          "name": "Curd / Yogurt",
           "base_qty": 200,
           "base_unit": "g",
           "category": "dairy",
-          "product_query": "yogurt curd"
+          "product_query": "yogurt"
         },
         {
-          "name": "Ginger-Garlic Paste",
+          "name": "Ginger",
           "base_qty": 50,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "ginger garlic paste"
+          "product_query": "ginger"
         },
         {
-          "name": "Biryani Masala",
+          "name": "Biryani / Garam Masala",
           "base_qty": 20,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "biryani masala spice"
+          "product_query": "garam masala"
         },
         {
           "name": "Ghee",
           "base_qty": 100,
           "base_unit": "ml",
-          "category": "grocery",
-          "product_query": "ghee clarified butter"
+          "category": null,
+          "product_query": "ghee"
         }
       ]
     },
@@ -119,57 +119,57 @@
           "name": "Chicken (cubed)",
           "base_qty": 800,
           "base_unit": "g",
-          "category": "fresh",
-          "product_query": "chicken breast cubes"
+          "category": "high_protein",
+          "product_query": "chicken breast"
         },
         {
           "name": "Butter",
           "base_qty": 150,
           "base_unit": "g",
           "category": "dairy",
-          "product_query": "butter salted"
+          "product_query": "butter"
         },
         {
-          "name": "Heavy Cream",
+          "name": "Fresh Cream",
           "base_qty": 250,
           "base_unit": "ml",
-          "category": "dairy",
-          "product_query": "cream heavy whipping"
+          "category": null,
+          "product_query": "fresh cream"
         },
         {
-          "name": "Tomato Puree",
+          "name": "Tomatoes",
           "base_qty": 400,
           "base_unit": "g",
-          "category": "grocery",
-          "product_query": "tomato puree paste"
+          "category": "fresh",
+          "product_query": "tomato"
         },
         {
           "name": "Onions",
           "base_qty": 300,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "onion fresh"
+          "product_query": "onion"
         },
         {
-          "name": "Ginger-Garlic Paste",
+          "name": "Ginger",
           "base_qty": 40,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "ginger garlic paste"
+          "product_query": "ginger"
         },
         {
           "name": "Garam Masala",
           "base_qty": 15,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "garam masala spice"
+          "product_query": "garam masala"
         },
         {
-          "name": "Kasuri Methi (Fenugreek)",
+          "name": "Coriander / Kasuri Methi",
           "base_qty": 10,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "kasuri methi dried"
+          "product_query": "coriander"
         }
       ]
     },
@@ -183,53 +183,53 @@
       "default_servings": 4,
       "ingredients": [
         {
-          "name": "Paneer (cottage cheese)",
+          "name": "Paneer",
           "base_qty": 500,
           "base_unit": "g",
-          "category": "dairy",
-          "product_query": "paneer cottage cheese"
+          "category": null,
+          "product_query": "paneer"
         },
         {
-          "name": "Yogurt",
+          "name": "Curd / Yogurt",
           "base_qty": 200,
           "base_unit": "g",
           "category": "dairy",
-          "product_query": "yogurt curd"
+          "product_query": "yogurt"
         },
         {
           "name": "Onions",
           "base_qty": 200,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "onion fresh"
+          "product_query": "onion"
         },
         {
-          "name": "Bell Peppers",
+          "name": "Capsicum / Bell Peppers",
           "base_qty": 300,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "bell pepper capsicum"
+          "product_query": "capsicum"
         },
         {
-          "name": "Ginger-Garlic Paste",
+          "name": "Ginger",
           "base_qty": 30,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "ginger garlic paste"
+          "product_query": "ginger"
         },
         {
-          "name": "Tandoori Masala",
+          "name": "Garam / Tandoori Masala",
           "base_qty": 20,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "tandoori masala spice"
+          "product_query": "garam masala"
         },
         {
           "name": "Lemon",
           "base_qty": 2,
           "base_unit": "pcs",
           "category": "fresh",
-          "product_query": "lemon fresh citrus"
+          "product_query": "lemon"
         }
       ]
     },
@@ -243,53 +243,53 @@
       "default_servings": 4,
       "ingredients": [
         {
-          "name": "Maida Flour (All-purpose)",
+          "name": "Maida Flour",
           "base_qty": 300,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "maida flour all-purpose"
+          "product_query": "maida"
         },
         {
           "name": "Mozzarella Cheese",
           "base_qty": 250,
           "base_unit": "g",
           "category": "dairy",
-          "product_query": "mozzarella cheese shredded"
+          "product_query": "mozzarella"
         },
         {
-          "name": "Tomato Puree",
+          "name": "Tomatoes",
           "base_qty": 200,
           "base_unit": "g",
-          "category": "grocery",
-          "product_query": "tomato puree sauce"
+          "category": "fresh",
+          "product_query": "tomato"
         },
         {
           "name": "Onions",
           "base_qty": 200,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "onion fresh"
+          "product_query": "onion"
         },
         {
-          "name": "Bell Peppers",
+          "name": "Capsicum",
           "base_qty": 200,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "bell pepper capsicum"
+          "product_query": "capsicum"
         },
         {
           "name": "Olive Oil",
           "base_qty": 50,
           "base_unit": "ml",
           "category": "grocery",
-          "product_query": "olive oil extra virgin"
+          "product_query": "olive oil"
         },
         {
-          "name": "Oregano",
+          "name": "Herbs / Coriander",
           "base_qty": 10,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "oregano dried herbs"
+          "product_query": "coriander"
         }
       ]
     },
@@ -303,60 +303,60 @@
       "default_servings": 4,
       "ingredients": [
         {
-          "name": "Moong Dal (Yellow Lentils)",
+          "name": "Moong Dal",
           "base_qty": 250,
           "base_unit": "g",
-          "category": "grocery",
-          "product_query": "moong dal yellow lentils"
+          "category": null,
+          "product_query": "moong"
         },
         {
           "name": "Onions",
           "base_qty": 300,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "onion fresh"
+          "product_query": "onion"
         },
         {
           "name": "Tomatoes",
           "base_qty": 250,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "tomato fresh"
+          "product_query": "tomato"
         },
         {
-          "name": "Ginger-Garlic Paste",
+          "name": "Ginger",
           "base_qty": 30,
           "base_unit": "g",
           "category": "fresh",
-          "product_query": "ginger garlic paste"
+          "product_query": "ginger"
         },
         {
           "name": "Ghee",
           "base_qty": 50,
           "base_unit": "ml",
-          "category": "grocery",
-          "product_query": "ghee clarified butter"
+          "category": null,
+          "product_query": "ghee"
         },
         {
-          "name": "Cumin Seeds",
+          "name": "Cumin Seeds (Jeera)",
           "base_qty": 10,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "cumin seeds"
+          "product_query": "cumin"
         },
         {
-          "name": "Turmeric Powder",
+          "name": "Turmeric (Haldi)",
           "base_qty": 5,
           "base_unit": "g",
           "category": "grocery",
-          "product_query": "turmeric powder"
+          "product_query": "turmeric"
         },
         {
-          "name": "Coriander (fresh)",
+          "name": "Coriander (fresh/powder)",
           "base_qty": 20,
           "base_unit": "g",
-          "category": "fresh",
-          "product_query": "coriander fresh cilantro"
+          "category": "grocery",
+          "product_query": "coriander"
         }
       ]
     }
