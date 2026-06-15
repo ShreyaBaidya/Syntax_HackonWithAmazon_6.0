@@ -3,6 +3,7 @@ Dietary & Allergy Profile Service.
 Single module consumed by all product-surfacing systems.
 Architecture: in-memory dict (mirrors cart_service.py pattern).
 """
+
 from __future__ import annotations
 
 import uuid
@@ -12,44 +13,104 @@ from typing import Dict, List, Optional, Set
 
 DIET_TAG_EXCLUSIONS: Dict[str, List[str]] = {
     "vegan": [
-        "milk", "dairy", "egg", "meat", "chicken", "fish",
-        "butter", "cheese", "yogurt", "honey",
+        "milk",
+        "dairy",
+        "egg",
+        "meat",
+        "chicken",
+        "fish",
+        "butter",
+        "cheese",
+        "yogurt",
+        "honey",
     ],
     "vegetarian": [
-        "meat", "chicken", "fish", "mutton", "pork", "prawn", "shrimp",
+        "meat",
+        "chicken",
+        "fish",
+        "mutton",
+        "pork",
+        "prawn",
+        "shrimp",
     ],
     "keto": [
-        "sugar", "bread", "rice", "wheat", "flour", "atta", "noodles", "pasta",
+        "sugar",
+        "bread",
+        "rice",
+        "wheat",
+        "flour",
+        "atta",
+        "noodles",
+        "pasta",
     ],
     "halal": [
-        "pork", "alcohol", "wine", "beer", "rum",
+        "pork",
+        "alcohol",
+        "wine",
+        "beer",
+        "rum",
     ],
     "pescatarian": [
-        "meat", "chicken", "mutton", "pork",
+        "meat",
+        "chicken",
+        "mutton",
+        "pork",
     ],
     "gluten-free": [
-        "wheat", "bread", "flour", "atta", "noodles", "pasta", "biscuit", "cookies",
+        "wheat",
+        "bread",
+        "flour",
+        "atta",
+        "noodles",
+        "pasta",
+        "biscuit",
+        "cookies",
     ],
 }
 
 ALLERGEN_TAG_EXCLUSIONS: Dict[str, List[str]] = {
     "nuts": [
-        "nut", "almond", "cashew", "peanut", "walnut", "pistachio",
+        "nut",
+        "almond",
+        "cashew",
+        "peanut",
+        "walnut",
+        "pistachio",
     ],
     "gluten": [
-        "wheat", "bread", "flour", "atta", "noodles", "pasta", "biscuit", "cookies",
+        "wheat",
+        "bread",
+        "flour",
+        "atta",
+        "noodles",
+        "pasta",
+        "biscuit",
+        "cookies",
     ],
     "dairy": [
-        "milk", "dairy", "butter", "cheese", "yogurt", "cream", "paneer",
+        "milk",
+        "dairy",
+        "butter",
+        "cheese",
+        "yogurt",
+        "cream",
+        "paneer",
     ],
     "soy": [
-        "soy", "soya", "tofu",
+        "soy",
+        "soya",
+        "tofu",
     ],
     "shellfish": [
-        "prawn", "shrimp", "crab", "lobster", "shellfish",
+        "prawn",
+        "shrimp",
+        "crab",
+        "lobster",
+        "shellfish",
     ],
     "eggs": [
-        "egg", "eggs",
+        "egg",
+        "eggs",
     ],
 }
 
@@ -230,9 +291,11 @@ def check_product_conflicts(
     for participant_id, exclusion_set in participant_profiles.items():
         matched = [kw for kw in exclusion_set if kw in tags_lower]
         if matched:
-            warnings.append({
-                "participant": participant_id,
-                "conflicts": matched,
-            })
+            warnings.append(
+                {
+                    "participant": participant_id,
+                    "conflicts": matched,
+                }
+            )
 
     return warnings

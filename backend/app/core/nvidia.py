@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 NVIDIA AI Endpoints client (LangChain).
 Replaces Amazon Bedrock for all LLM calls in this project.
@@ -18,7 +19,9 @@ def get_llm(
     return ChatNVIDIA(
         model=settings.nvidia_model_id,
         api_key=settings.nvidia_api_key,
-        temperature=temperature if temperature is not None else settings.nvidia_temperature,
+        temperature=temperature
+        if temperature is not None
+        else settings.nvidia_temperature,
         top_p=settings.nvidia_top_p,
         max_tokens=max_tokens if max_tokens is not None else settings.nvidia_max_tokens,
     )
@@ -41,6 +44,7 @@ def get_singleton_llm() -> ChatNVIDIA:
 # call only happens the first time `llm` is *called*, not at import time.
 class _LazyLLM:
     """Thin proxy that forwards all attribute access to the real singleton."""
+
     def __getattr__(self, name: str):
         return getattr(get_singleton_llm(), name)
 

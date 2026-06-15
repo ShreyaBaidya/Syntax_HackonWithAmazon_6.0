@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 Product catalog search service.
 Tries DynamoDB first; falls back to in-memory data for local dev.
@@ -46,9 +47,21 @@ def _infer_dietary_tags(p: dict) -> list[str]:
         return p["dietary_tags"]
 
     # Only infer for food categories
-    FOOD_CATEGORIES = {"fruits", "vegetables", "fresh", "dairy", "beverages", "snacks",
-                       "grocery", "breakfast", "plant_based", "high_protein",
-                       "allergy_friendly", "ready_to_eat", "medicine"}
+    FOOD_CATEGORIES = {
+        "fruits",
+        "vegetables",
+        "fresh",
+        "dairy",
+        "beverages",
+        "snacks",
+        "grocery",
+        "breakfast",
+        "plant_based",
+        "high_protein",
+        "allergy_friendly",
+        "ready_to_eat",
+        "medicine",
+    }
     category = p.get("category", "")
     if category not in FOOD_CATEGORIES:
         return []
@@ -58,11 +71,21 @@ def _infer_dietary_tags(p: dict) -> list[str]:
 
     # Non-vegetarian indicators (egg is non-veg in the Indian context this app serves)
     non_veg_keywords = [
-        "chicken", "mutton", "pork", "fish", "prawn", "shrimp", "meat",
-        "egg", "eggs", "quail",
+        "chicken",
+        "mutton",
+        "pork",
+        "fish",
+        "prawn",
+        "shrimp",
+        "meat",
+        "egg",
+        "eggs",
+        "quail",
     ]
     has_egg = _has_word(name, ["egg", "eggs", "quail"])
-    has_meat = _has_word(name, ["chicken", "mutton", "pork", "fish", "prawn", "shrimp", "meat"])
+    has_meat = _has_word(
+        name, ["chicken", "mutton", "pork", "fish", "prawn", "shrimp", "meat"]
+    )
     is_non_veg = has_egg or has_meat
 
     if not is_non_veg:
@@ -73,8 +96,20 @@ def _infer_dietary_tags(p: dict) -> list[str]:
 
     # Vegan check (must be vegetarian AND no animal-derived ingredients)
     dairy_animal_keywords = [
-        "milk", "dairy", "butter", "cheese", "yogurt", "curd", "honey",
-        "cream", "paneer", "ghee", "lactose", "khoa", "khoya", "dahi",
+        "milk",
+        "dairy",
+        "butter",
+        "cheese",
+        "yogurt",
+        "curd",
+        "honey",
+        "cream",
+        "paneer",
+        "ghee",
+        "lactose",
+        "khoa",
+        "khoya",
+        "dahi",
     ]
     if "Vegetarian" in inferred and not _has_word(name, dairy_animal_keywords):
         inferred.append("Vegan")
@@ -90,8 +125,18 @@ def _infer_dietary_tags(p: dict) -> list[str]:
 
     # Gluten-free check (against name only — tags are polluted by category)
     gluten_keywords = [
-        "wheat", "bread", "flour", "atta", "maida", "noodles", "pasta",
-        "biscuit", "biscuits", "cookie", "cookies", "rusk",
+        "wheat",
+        "bread",
+        "flour",
+        "atta",
+        "maida",
+        "noodles",
+        "pasta",
+        "biscuit",
+        "biscuits",
+        "cookie",
+        "cookies",
+        "rusk",
     ]
     if not _has_word(name, gluten_keywords):
         if "Gluten-Free" not in inferred:
@@ -103,20 +148,20 @@ def _infer_dietary_tags(p: dict) -> list[str]:
 def _format(p: dict) -> dict:
     dietary = p.get("dietary_tags", []) or _infer_dietary_tags(p)
     return {
-        "id":               p.get("id", ""),
-        "name":             p.get("name", ""),
-        "price":            float(p.get("price", 0)),
-        "mrp":              float(p.get("mrp", p.get("price", 0))),
+        "id": p.get("id", ""),
+        "name": p.get("name", ""),
+        "price": float(p.get("price", 0)),
+        "mrp": float(p.get("mrp", p.get("price", 0))),
         "discount_percent": int(p.get("discount_percent", 0)),
-        "unit":             p.get("unit", "piece"),
-        "image_url":        p.get("image_url", ""),
-        "eta_min":          int(p.get("eta_min", 30)),
-        "category":         p.get("category", ""),
-        "tags":             p.get("tags", ""),
-        "in_stock":         bool(p.get("in_stock", True)),
-        "ingredients":      p.get("ingredients", []),
-        "dietary_tags":     dietary,
-        "allergen_tags":    p.get("allergen_tags", []),
+        "unit": p.get("unit", "piece"),
+        "image_url": p.get("image_url", ""),
+        "eta_min": int(p.get("eta_min", 30)),
+        "category": p.get("category", ""),
+        "tags": p.get("tags", ""),
+        "in_stock": bool(p.get("in_stock", True)),
+        "ingredients": p.get("ingredients", []),
+        "dietary_tags": dietary,
+        "allergen_tags": p.get("allergen_tags", []),
         "nutrition_summary": p.get("nutrition_summary", None),
     }
 
@@ -134,9 +179,9 @@ def get_catalog_stats() -> dict:
 
     return {
         "total_products": len(ALL_PRODUCTS),
-        "in_stock":       in_stock_count,
-        "out_of_stock":   len(ALL_PRODUCTS) - in_stock_count,
-        "by_category":    dict(sorted(by_category.items(), key=lambda x: -x[1])),
+        "in_stock": in_stock_count,
+        "out_of_stock": len(ALL_PRODUCTS) - in_stock_count,
+        "by_category": dict(sorted(by_category.items(), key=lambda x: -x[1])),
         "sources": {
             "amazon_now_json": len(AMAZON_PRODUCTS),
             "curated_mock": len(PRODUCTS),
@@ -160,6 +205,7 @@ def search_products(
 
     try:
         from app.db.dynamo import search_products_by_query, search_products_by_category
+
         if category:
             results = search_products_by_category(category, fetch_limit)
             if not results and query:
@@ -208,7 +254,11 @@ def _search_memory(query: str, category: str | None, limit: int) -> list[dict]:
 
     # If we still have nothing and a category was specified, return category items
     if not out and category:
-        out = [_format(p) for p in ALL_PRODUCTS if p.get("in_stock") and p.get("category") == category]
+        out = [
+            _format(p)
+            for p in ALL_PRODUCTS
+            if p.get("in_stock") and p.get("category") == category
+        ]
 
     # Last resort: return top in-stock products (safety net)
     if not out:

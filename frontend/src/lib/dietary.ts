@@ -1,24 +1,33 @@
-import { Product } from './api';
+import { Product } from "./api";
 
 // Allergen tag → keyword list (mirrors backend ALLERGEN_TAG_EXCLUSIONS)
 export const ALLERGEN_EXCLUSIONS: Record<string, string[]> = {
-  nuts: ['nut', 'almond', 'cashew', 'peanut', 'walnut', 'pistachio'],
-  gluten: ['wheat', 'bread', 'flour', 'atta', 'noodles', 'pasta', 'biscuit', 'cookies'],
-  dairy: ['milk', 'dairy', 'butter', 'cheese', 'yogurt', 'cream', 'paneer'],
-  soy: ['soy', 'soya', 'tofu'],
-  shellfish: ['prawn', 'shrimp', 'crab', 'lobster', 'shellfish'],
-  eggs: ['egg', 'eggs'],
+  nuts: ["nut", "almond", "cashew", "peanut", "walnut", "pistachio"],
+  gluten: [
+    "wheat",
+    "bread",
+    "flour",
+    "atta",
+    "noodles",
+    "pasta",
+    "biscuit",
+    "cookies",
+  ],
+  dairy: ["milk", "dairy", "butter", "cheese", "yogurt", "cream", "paneer"],
+  soy: ["soy", "soya", "tofu"],
+  shellfish: ["prawn", "shrimp", "crab", "lobster", "shellfish"],
+  eggs: ["egg", "eggs"],
 };
 
 // Representative substance name shown on the red badge for each allergen.
 // e.g. butter/cheese/paneer all map to the "dairy" allergen → displayed as "milk".
 export const ALLERGEN_DISPLAY: Record<string, string> = {
-  nuts: 'nuts',
-  gluten: 'gluten',
-  dairy: 'milk',
-  soy: 'soy',
-  shellfish: 'shellfish',
-  eggs: 'egg',
+  nuts: "nuts",
+  gluten: "gluten",
+  dairy: "milk",
+  soy: "soy",
+  shellfish: "shellfish",
+  eggs: "egg",
 };
 
 /**
@@ -37,22 +46,30 @@ export function getAllergenLabel(
   product: Product,
   userAllergenTags: string[] = [],
 ): string | null {
-  const productAllergenTags = ((product as { allergen_tags?: string[] }).allergen_tags ?? [])
-    .map(t => t.toLowerCase());
-  const ingredientsText = ((product as { ingredients?: string[] }).ingredients ?? [])
-    .join(' ').toLowerCase();
-  const nameText = (product.name ?? '').toLowerCase();
+  const productAllergenTags = (
+    (product as { allergen_tags?: string[] }).allergen_tags ?? []
+  ).map((t) => t.toLowerCase());
+  const ingredientsText = (
+    (product as { ingredients?: string[] }).ingredients ?? []
+  )
+    .join(" ")
+    .toLowerCase();
+  const nameText = (product.name ?? "").toLowerCase();
   const searchable = `${nameText} ${ingredientsText}`;
 
   const matchKeyword = (kw: string): boolean => {
-    if (productAllergenTags.some(t => t === kw || t.startsWith(kw))) return true;
-    const re = new RegExp(`\\b${kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}s?\\b`, 'i');
+    if (productAllergenTags.some((t) => t === kw || t.startsWith(kw)))
+      return true;
+    const re = new RegExp(
+      `\\b${kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}s?\\b`,
+      "i",
+    );
     return re.test(searchable);
   };
 
   const active = userAllergenTags
-    .map(t => t.toLowerCase())
-    .filter(t => ALLERGEN_EXCLUSIONS[t]);
+    .map((t) => t.toLowerCase())
+    .filter((t) => ALLERGEN_EXCLUSIONS[t]);
 
   for (const allergen of active) {
     if (ALLERGEN_EXCLUSIONS[allergen].some(matchKeyword)) {

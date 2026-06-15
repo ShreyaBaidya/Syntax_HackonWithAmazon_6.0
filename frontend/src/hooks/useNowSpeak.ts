@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useRef } from 'react';
-import { openChatStream, Product } from '@/lib/api';
+import { useState, useCallback, useRef } from "react";
+import { openChatStream, Product } from "@/lib/api";
 
 export type ChatMessage = {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   text: string;
   products?: Product[];
 };
@@ -26,94 +26,106 @@ export function useNowSpeak(): NowSpeakHook {
   const [isStreaming, setIsStreaming] = useState(false);
   // Stable session ID for the lifetime of this hook instance
   const sessionId = useRef(
-    typeof crypto !== 'undefined' ? crypto.randomUUID() : `session-${Date.now()}`
+    typeof crypto !== "undefined"
+      ? crypto.randomUUID()
+      : `session-${Date.now()}`,
   );
 
-  const sendMessage = useCallback(async (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed || isStreaming) return;
+  const sendMessage = useCallback(
+    async (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || isStreaming) return;
 
-    // Store the user's intent so the home page can react to it
-    try {
-      sessionStorage.setItem('last_chat_intent', trimmed);
-      console.log('[NowSpeak] Stored chat intent:', trimmed);
-      // Dispatch custom event so home page picks up the change immediately
-      window.dispatchEvent(new Event('chat-intent-changed'));
-    } catch { /* sessionStorage unavailable */ }
+      // Store the user's intent so the home page can react to it
+      try {
+        sessionStorage.setItem("last_chat_intent", trimmed);
+        console.log("[NowSpeak] Stored chat intent:", trimmed);
+        // Dispatch custom event so home page picks up the change immediately
+        window.dispatchEvent(new Event("chat-intent-changed"));
+      } catch {
+        /* sessionStorage unavailable */
+      }
 
-    // Append user bubble immediately
-    setMessages(prev => [...prev, { role: 'user', text: trimmed }]);
-    setIsStreaming(true);
+      // Append user bubble immediately
+      setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
+      setIsStreaming(true);
 
-    // Placeholder assistant bubble — we'll update it in-place
-    setMessages(prev => [...prev, { role: 'assistant', text: '', products: [] }]);
+      // Placeholder assistant bubble — we'll update it in-place
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", text: "", products: [] },
+      ]);
 
-    try {
-      const response = await openChatStream(trimmed, sessionId.current);
-      if (!response.body) throw new Error('No response body');
+      try {
+        const response = await openChatStream(trimmed, sessionId.current);
+        if (!response.body) throw new Error("No response body");
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      let assistantText = '';
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        let assistantText = "";
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() ?? '';           // keep incomplete last line
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? ""; // keep incomplete last line
 
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          try {
-            const event = JSON.parse(line.slice(6));
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            try {
+              const event = JSON.parse(line.slice(6));
 
-            if (event.type === 'text') {
-              assistantText += event.delta;
-              setMessages(prev => {
-                const updated = [...prev];
-                updated[updated.length - 1] = {
-                  ...updated[updated.length - 1],
-                  text: assistantText,
-                };
-                return updated;
-              });
-            } else if (event.type === 'products') {
-              setMessages(prev => {
-                const updated = [...prev];
-                updated[updated.length - 1] = {
-                  ...updated[updated.length - 1],
-                  products: event.products as Product[],
-                };
-                return updated;
-              });
+              if (event.type === "text") {
+                assistantText += event.delta;
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  updated[updated.length - 1] = {
+                    ...updated[updated.length - 1],
+                    text: assistantText,
+                  };
+                  return updated;
+                });
+              } else if (event.type === "products") {
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  updated[updated.length - 1] = {
+                    ...updated[updated.length - 1],
+                    products: event.products as Product[],
+                  };
+                  return updated;
+                });
+              }
+              // 'done' and 'error' just end the loop gracefully
+            } catch {
+              // Malformed SSE line — skip
             }
-            // 'done' and 'error' just end the loop gracefully
-          } catch {
-            // Malformed SSE line — skip
           }
         }
+      } catch {
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...updated[updated.length - 1],
+            text: "Sorry, I couldn't reach the server. Please try again.",
+          };
+          return updated;
+        });
+      } finally {
+        setIsStreaming(false);
       }
-    } catch {
-      setMessages(prev => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          ...updated[updated.length - 1],
-          text: "Sorry, I couldn't reach the server. Please try again.",
-        };
-        return updated;
-      });
-    } finally {
-      setIsStreaming(false);
-    }
-  }, [isStreaming]);
+    },
+    [isStreaming],
+  );
 
   const reset = useCallback(() => {
     setMessages([]);
     sessionId.current =
-      typeof crypto !== 'undefined' ? crypto.randomUUID() : `session-${Date.now()}`;
+      typeof crypto !== "undefined"
+        ? crypto.randomUUID()
+        : `session-${Date.now()}`;
   }, []);
 
   return { messages, isStreaming, sendMessage, reset };

@@ -17,7 +17,9 @@ async def place_order(request: OrderRequest):
     Creates an order record and returns confirmation with ETA.
     DynamoDB persistence is best-effort — never blocks the response.
     """
-    order_id = f"ORD-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
+    order_id = (
+        f"ORD-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
+    )
 
     # Calculate total from seed catalog prices
     total = sum(
@@ -27,23 +29,23 @@ async def place_order(request: OrderRequest):
     )
 
     eta_minutes = 28
-    estimated_delivery = (
-        datetime.utcnow() + timedelta(minutes=eta_minutes)
-    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    estimated_delivery = (datetime.utcnow() + timedelta(minutes=eta_minutes)).strftime(
+        "%Y-%m-%dT%H:%M:%SZ"
+    )
 
     created_at = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
     order_record = {
-        "order_id":         order_id,
-        "user_id":          request.user_id,
-        "items":            [i.model_dump() for i in request.items],
+        "order_id": order_id,
+        "user_id": request.user_id,
+        "items": [i.model_dump() for i in request.items],
         "delivery_address": request.delivery_address,
-        "status":           "confirmed",
-        "total_amount":     round(total, 2),
-        "eta_minutes":      eta_minutes,
+        "status": "confirmed",
+        "total_amount": round(total, 2),
+        "eta_minutes": eta_minutes,
         "estimated_delivery": estimated_delivery,
-        "created_at":       created_at,
-        "payment_method":   getattr(request, "payment_method", "UPI"),
+        "created_at": created_at,
+        "payment_method": getattr(request, "payment_method", "UPI"),
     }
 
     # Always store in memory for the session
@@ -52,6 +54,7 @@ async def place_order(request: OrderRequest):
     # Persist order (non-blocking — local dev may not have DynamoDB)
     try:
         from app.db.dynamo import put_order
+
         put_order(order_record)
     except Exception:
         pass
@@ -92,33 +95,35 @@ async def get_order_history(user_id: str = Query(default="demo_user")):
 
                     def clean_url(url: str) -> str:
                         """Extract plain URL from markdown [text](url) format."""
-                        m = re.search(r'\(https?://[^\)]+\)', url)
+                        m = re.search(r"\(https?://[^\)]+\)", url)
                         if m:
                             return m.group()[1:-1]  # strip surrounding ( )
                         return url
 
-                    result.append({
-                        "order_id":           order.get("order_id", ""),
-                        "user_id":            user_id,
-                        "status":             "confirmed",
-                        "estimated_delivery": created_at,
-                        "eta_minutes":        15,
-                        "total_amount":       0.0,
-                        "items": [
-                            {
-                                "product_id": p.get("product_id", ""),
-                                "quantity":   p.get("quantity", 1),
-                                "title":      p.get("title", ""),
-                                "image_url":  clean_url(p.get("imageUrl", "")),
-                                "brand":      p.get("brand", ""),
-                                "category":   p.get("category", ""),
-                            }
-                            for p in products
-                        ],
-                        "delivery_address":  "Bengaluru",
-                        "created_at":        created_at,
-                        "payment_method":    order.get("payment_method", "UPI"),
-                    })
+                    result.append(
+                        {
+                            "order_id": order.get("order_id", ""),
+                            "user_id": user_id,
+                            "status": "confirmed",
+                            "estimated_delivery": created_at,
+                            "eta_minutes": 15,
+                            "total_amount": 0.0,
+                            "items": [
+                                {
+                                    "product_id": p.get("product_id", ""),
+                                    "quantity": p.get("quantity", 1),
+                                    "title": p.get("title", ""),
+                                    "image_url": clean_url(p.get("imageUrl", "")),
+                                    "brand": p.get("brand", ""),
+                                    "category": p.get("category", ""),
+                                }
+                                for p in products
+                            ],
+                            "delivery_address": "Bengaluru",
+                            "created_at": created_at,
+                            "payment_method": order.get("payment_method", "UPI"),
+                        }
+                    )
 
     # Most recent first
     result.sort(key=lambda o: o.get("created_at", ""), reverse=True)

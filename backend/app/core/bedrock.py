@@ -1,4 +1,5 @@
 """Boto3 Bedrock runtime client and low-level helpers."""
+
 import json
 import boto3
 
@@ -26,5 +27,7 @@ def invoke_sync(
         contentType="application/json",
     )
     result = json.loads(response["body"].read())
-    text_blocks = [c["text"] for c in result.get("content", []) if c.get("type") == "text"]
+    text_blocks = [
+        c["text"] for c in result.get("content", []) if c.get("type") == "text"
+    ]
     return "".join(text_blocks)

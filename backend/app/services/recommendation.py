@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 Smart Recommendations Engine.
 Three lanes: Now Suggestions (time-based) · Reorder Nudges · Trending.
@@ -15,32 +16,100 @@ from app.services.profile_service import get_exclusion_set, filter_products
 # Used by find_alternatives() to suggest safe replacements.
 ALTERNATIVE_MAP: dict[str, list[dict]] = {
     "nut": [
-        {"pattern": "peanut butter", "alt_query": "sunflower seed butter", "alt_category": "allergy_friendly"},
-        {"pattern": "almond milk", "alt_query": "oat milk", "alt_category": "plant_based"},
-        {"pattern": "almond", "alt_query": "sunflower seeds pumpkin seeds", "alt_category": "allergy_friendly"},
-        {"pattern": "cashew", "alt_query": "sunflower seeds", "alt_category": "allergy_friendly"},
+        {
+            "pattern": "peanut butter",
+            "alt_query": "sunflower seed butter",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "almond milk",
+            "alt_query": "oat milk",
+            "alt_category": "plant_based",
+        },
+        {
+            "pattern": "almond",
+            "alt_query": "sunflower seeds pumpkin seeds",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "cashew",
+            "alt_query": "sunflower seeds",
+            "alt_category": "allergy_friendly",
+        },
     ],
     "dairy": [
-        {"pattern": "milk", "alt_query": "oat milk coconut milk", "alt_category": "plant_based"},
-        {"pattern": "yogurt", "alt_query": "coconut yogurt", "alt_category": "allergy_friendly"},
-        {"pattern": "cheese", "alt_query": "dairy-free cheese", "alt_category": "allergy_friendly"},
-        {"pattern": "butter", "alt_query": "sunflower seed butter", "alt_category": "allergy_friendly"},
+        {
+            "pattern": "milk",
+            "alt_query": "oat milk coconut milk",
+            "alt_category": "plant_based",
+        },
+        {
+            "pattern": "yogurt",
+            "alt_query": "coconut yogurt",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "cheese",
+            "alt_query": "dairy-free cheese",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "butter",
+            "alt_query": "sunflower seed butter",
+            "alt_category": "allergy_friendly",
+        },
         {"pattern": "paneer", "alt_query": "tofu", "alt_category": "plant_based"},
-        {"pattern": "cream", "alt_query": "coconut cream", "alt_category": "plant_based"},
+        {
+            "pattern": "cream",
+            "alt_query": "coconut cream",
+            "alt_category": "plant_based",
+        },
     ],
     "gluten": [
-        {"pattern": "bread", "alt_query": "gluten free bread", "alt_category": "allergy_friendly"},
-        {"pattern": "pasta", "alt_query": "rice pasta", "alt_category": "allergy_friendly"},
-        {"pattern": "flour", "alt_query": "gluten free atta rice flour", "alt_category": "allergy_friendly"},
-        {"pattern": "oats", "alt_query": "ragi jowar millet", "alt_category": "allergy_friendly"},
-        {"pattern": "noodles", "alt_query": "rice pasta glass noodles", "alt_category": "allergy_friendly"},
+        {
+            "pattern": "bread",
+            "alt_query": "gluten free bread",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "pasta",
+            "alt_query": "rice pasta",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "flour",
+            "alt_query": "gluten free atta rice flour",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "oats",
+            "alt_query": "ragi jowar millet",
+            "alt_category": "allergy_friendly",
+        },
+        {
+            "pattern": "noodles",
+            "alt_query": "rice pasta glass noodles",
+            "alt_category": "allergy_friendly",
+        },
     ],
     "soy": [
-        {"pattern": "tofu", "alt_query": "paneer cottage cheese", "alt_category": "dairy"},
-        {"pattern": "soy milk", "alt_query": "oat milk coconut milk", "alt_category": "plant_based"},
+        {
+            "pattern": "tofu",
+            "alt_query": "paneer cottage cheese",
+            "alt_category": "dairy",
+        },
+        {
+            "pattern": "soy milk",
+            "alt_query": "oat milk coconut milk",
+            "alt_category": "plant_based",
+        },
     ],
     "eggs": [
-        {"pattern": "egg", "alt_query": "tofu scramble chickpea flour", "alt_category": "plant_based"},
+        {
+            "pattern": "egg",
+            "alt_query": "tofu scramble chickpea flour",
+            "alt_category": "plant_based",
+        },
     ],
 }
 
@@ -94,7 +163,10 @@ def find_alternatives(
         # Fallback: find a same-category safe product
         if not alt_found:
             for safe_p in all_safe_products:
-                if safe_p.get("category") == category and safe_p["id"] not in seen_alt_ids:
+                if (
+                    safe_p.get("category") == category
+                    and safe_p["id"] not in seen_alt_ids
+                ):
                     alt_found = safe_p
                     break
 
@@ -103,13 +175,17 @@ def find_alternatives(
             alt_found = dict(alt_found)  # Copy to avoid mutation
             alt_found["is_alternative"] = True
             alt_found["replaces"] = product.get("name", "Unknown")
-            alt_found["reason"] = f"Recommended Alternative — try instead of {product.get('name', '')}"
+            alt_found["reason"] = (
+                f"Recommended Alternative — try instead of {product.get('name', '')}"
+            )
             alternatives.append(alt_found)
 
     return alternatives
 
 
-def _compute_reason(product: dict, user_profile: dict | None, intent_query: str | None) -> str:
+def _compute_reason(
+    product: dict, user_profile: dict | None, intent_query: str | None
+) -> str:
     """
     Generate a contextual recommendation reason for a product.
     Priority: intent > dietary match > allergen safety > nutritional > time-based > generic.
@@ -133,7 +209,9 @@ def _compute_reason(product: dict, user_profile: dict | None, intent_query: str 
     product_diet_tags = [t.lower() for t in product.get("dietary_tags", [])]
     for tag in user_diet_tags:
         tag_lower = tag.lower()
-        if tag_lower in product_diet_tags or tag_lower.replace("-", " ") in " ".join(product_diet_tags):
+        if tag_lower in product_diet_tags or tag_lower.replace("-", " ") in " ".join(
+            product_diet_tags
+        ):
             return f"Matches your {tag} preference ✓"
 
     # Priority 3: Allergen safety
@@ -172,11 +250,11 @@ def _time_context() -> str:
 
 
 _GREETINGS = {
-    "morning":   "Good morning ☀️",
-    "midday":    "Lunch time 🍽️",
+    "morning": "Good morning ☀️",
+    "midday": "Lunch time 🍽️",
     "afternoon": "Afternoon pick-me-up ☕",
-    "evening":   "Evening essentials 🌆",
-    "night":     "Late night needs 🌙",
+    "evening": "Evening essentials 🌆",
+    "night": "Late night needs 🌙",
 }
 
 
@@ -212,6 +290,7 @@ def _reorder_nudges(user_id: str) -> list[dict]:
         return []
     try:
         from app.db.dynamo import get_user_orders
+
         past_orders = get_user_orders(user_id, limit=5)
     except Exception:
         return []
@@ -231,7 +310,9 @@ def _reorder_nudges(user_id: str) -> list[dict]:
     return nudges[:3]
 
 
-def get_recommendations(user_id: str | None = None, query: str | None = None, category: str | None = None) -> dict:
+def get_recommendations(
+    user_id: str | None = None, query: str | None = None, category: str | None = None
+) -> dict:
     from app.services.profile_service import get_profile
 
     time_ctx = _time_context()
@@ -248,11 +329,16 @@ def get_recommendations(user_id: str | None = None, query: str | None = None, ca
     # Fetch more products (limit=16) for intent queries to increase diversity across intents
     if query:
         from app.services.catalog import search_products as cat_search
-        now = cat_search(query=query, category=category, limit=16, exclusion_set=exclusion_set)
+
+        now = cat_search(
+            query=query, category=category, limit=16, exclusion_set=exclusion_set
+        )
         # Fallback: if searching with category returned nothing, retry without category filter
         # (handles cases where intent + category combination is too restrictive)
         if not now and category:
-            now = cat_search(query=query, category=None, limit=16, exclusion_set=exclusion_set)
+            now = cat_search(
+                query=query, category=None, limit=16, exclusion_set=exclusion_set
+            )
         # Add reason for intent-based suggestions (Task 6.3 — includes chat context)
         for p in now:
             p["reason"] = f'Based on: "{query}" 🔍'
@@ -275,6 +361,7 @@ def get_recommendations(user_id: str | None = None, query: str | None = None, ca
     # Backfill if lanes are empty after filtering
     if not now and exclusion_set:
         from app.services.catalog import search_products as cat_search
+
         backfill_limit = 16 if query else 8
         backfill = cat_search(query="", category=None, limit=backfill_limit)
         now = filter_products(backfill, exclusion_set)[:8]
@@ -301,12 +388,16 @@ def get_recommendations(user_id: str | None = None, query: str | None = None, ca
     # Find alternatives for filtered-out products (Task 4.3)
     all_filtered_out = now_filtered_out + trending_filtered_out
     safe_products = now + trending
-    alternatives = find_alternatives(all_filtered_out, exclusion_set, safe_products) if all_filtered_out and exclusion_set else []
+    alternatives = (
+        find_alternatives(all_filtered_out, exclusion_set, safe_products)
+        if all_filtered_out and exclusion_set
+        else []
+    )
 
     return {
-        "time_context":    time_ctx,
+        "time_context": time_ctx,
         "now_suggestions": now[:16] if query else now[:8],
-        "reorder_nudges":  reorder,
-        "trending":        trending,
-        "alternatives":    alternatives,
+        "reorder_nudges": reorder,
+        "trending": trending,
+        "alternatives": alternatives,
     }

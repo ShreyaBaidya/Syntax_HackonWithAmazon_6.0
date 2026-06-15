@@ -14,16 +14,18 @@ class CartItem(BaseModel):
 
 
 class CartState(BaseModel):
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "cart_id": "ABC123",
-            "items": {},
-            "participants": ["You"],
-            "total": 0.0,
-            "item_count": 0,
-            "created_at": "2026-06-13T14:00:00Z",
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "cart_id": "ABC123",
+                "items": {},
+                "participants": ["You"],
+                "total": 0.0,
+                "item_count": 0,
+                "created_at": "2026-06-13T14:00:00Z",
+            }
         }
-    })
+    )
 
     cart_id: str
     items: Dict[str, CartItem]
@@ -35,47 +37,50 @@ class CartState(BaseModel):
 
 # ── Request bodies ────────────────────────────────────────────────────────────
 
+
 class CreateCartRequest(BaseModel):
-    model_config = ConfigDict(json_schema_extra={
-        "example": {"participant_name": "Rahul 🛒"}
-    })
+    model_config = ConfigDict(
+        json_schema_extra={"example": {"participant_name": "Rahul 🛒"}}
+    )
     participant_name: Optional[str] = "You"
 
 
 class AddItemRequest(BaseModel):
-    model_config = ConfigDict(json_schema_extra={
-        "example": {
-            "product_id": "z0001",
-            "participant_name": "Rahul",
-            "quantity": 1,
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "product_id": "z0001",
+                "participant_name": "Rahul",
+                "quantity": 1,
+            }
         }
-    })
+    )
     product_id: str
     participant_name: str
     quantity: int = 1
 
 
 class UpdateQtyRequest(BaseModel):
-    model_config = ConfigDict(json_schema_extra={
-        "example": {"quantity": 3}
-    })
+    model_config = ConfigDict(json_schema_extra={"example": {"quantity": 3}})
     quantity: int
 
 
 class JoinCartRequest(BaseModel):
-    model_config = ConfigDict(json_schema_extra={
-        "example": {"participant_name": "Priya 🎉"}
-    })
+    model_config = ConfigDict(
+        json_schema_extra={"example": {"participant_name": "Priya 🎉"}}
+    )
     participant_name: str
 
 
 # ── SSE event sent to all cart participants ───────────────────────────────────
+
 
 class CartSSEEvent(BaseModel):
     """
     Streamed to every connected participant when the cart changes.
     type: "cart_update" | "participant_joined" | "participant_left" | "checkout"
     """
+
     type: str
     cart: Optional[CartState] = None
     message: Optional[str] = None

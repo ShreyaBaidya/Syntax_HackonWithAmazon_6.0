@@ -5,6 +5,7 @@ Given today's events and the customer's purchase preferences,
 the LLM suggests what to buy for each event. Results are tagged
 frequency="today" and appear in the "Today" tab of the Home Refill card.
 """
+
 from __future__ import annotations
 
 import json
@@ -15,6 +16,7 @@ from typing import Optional
 def _build_preference_summary(history: list[dict]) -> str:
     """Build a compact preference string from purchase history."""
     from collections import Counter
+
     counts: Counter = Counter()
     titles: dict[str, str] = {}
 
@@ -52,8 +54,16 @@ def suggest_for_events(
 
     # Available catalog categories for the LLM to ground suggestions
     categories = [
-        "beverages", "snacks", "dairy", "fresh", "grocery",
-        "medicine", "personal_care", "cleaning", "baby", "electronics",
+        "beverages",
+        "snacks",
+        "dairy",
+        "fresh",
+        "grocery",
+        "medicine",
+        "personal_care",
+        "cleaning",
+        "baby",
+        "electronics",
     ]
 
     system_prompt = """\
@@ -89,7 +99,7 @@ Today's Events:
 Customer's Purchase Preferences:
 {preferences}
 
-Available Categories: {', '.join(categories)}
+Available Categories: {", ".join(categories)}
 
 Suggest products for today's events. Return JSON array."""
 
@@ -97,13 +107,15 @@ Suggest products for today's events. Return JSON array."""
         from app.core.nvidia import llm
         from langchain_core.messages import SystemMessage, HumanMessage
 
-        response = llm.invoke([
-            SystemMessage(content=system_prompt),
-            HumanMessage(content=user_prompt),
-        ])
+        response = llm.invoke(
+            [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=user_prompt),
+            ]
+        )
 
         text = response.content or ""
-        match = re.search(r'\[.*\]', text, re.DOTALL)
+        match = re.search(r"\[.*\]", text, re.DOTALL)
         if not match:
             raise ValueError("No JSON array in LLM response")
 
@@ -128,7 +140,7 @@ def _resolve_to_products(suggestions: list[dict], events: list[dict]) -> list[di
     for s in suggestions:
         keywords = s.get("search_keywords", "")
         category = s.get("category", "")
-        reason   = s.get("reason", "For today's event")
+        reason = s.get("reason", "For today's event")
         qty_hint = int(s.get("quantity_hint", 1))
 
         found = search_products(query=keywords, category=category, limit=1)
@@ -142,17 +154,17 @@ def _resolve_to_products(suggestions: list[dict], events: list[dict]) -> list[di
             seen_ids.add(product["id"])
 
             product["refill_info"] = {
-                "avg_gap_days":    0,
+                "avg_gap_days": 0,
                 "days_since_last": 0,
-                "urgency":         1.0,
-                "purchase_count":  0,
-                "frequency":       "today",
-                "reason":          reason,
-                "last_purchased":  "",
+                "urgency": 1.0,
+                "purchase_count": 0,
+                "frequency": "today",
+                "reason": reason,
+                "last_purchased": "",
             }
-            product["ai_reason"]    = reason
+            product["ai_reason"] = reason
             product["quantity_hint"] = qty_hint
-            product["event_source"]  = events[0]["title"] if events else "Today's Event"
+            product["event_source"] = events[0]["title"] if events else "Today's Event"
             results.append(product)
 
     return results
@@ -163,12 +175,28 @@ def _fallback_suggestions(events: list[dict]) -> list[dict]:
     from app.services.catalog import search_products
 
     type_keywords = {
-        "party":   [("snacks", "chips"), ("beverages", "cold drink"), ("home", "disposable cups")],
-        "festival":[("snacks", "sweets"), ("beverages", "juice"), ("grocery", "ghee")],
-        "guest":   [("beverages", "tea"), ("snacks", "biscuits"), ("dairy", "milk")],
-        "workout": [("beverages", "protein shake"), ("fresh", "banana"), ("snacks", "energy bar")],
-        "health":  [("medicine", "paracetamol"), ("beverages", "ors"), ("grocery", "soup")],
-        "travel":  [("snacks", "chips"), ("beverages", "water"), ("personal_care", "hand sanitizer")],
+        "party": [
+            ("snacks", "chips"),
+            ("beverages", "cold drink"),
+            ("home", "disposable cups"),
+        ],
+        "festival": [("snacks", "sweets"), ("beverages", "juice"), ("grocery", "ghee")],
+        "guest": [("beverages", "tea"), ("snacks", "biscuits"), ("dairy", "milk")],
+        "workout": [
+            ("beverages", "protein shake"),
+            ("fresh", "banana"),
+            ("snacks", "energy bar"),
+        ],
+        "health": [
+            ("medicine", "paracetamol"),
+            ("beverages", "ors"),
+            ("grocery", "soup"),
+        ],
+        "travel": [
+            ("snacks", "chips"),
+            ("beverages", "water"),
+            ("personal_care", "hand sanitizer"),
+        ],
     }
 
     results: list[dict] = []
@@ -182,9 +210,13 @@ def _fallback_suggestions(events: list[dict]) -> list[dict]:
                 p = dict(found[0])
                 seen_ids.add(p["id"])
                 p["refill_info"] = {
-                    "avg_gap_days": 0, "days_since_last": 0, "urgency": 1.0,
-                    "purchase_count": 0, "frequency": "today",
-                    "reason": f"For {event['title']}", "last_purchased": "",
+                    "avg_gap_days": 0,
+                    "days_since_last": 0,
+                    "urgency": 1.0,
+                    "purchase_count": 0,
+                    "frequency": "today",
+                    "reason": f"For {event['title']}",
+                    "last_purchased": "",
                 }
                 p["ai_reason"] = f"For {event['title']}"
                 results.append(p)

@@ -161,8 +161,8 @@ async def cart_stream(cart_id: str = Path(...)):
         cart_service.stream_cart(cart_id.upper()),
         media_type="text/event-stream",
         headers={
-            "Cache-Control":    "no-cache",
+            "Cache-Control": "no-cache",
             "X-Accel-Buffering": "no",
-            "Connection":       "keep-alive",
+            "Connection": "keep-alive",
         },
     )

@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 // ── Profile types ─────────────────────────────────────────────────────────────
 
@@ -25,8 +25,8 @@ export async function saveProfile(
   userId?: string,
 ): Promise<ProfileResponse> {
   const res = await fetch(`${API_BASE}/api/v1/profile`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user_id: userId ?? null, profile }),
   });
   if (!res.ok) throw new Error(`Save profile failed: ${res.status}`);
@@ -38,7 +38,9 @@ export async function saveProfile(
  * GET /api/v1/profile/{userId}
  */
 export async function getProfile(userId: string): Promise<ProfileResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/profile/${encodeURIComponent(userId)}`);
+  const res = await fetch(
+    `${API_BASE}/api/v1/profile/${encodeURIComponent(userId)}`,
+  );
   if (!res.ok) throw new Error(`Get profile failed: ${res.status}`);
   return res.json();
 }

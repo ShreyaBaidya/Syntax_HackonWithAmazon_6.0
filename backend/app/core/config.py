@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 # Calendar service) see the same values pydantic loads into Settings.
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except Exception:
     pass

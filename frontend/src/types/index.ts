@@ -1,5 +1,5 @@
-export type BudgetTier = 'budget' | 'standard' | 'premium';
-export type ItemCategory = 'essential' | 'recommended' | 'optional';
+export type BudgetTier = "budget" | "standard" | "premium";
+export type ItemCategory = "essential" | "recommended" | "optional";
 
 export interface CartItem {
   name: string;

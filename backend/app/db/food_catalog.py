@@ -2,6 +2,7 @@
 Enhanced Food Catalog Loader.
 Loads 200+ structured food products from the JSON data file.
 """
+
 from __future__ import annotations
 
 import json

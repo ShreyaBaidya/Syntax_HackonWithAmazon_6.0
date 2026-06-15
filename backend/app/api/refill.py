@@ -38,7 +38,9 @@ async def refill_suggestions(
     # Parse comma-separated cart item names
     cart_item_names: list[str] = []
     if cart_items:
-        cart_item_names = [name.strip() for name in cart_items.split(",") if name.strip()]
+        cart_item_names = [
+            name.strip() for name in cart_items.split(",") if name.strip()
+        ]
 
     return get_refill_suggestions(
         user_id=user_id,

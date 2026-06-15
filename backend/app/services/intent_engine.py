@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 NowSpeak Intent Engine — powered by NVIDIA AI Endpoints (z-ai/glm-5.1)
 ───────────────────────────────────────────────────────────────────────
@@ -53,8 +54,14 @@ _KEYWORD_INTENT_MAP: dict[str, dict] = {
     # Health / Recovery
     "flu": {"query": "soup vitamin c hydration light food", "category": ""},
     "recovery": {"query": "soup fruits hydration light food recovery", "category": ""},
-    "immunity": {"query": "vitamin c fruits citrus honey ginger immunity", "category": ""},
-    "hydration": {"query": "water coconut water electral juice hydration", "category": "beverages"},
+    "immunity": {
+        "query": "vitamin c fruits citrus honey ginger immunity",
+        "category": "",
+    },
+    "hydration": {
+        "query": "water coconut water electral juice hydration",
+        "category": "beverages",
+    },
     "soup": {"query": "soup instant ready to eat warm", "category": "ready_to_eat"},
     # Beverages
     "coffee": {"query": "coffee", "category": "beverages"},
@@ -65,21 +72,45 @@ _KEYWORD_INTENT_MAP: dict[str, dict] = {
     # Food
     "hungry": {"query": "ready to eat snacks", "category": "snacks"},
     "snack": {"query": "snacks chips namkeen biscuit makhana", "category": "snacks"},
-    "breakfast": {"query": "breakfast oats cereal bread poha upma idli", "category": "breakfast"},
-    "lunch": {"query": "rice dal ready meal biryani khichdi", "category": "ready_to_eat"},
-    "dinner": {"query": "dinner chapati dal rice ready meal", "category": "ready_to_eat"},
+    "breakfast": {
+        "query": "breakfast oats cereal bread poha upma idli",
+        "category": "breakfast",
+    },
+    "lunch": {
+        "query": "rice dal ready meal biryani khichdi",
+        "category": "ready_to_eat",
+    },
+    "dinner": {
+        "query": "dinner chapati dal rice ready meal",
+        "category": "ready_to_eat",
+    },
     # Diet-specific
-    "protein": {"query": "high protein paneer tofu lentils chickpeas eggs chicken", "category": "high_protein"},
+    "protein": {
+        "query": "high protein paneer tofu lentils chickpeas eggs chicken",
+        "category": "high_protein",
+    },
     "vegetarian": {"query": "vegetarian paneer tofu plant based dal", "category": ""},
-    "vegan": {"query": "vegan plant based tofu soy oat milk coconut", "category": "plant_based"},
+    "vegan": {
+        "query": "vegan plant based tofu soy oat milk coconut",
+        "category": "plant_based",
+    },
     "keto": {"query": "keto low carb avocado nuts cheese paneer eggs", "category": ""},
-    "gluten free": {"query": "gluten free ragi jowar rice flour millet", "category": "allergy_friendly"},
+    "gluten free": {
+        "query": "gluten free ragi jowar rice flour millet",
+        "category": "allergy_friendly",
+    },
     "low sugar": {"query": "sugar free low sugar diet natural", "category": ""},
     # Specific foods
     "fruit": {"query": "fresh fruits apple banana orange mango", "category": "fruits"},
     "fruits": {"query": "fresh fruits apple banana orange mango", "category": "fruits"},
-    "vegetable": {"query": "fresh vegetables tomato onion potato spinach", "category": "vegetables"},
-    "vegetables": {"query": "fresh vegetables tomato onion potato spinach", "category": "vegetables"},
+    "vegetable": {
+        "query": "fresh vegetables tomato onion potato spinach",
+        "category": "vegetables",
+    },
+    "vegetables": {
+        "query": "fresh vegetables tomato onion potato spinach",
+        "category": "vegetables",
+    },
     "dairy": {"query": "milk curd paneer cheese butter yogurt", "category": "dairy"},
     "paneer": {"query": "paneer cottage cheese protein", "category": "dairy"},
     "eggs": {"query": "eggs protein fresh farm", "category": "high_protein"},
@@ -87,7 +118,10 @@ _KEYWORD_INTENT_MAP: dict[str, dict] = {
     "fish": {"query": "fish rohu protein fresh", "category": "high_protein"},
     # Situational
     "energy": {"query": "energy bar banana nuts dates glucose", "category": ""},
-    "workout": {"query": "protein bar whey energy fitness recovery", "category": "high_protein"},
+    "workout": {
+        "query": "protein bar whey energy fitness recovery",
+        "category": "high_protein",
+    },
     "kids": {"query": "cereal milk biscuit juice healthy kids", "category": ""},
     "party": {"query": "chips snacks drinks juice cold drink", "category": "snacks"},
     "cooking": {"query": "oil spices flour atta onion tomato", "category": ""},
@@ -108,6 +142,7 @@ def _keyword_fallback_intent(message: str) -> dict:
             return intent
     return {"query": message, "category": ""}
 
+
 _REPLY_SYSTEM = """\
 You are Amazon Now — an urgent shopping assistant with 30-minute delivery.
 You have already found the products the customer needs.
@@ -123,6 +158,7 @@ Write your 1-2 sentence warm reply now."""
 
 # ── Intent extraction ─────────────────────────────────────────────────────────
 
+
 def _extract_intent(message: str) -> dict:
     """Ask GLM to return the search query + category as JSON.
     Falls back to keyword-based mapping if LLM is unavailable."""
@@ -131,11 +167,11 @@ def _extract_intent(message: str) -> dict:
         response = llm.invoke([HumanMessage(content=prompt)])
         text = response.content or ""
         # Find the first {...} JSON object in the response
-        match = re.search(r'\{[^{}]+\}', text, re.DOTALL)
+        match = re.search(r"\{[^{}]+\}", text, re.DOTALL)
         if match:
             data = json.loads(match.group())
             return {
-                "query":    str(data.get("query", message)),
+                "query": str(data.get("query", message)),
                 "category": str(data.get("category", "")),
             }
     except Exception:
@@ -145,6 +181,7 @@ def _extract_intent(message: str) -> dict:
 
 
 # ── Core streaming function ───────────────────────────────────────────────────
+
 
 def stream_nowspeak(
     message: str,
@@ -182,7 +219,9 @@ def stream_nowspeak(
         found_products = filter_products(found_products, exclusion_set)
         if not found_products:
             # Retry without category restriction while still applying exclusion filter
-            found_products = _catalog_search(query=intent["query"], category=None, limit=10)
+            found_products = _catalog_search(
+                query=intent["query"], category=None, limit=10
+            )
             found_products = filter_products(found_products, exclusion_set)
         found_products = found_products[:5]
 
@@ -194,25 +233,29 @@ def stream_nowspeak(
     if exclusion_set and user_id:
         profile_entry = get_profile(user_id)
         if profile_entry:
-            tags = profile_entry["profile"].get("diet_tags", []) + profile_entry["profile"].get("allergen_tags", [])
+            tags = profile_entry["profile"].get("diet_tags", []) + profile_entry[
+                "profile"
+            ].get("allergen_tags", [])
             if tags:
                 reply_system += f"\nThe customer has dietary restrictions: {', '.join(tags)}. Acknowledge this briefly."
 
     try:
         reply_messages = [
             SystemMessage(content=reply_system),
-            HumanMessage(content=_REPLY_USER.format(
-                message=message,
-                product_names=product_names,
-            )),
+            HumanMessage(
+                content=_REPLY_USER.format(
+                    message=message,
+                    product_names=product_names,
+                )
+            ),
         ]
         for chunk in llm.stream(reply_messages):
             text = chunk.content
             if text:
-                yield f'data: {json.dumps({"type": "text", "delta": text})}\n\n'
+                yield f"data: {json.dumps({'type': 'text', 'delta': text})}\n\n"
     except Exception as exc:
-        yield f'data: {json.dumps({"type": "error", "error": str(exc)})}\n\n'
+        yield f"data: {json.dumps({'type': 'error', 'error': str(exc)})}\n\n"
 
     # ── Emit product cards ────────────────────────────────────────────────────
-    yield f'data: {json.dumps({"type": "products", "products": found_products})}\n\n'
-    yield f'data: {json.dumps({"type": "done"})}\n\n'
+    yield f"data: {json.dumps({'type': 'products', 'products': found_products})}\n\n"
+    yield f"data: {json.dumps({'type': 'done'})}\n\n"

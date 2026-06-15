@@ -5,6 +5,7 @@ GET  /api/v1/calendar/events       — fetch today's events (token or service ac
 GET  /api/v1/calendar/auth-url     — returns the Google OAuth2 consent URL
 POST /api/v1/calendar/callback     — exchanges auth code for access token
 """
+
 from __future__ import annotations
 
 import os
@@ -27,6 +28,7 @@ EVENT_RECO_USER_ID = "user_002"
 
 # ── Models ────────────────────────────────────────────────────────────────────
 
+
 class GoogleCallbackRequest(BaseModel):
     code: str
     user_id: str
@@ -38,6 +40,7 @@ class StoreTokenRequest(BaseModel):
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
+
 
 @router.get(
     "/calendar/events",
@@ -53,14 +56,20 @@ class StoreTokenRequest(BaseModel):
 )
 async def get_events(
     user_id: Optional[str] = Query(default=None),
-    date: Optional[str] = Query(default=None, description="YYYY-MM-DD, defaults to today"),
+    date: Optional[str] = Query(
+        default=None, description="YYYY-MM-DD, defaults to today"
+    ),
 ):
     token = _GOOGLE_TOKENS.get(user_id or "") if user_id else None
     events = get_today_events(access_token=token, date_str=date)
     return {
         "events": events,
         "total": len(events),
-        "source": "oauth" if token else ("service_account" if os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") else "mock"),
+        "source": "oauth"
+        if token
+        else (
+            "service_account" if os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") else "mock"
+        ),
         "date": date or "today",
     }
 
@@ -80,7 +89,9 @@ async def get_events(
 )
 async def event_recommendations(
     user_id: str = Query(..., description="User ID — feature active only for user_002"),
-    date: Optional[str] = Query(default=None, description="YYYY-MM-DD, defaults to today"),
+    date: Optional[str] = Query(
+        default=None, description="YYYY-MM-DD, defaults to today"
+    ),
 ):
     # Gate the feature to Shreya only
     if user_id != EVENT_RECO_USER_ID:
@@ -163,9 +174,11 @@ async def oauth_callback(body: GoogleCallbackRequest):
     """Exchange auth code for access token and store it for the user."""
     import httpx
 
-    client_id     = os.getenv("GOOGLE_CLIENT_ID", "")
+    client_id = os.getenv("GOOGLE_CLIENT_ID", "")
     client_secret = os.getenv("GOOGLE_CLIENT_SECRET", "")
-    redirect_uri  = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:3000/auth/google-callback")
+    redirect_uri = os.getenv(
+        "GOOGLE_REDIRECT_URI", "http://localhost:3000/auth/google-callback"
+    )
 
     if not client_id or not client_secret:
         return {"error": "GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET not configured"}
@@ -174,11 +187,11 @@ async def oauth_callback(body: GoogleCallbackRequest):
         resp = await client.post(
             "https://oauth2.googleapis.com/token",
             data={
-                "code":          body.code,
-                "client_id":     client_id,
+                "code": body.code,
+                "client_id": client_id,
                 "client_secret": client_secret,
-                "redirect_uri":  redirect_uri,
-                "grant_type":    "authorization_code",
+                "redirect_uri": redirect_uri,
+                "grant_type": "authorization_code",
             },
         )
         token_data = resp.json()
@@ -216,10 +229,14 @@ async def calendar_status(user_id: str = Query(...)):
     return {
         "user_id": user_id,
         "linked": has_token,
-        "mode": "oauth" if has_token else ("service_account" if has_service_account else "mock"),
+        "mode": "oauth"
+        if has_token
+        else ("service_account" if has_service_account else "mock"),
         "message": (
-            "Personal Google Calendar connected" if has_token
-            else "Using shared demo calendar" if has_service_account
+            "Personal Google Calendar connected"
+            if has_token
+            else "Using shared demo calendar"
+            if has_service_account
             else "Using mock events (connect Google Calendar for real events)"
         ),
     }
