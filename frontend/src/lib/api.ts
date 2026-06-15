@@ -210,12 +210,7 @@ export async function getRecommendations(
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Recommendations fetch failed: ${res.status}`);
   const data = await res.json();
-  console.log(
-    "[API] getRecommendations response — now_suggestions:",
-    data.now_suggestions?.length,
-    ", trending:",
-    data.trending?.length,
-  );
+
   return data;
 }
 

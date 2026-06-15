@@ -85,10 +85,7 @@ export function RecommendationFeed({
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
   const [loadingCategory, setLoadingCategory] = useState(false);
 
-    nowSuggestions: nowSuggestions.length,
-    trending: trending.length,
-    exclusionSet: exclusionSet?.length ?? 0,
-  });
+
 
   // Fetch catalog products whenever a category is selected
   useEffect(() => {
@@ -125,9 +122,7 @@ export function RecommendationFeed({
     exclusionSet ?? [],
   );
 
-    safe: safeProducts.length,
-    removed: removedProducts.length,
-  });
+
 
   const sectionTitle = (() => {
     let title = isBrowsing

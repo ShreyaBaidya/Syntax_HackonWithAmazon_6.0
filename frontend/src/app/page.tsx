@@ -158,21 +158,11 @@ export default function HomePage() {
 
   // ── Fetch recommendations whenever userId or chatIntent changes ─────────
   useEffect(() => {
-    console.log(
-      "[Recommendations] React state — userId:",
-      userId,
-      "chatIntent:",
-      chatIntent,
-    );
+
 
     getRecommendations(userId ?? undefined, chatIntent ?? undefined)
       .then((data) => {
-        console.log(
-          "[Recommendations] Response — now_suggestions:",
-          data.now_suggestions.length,
-          ", trending:",
-          data.trending.length,
-        );
+
         setRecs(data);
         try {
           sessionStorage.setItem("recs_cache", JSON.stringify(data));
