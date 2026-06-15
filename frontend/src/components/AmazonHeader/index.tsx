@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useProductSearch } from "@/hooks/useProductSearch";
 import { CartItem } from "@/components/SpeedCheckout";
 import { searchProducts, Product } from "@/lib/api";
 import logo from "./logo.png";
@@ -173,29 +174,6 @@ export function AmazonHeader({ cart, onCartClick, onProductSelect }: Props) {
     return () => document.removeEventListener("mousedown", handler);
   }, [calOpen]);
 
-  // ── Search ─────────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    const q = query.trim();
-    if (q.length < 2) {
-      setResults([]);
-      setSearching(false);
-      return;
-    }
-    setSearching(true);
-    timerRef.current = setTimeout(async () => {
-      try {
-        setResults(await searchProducts(q, 8));
-      } catch {
-        setResults([]);
-      } finally {
-        setSearching(false);
-      }
-    }, 300);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [query]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {

@@ -19,6 +19,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { useProfile } from "@/hooks/useProfile";
 import { ProfileBanner } from "@/components/ProfileBanner";
 
+import { LoadingSkeleton } from '@/components/LoadingSkeleton';
 export default function HomePage() {
   const router = useRouter();
   const { userId, profile, exclusionSet, loading: profileLoading } = useProfile();
@@ -486,20 +487,3 @@ export default function HomePage() {
   );
 }
 
-function LoadingSkeleton() {
-  return (
-    <div style={{ background: "white", padding: 10, marginTop: 8 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
-        {[...Array(8)].map((_, i) => (
-          <div key={i} style={{ borderRadius: 6, overflow: "hidden", border: "1px solid #F0F0F0" }}>
-            <div style={{ paddingTop: "90%", background: "#F0F0F0" }} />
-            <div style={{ padding: 6 }}>
-              <div style={{ height: 10, background: "#F0F0F0", borderRadius: 2, marginBottom: 4 }} />
-              <div style={{ height: 10, background: "#F0F0F0", borderRadius: 2, width: "70%" }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}

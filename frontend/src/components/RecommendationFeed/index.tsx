@@ -17,115 +17,7 @@ interface Props {
   allergenTags?: string[];
 }
 
-// Allergen tag to keyword mappings (mirroring backend)
-const ALLERGEN_EXCLUSIONS: Record<string, string[]> = {
-  nuts: ["nut", "almond", "cashew", "peanut", "walnut", "pistachio"],
-  gluten: [
-    "wheat",
-    "bread",
-    "flour",
-    "atta",
-    "noodles",
-    "pasta",
-    "biscuit",
-    "cookies",
-  ],
-  dairy: ["milk", "dairy", "butter", "cheese", "yogurt", "cream", "paneer"],
-  soy: ["soy", "soya", "tofu"],
-  shellfish: ["prawn", "shrimp", "crab", "lobster", "shellfish"],
-  eggs: ["egg", "eggs"],
-};
 
-// Representative substance name shown on the red badge for each allergen.
-// e.g. butter/cheese/paneer all map to the "dairy" allergen → displayed as "milk".
-const ALLERGEN_DISPLAY: Record<string, string> = {
-  nuts: "nuts",
-  gluten: "gluten",
-  dairy: "milk",
-  soy: "soy",
-  shellfish: "shellfish",
-  eggs: "egg",
-};
-
-/**
- * Dietary labelling logic. Labels are driven ONLY by what the user selected:
- *   - Diet preferences  → green "✓ <preference>" badges (handled in ProductCard)
- *   - Allergen tags     → red "Contains <substance>" badge when a product
- *                         contains that allergen. The substance shown is the
- *                         allergen's representative name (e.g. dairy → "milk").
- * No generic "Non-Vegetarian"/"Non-Vegan" conflict labels are produced.
- */
-function filterProductsClient(
-  products: Product[],
-  dietTags: string[] = [],
-  allergenTags: string[] = [],
-): {
-  safe: Product[];
-  removed: { product: Product; reason: string }[];
-  warnings: Map<string, { message: string; type: "allergen" | "diet" }>;
-} {
-  const warnings = new Map<
-    string,
-    { message: string; type: "allergen" | "diet" }
-  >();
-
-  // Build the active allergen tags (those the user actually selected and that
-  // we have a keyword mapping for).
-  const activeAllergens = allergenTags
-    .map((t) => t.toLowerCase())
-    .filter((t) => ALLERGEN_EXCLUSIONS[t]);
-
-  for (const product of products) {
-    // Build searchable text from product fields.
-    // We deliberately exclude both `category` AND `tags` because they're
-    // polluted by category names. Example: every product in the "Dairy and
-    // Eggs" aisle (milk, butter, cheese, yogurt) gets the words "dairy" and
-    // "eggs" injected into its tags by the backend's _make_tags() builder,
-    // which would falsely trigger egg/dairy allergen warnings on lactose-free
-    // milk, butter, etc. The product NAME and structured INGREDIENTS list are
-    // the only authoritative sources for what the product actually contains.
-    const productAllergenTags = ((product as any).allergen_tags ?? []).map(
-      (t: string) => t.toLowerCase(),
-    );
-    const ingredientsText = ((product as any).ingredients ?? [])
-      .join(" ")
-      .toLowerCase();
-    const nameText = (product.name ?? "").toLowerCase();
-    const searchable = `${nameText} ${ingredientsText}`;
-    // Word-boundary matcher to avoid substring-in-substring false positives
-    // (e.g. "egg" matching inside "eggless"). Each keyword must appear as a
-    // standalone token, optionally with a plural 's', or be present as a
-    // structured allergen_tag.
-    const matchKeyword = (kw: string): boolean => {
-      // 1. Structured allergen_tags are authoritative
-      if (productAllergenTags.some((t: string) => t === kw || t.startsWith(kw)))
-        return true;
-      // 2. Word-boundary check in name/ingredients
-      const re = new RegExp(
-        `\\b${kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}s?\\b`,
-        "i",
-      );
-      return re.test(searchable);
-    };
-
-    // ALLERGEN CHECK — for each allergen the user selected, see if the product
-    // contains it. If so, show a single red badge naming the allergen substance
-    // (e.g. "Contains milk" for any dairy-derived product).
-    for (const allergen of activeAllergens) {
-      const keywords = ALLERGEN_EXCLUSIONS[allergen];
-      if (keywords.some(matchKeyword)) {
-        warnings.set(product.id, {
-          message: `Contains ${ALLERGEN_DISPLAY[allergen] ?? allergen}`,
-          type: "allergen",
-        });
-        break; // one allergen badge per product is enough
-      }
-    }
-  }
-
-  // All products are shown — none removed
-  return { safe: products, removed: [], warnings };
-}
 
 const SUB_CATS = [
   "All",
@@ -201,16 +93,8 @@ export function RecommendationFeed({
   const filteredReorder = isBrowsing ? [] : reorderNudges;
 
   // Apply client-side dietary safety check (warns, never removes)
-  const {
-    safe: safeProducts,
-    removed: removedProducts,
-    warnings: productWarnings,
-  } = filterProductsClient(filtered, dietTags, allergenTags);
-  const { safe: safeReorder, warnings: reorderWarnings } = filterProductsClient(
-    filteredReorder,
-    dietTags,
-    allergenTags,
-  );
+  const safeProducts = filtered;
+  const safeReorder = filteredReorder;
 
   // Only render dietary/allergen badges when the user has actually set up a profile.
   // Without a profile, products show no diet labels at all.
@@ -218,7 +102,6 @@ export function RecommendationFeed({
 
   console.log("[RecommendationFeed] After filter:", {
     safe: safeProducts.length,
-    removed: removedProducts.length,
   });
 
   const sectionTitle = (() => {
@@ -276,8 +159,7 @@ export function RecommendationFeed({
             products={safeProducts}
             onProductSelect={onProductSelect}
             getCartQty={getCartQty}
-            warnings={productWarnings}
-            showDietaryInfo={hasProfile}
+                        showDietaryInfo={hasProfile}
             userDietTags={dietTags}
             userAllergenTags={allergenTags}
           />
@@ -321,7 +203,6 @@ export function RecommendationFeed({
         <Section title="🔁 Buy Again">
           <div>
             {safeReorder.map((p) => {
-              const warn = reorderWarnings.get(p.id);
               return (
                 <ProductCard
                   key={p.id}
@@ -329,8 +210,6 @@ export function RecommendationFeed({
                   onAddToCart={onProductSelect}
                   compact
                   initialQty={getCartQty(p.id)}
-                  allergyWarning={warn?.message}
-                  warningType={warn?.type}
                   showDietaryInfo={hasProfile}
                   userDietTags={dietTags}
                   userAllergenTags={allergenTags}
@@ -410,16 +289,14 @@ function ProductGrid4({
   products,
   onProductSelect,
   getCartQty,
-  warnings = new Map(),
-  showDietaryInfo = false,
+    showDietaryInfo = false,
   userDietTags = [],
   userAllergenTags = [],
 }: {
   products: Product[];
   onProductSelect: (p: Product, qty: number) => void;
   getCartQty: (productId: string) => number;
-  warnings?: Map<string, { message: string; type: "allergen" | "diet" }>;
-  showDietaryInfo?: boolean;
+    showDietaryInfo?: boolean;
   userDietTags?: string[];
   userAllergenTags?: string[];
 }) {
@@ -433,17 +310,14 @@ function ProductGrid4({
       }}
     >
       {products.map((p) => {
-        const warning = warnings.get(p.id);
-        return (
+                return (
           <ProductCard
             key={p.id}
             product={p}
             onAddToCart={onProductSelect}
             grid
             initialQty={getCartQty(p.id)}
-            allergyWarning={warning?.message}
-            warningType={warning?.type}
-            showDietaryInfo={showDietaryInfo}
+                                    showDietaryInfo={showDietaryInfo}
             userDietTags={userDietTags}
             userAllergenTags={userAllergenTags}
           />

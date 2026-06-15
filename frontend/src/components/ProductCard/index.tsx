@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { Product } from "@/lib/api";
 import { getAllergenLabel } from "@/lib/dietary";
+import { AddBtn } from "./AddBtn";
 
 interface Props {
   product: Product;
@@ -714,108 +715,3 @@ export function ProductCard({
 }
 
 // ── Reusable Add/Counter button ───────────────────────────────────────────────
-function AddBtn({
-  qty,
-  onAdd,
-  onInc,
-  onDec,
-  small = false,
-}: {
-  qty: number;
-  onAdd: () => void;
-  onInc: () => void;
-  onDec: () => void;
-  small?: boolean;
-}) {
-  const size = small ? 26 : 32;
-  const fontSize = small ? 16 : 18;
-  const textSize = small ? 11 : 13;
-
-  if (qty === 0) {
-    return (
-      <button
-        onClick={onAdd}
-        style={{
-          width: size,
-          height: size,
-          borderRadius: "50%",
-          background: "#FFD814",
-          border: "1px solid #F0C000",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          fontSize,
-          fontWeight: 700,
-          color: "#0F1111",
-          flexShrink: 0,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-        }}
-      >
-        +
-      </button>
-    );
-  }
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        background: "#FFD814",
-        borderRadius: 20,
-        border: "1px solid #F0C000",
-        overflow: "hidden",
-        flexShrink: 0,
-      }}
-    >
-      <button
-        onClick={onDec}
-        style={{
-          width: size,
-          height: size,
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          fontSize,
-          fontWeight: 700,
-          color: "#0F1111",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        −
-      </button>
-      <span
-        style={{
-          fontSize: textSize,
-          fontWeight: 700,
-          color: "#0F1111",
-          minWidth: 16,
-          textAlign: "center",
-        }}
-      >
-        {qty}
-      </span>
-      <button
-        onClick={onInc}
-        style={{
-          width: size,
-          height: size,
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          fontSize,
-          fontWeight: 700,
-          color: "#0F1111",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        +
-      </button>
-    </div>
-  );
-}

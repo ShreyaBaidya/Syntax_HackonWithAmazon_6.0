@@ -16,30 +16,25 @@ export type ProfileState = {
   loading: boolean;
 };
 
-const STORAGE_KEY = "diet_user_id";
+const STORAGE_KEY = "amazon_now_user";
 
 function getStoredUserId(): string | null {
   try {
-    return sessionStorage.getItem(STORAGE_KEY);
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (!data) return null;
+    return JSON.parse(data).user_id || null;
   } catch {
     return null;
   }
 }
 
 function setStoredUserId(userId: string): void {
-  try {
-    sessionStorage.setItem(STORAGE_KEY, userId);
-  } catch {
-    // sessionStorage unavailable (private browsing)
-  }
+  // We do NOT update amazon_now_user here because auth handles it.
+  // Profile just reads it. If there's no auth user, we don't save.
 }
 
 function removeStoredUserId(): void {
-  try {
-    sessionStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // sessionStorage unavailable
-  }
+  // We do NOT remove amazon_now_user here because auth handles it.
 }
 
 export function useProfile() {

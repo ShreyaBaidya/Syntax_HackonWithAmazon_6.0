@@ -38,8 +38,8 @@ class Settings(BaseSettings):
     dynamodb_products_table: str = "amazon-now-products"
     dynamodb_orders_table: str = "amazon-now-orders"
 
-    # CORS
-    cors_origins: list[str] = ["http://localhost:3000", "http://localhost:3001"]
+    # CORS ⭐ Allow all origins for development
+    cors_origins: list[str] = ["*"]
 
     # Google Calendar — Service Account
     google_service_account_json: str = ""

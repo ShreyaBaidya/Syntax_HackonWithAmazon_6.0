@@ -36,8 +36,11 @@ export function SpeedCheckout({
     await new Promise((r) => setTimeout(r, 1800)); // biometric animation duration
 
     try {
+      const stored = localStorage.getItem("amazon_now_user");
+      const uid = stored ? JSON.parse(stored).user_id : "demo_user";
+
       const result = await placeOrder({
-        user_id: "demo_user",
+        user_id: uid,
         items: cart.map((i) => ({
           product_id: i.product.id,
           quantity: i.quantity,
