@@ -463,17 +463,6 @@ async function _aiPost<T>(path: string, body: object): Promise<T> {
   }
   return res.json();
 }
-export async function buildCartFromIntent(
-  query: string,
-  budgetTier: BudgetTier = "standard",
-  dietaryPreferences: string[] = [],
-): Promise<AICartResponse> {
-  return _aiPost("/api/v1/cart/intent", {
-    query,
-    budget_tier: budgetTier,
-    dietary_preferences: dietaryPreferences,
-  });
-}
 export async function buildCartFromImage(file: File): Promise<AICartResponse> {
   const formData = new FormData();
   formData.append("file", file);
@@ -483,37 +472,6 @@ export async function buildCartFromImage(file: File): Promise<AICartResponse> {
   });
   if (!res.ok) throw new Error(`Image cart failed: ${res.status}`);
   return res.json();
-}
-export async function buildCartFromURL(
-  url: string,
-  prompt?: string,
-  budgetTier: BudgetTier = "standard",
-): Promise<AICartResponse> {
-  return _aiPost("/api/v1/cart/url", { url, prompt, budget_tier: budgetTier });
-}
-export async function buildCartForOccasion(
-  occasion: string,
-  guests = 2,
-  budgetTier: BudgetTier = "standard",
-  dietaryPreferences: string[] = [],
-): Promise<AICartResponse> {
-  return _aiPost("/api/v1/cart/occasion", {
-    occasion,
-    guests,
-    budget_tier: budgetTier,
-    dietary_preferences: dietaryPreferences,
-  });
-}
-export async function buildCartForOutcome(
-  goal: string,
-  budgetTier: BudgetTier = "standard",
-  dietaryPreferences: string[] = [],
-): Promise<AICartResponse> {
-  return _aiPost("/api/v1/cart/outcome", {
-    goal,
-    budget_tier: budgetTier,
-    dietary_preferences: dietaryPreferences,
-  });
 }
 export async function getOccasions(): Promise<Occasion[]> {
   const res = await fetch(`${API_BASE}/api/v1/occasions`);
