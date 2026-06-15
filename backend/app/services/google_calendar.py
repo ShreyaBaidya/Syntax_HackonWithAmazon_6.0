@@ -19,15 +19,36 @@ import os
 from datetime import date, datetime, timezone
 from typing import Optional
 
+try:
+    from zoneinfo import ZoneInfo
+
+    _LOCAL_TZ = ZoneInfo(os.getenv("APP_TIMEZONE", "Asia/Kolkata"))
+except Exception:  # pragma: no cover - fallback if tzdata missing
+    _LOCAL_TZ = timezone.utc
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 
-def _today_range() -> tuple[str, str]:
-    """Return ISO-8601 strings for today midnight→midnight in UTC."""
-    today = date.today()
-    start = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc)
-    end = datetime(today.year, today.month, today.day, 23, 59, 59, tzinfo=timezone.utc)
+def _day_range(date_str: Optional[str] = None) -> tuple[str, str]:
+    """
+    Return ISO-8601 start/end strings covering the full local day.
+
+    Events are matched against the app's local timezone (default Asia/Kolkata)
+    so that, e.g., an early-morning IST event isn't pushed onto the previous
+    UTC day. The returned bounds are timezone-aware and accepted as-is by the
+    Google Calendar API.
+    """
+    if date_str:
+        try:
+            d = date.fromisoformat(date_str)
+        except ValueError:
+            d = datetime.now(_LOCAL_TZ).date()
+    else:
+        d = datetime.now(_LOCAL_TZ).date()
+
+    start = datetime(d.year, d.month, d.day, 0, 0, 0, tzinfo=_LOCAL_TZ)
+    end = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=_LOCAL_TZ)
     return start.isoformat(), end.isoformat()
 
 
@@ -118,19 +139,7 @@ def fetch_events_with_token(
         creds = Credentials(token=access_token)
         service = build("calendar", "v3", credentials=creds, cache_discovery=False)
 
-        if date_str:
-            try:
-                d = date.fromisoformat(date_str)
-            except ValueError:
-                d = date.today()
-            start = datetime(
-                d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc
-            ).isoformat()
-            end = datetime(
-                d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc
-            ).isoformat()
-        else:
-            start, end = _today_range()
+        start, end = _day_range(date_str)
 
         result = (
             service.events()
@@ -180,19 +189,7 @@ def fetch_events_service_account(date_str: Optional[str] = None) -> list[dict]:
         )
         service = build("calendar", "v3", credentials=creds, cache_discovery=False)
 
-        if date_str:
-            try:
-                d = date.fromisoformat(date_str)
-            except ValueError:
-                d = date.today()
-            start = datetime(
-                d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc
-            ).isoformat()
-            end = datetime(
-                d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc
-            ).isoformat()
-        else:
-            start, end = _today_range()
+        start, end = _day_range(date_str)
 
         result = (
             service.events()

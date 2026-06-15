@@ -436,7 +436,7 @@ def get_refill_suggestions(
     total = round(sum(s["price"] for s in all_items), 2)
 
     return {
-        "bundle_name": "🏠 Home Refill",
+        "bundle_name": "Home Refill",
         "subtitle": f"{len(all_items)} items likely running low",
         "total": total,
         "item_count": len(all_items),
@@ -448,17 +448,17 @@ def get_refill_suggestions(
                 "items": today,
             },
             "weekly": {
-                "label": "📅 Weekly Restock",
+                "label": " Weekly Restock",
                 "sublabel": "Every 5–10 days",
                 "items": weekly,
             },
             "biweekly": {
-                "label": "🗓️ Bi-weekly",
+                "label": "Bi-weekly",
                 "sublabel": "Every 11–20 days",
                 "items": biweekly,
             },
             "monthly": {
-                "label": "📦 Monthly Pantry",
+                "label": "Monthly Pantry",
                 "sublabel": "Every 3–4 weeks",
                 "items": monthly,
             },

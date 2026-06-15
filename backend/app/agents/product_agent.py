@@ -29,9 +29,12 @@ class ProductAgent:
             BudgetTier.STANDARD: "balance quality and price",
             BudgetTier.PREMIUM: "premium/organic options",
         }
+        dietary_context = ""
+        if dietary_preferences:
+            dietary_context = f"\nDietary requirements (STRICTLY follow): {', '.join(dietary_preferences)}. Only include products that comply with ALL of these requirements. Exclude any product that contains restricted ingredients."
         prompt = f"""Build a shopping cart for: "{query}"
 Intent: {json.dumps(intent_data)}
-Budget: {budget_tier.value} - {budget_context[budget_tier]}
+Budget: {budget_tier.value} - {budget_context[budget_tier]}{dietary_context}
 Return ONLY a JSON array (8-15 items). Prices in Indian Rupees (INR).
 Format: [{{"name":"Product","quantity":"1","category":"essential","estimated_price":299,"substitutes":["Alt1","Alt2"]}}]
 Categories: essential, recommended, optional. No markdown. No explanations."""

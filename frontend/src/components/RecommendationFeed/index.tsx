@@ -13,43 +13,119 @@ interface Props {
   onProductSelect: (product: Product, qty: number) => void;
   exclusionSet?: string[];
   alternatives?: Product[];
+  cart?: { product: Product; quantity: number }[];
+  dietTags?: string[];
+  allergenTags?: string[];
 }
 
+// Allergen tag to keyword mappings (mirroring backend)
+const ALLERGEN_EXCLUSIONS: Record<string, string[]> = {
+  nuts: ["nut", "almond", "cashew", "peanut", "walnut", "pistachio"],
+  gluten: [
+    "wheat",
+    "bread",
+    "flour",
+    "atta",
+    "noodles",
+    "pasta",
+    "biscuit",
+    "cookies",
+  ],
+  dairy: ["milk", "dairy", "butter", "cheese", "yogurt", "cream", "paneer"],
+  soy: ["soy", "soya", "tofu"],
+  shellfish: ["prawn", "shrimp", "crab", "lobster", "shellfish"],
+  eggs: ["egg", "eggs"],
+};
+
+// Representative substance name shown on the red badge for each allergen.
+// e.g. butter/cheese/paneer all map to the "dairy" allergen → displayed as "milk".
+const ALLERGEN_DISPLAY: Record<string, string> = {
+  nuts: "nuts",
+  gluten: "gluten",
+  dairy: "milk",
+  soy: "soy",
+  shellfish: "shellfish",
+  eggs: "egg",
+};
+
 /**
- * Client-side safety filter: removes products whose category/tags/name
- * contain any exclusion keyword (case-insensitive substring match).
- * Returns { safe: Product[], removed: { product: Product, reason: string }[] }
+ * Dietary labelling logic. Labels are driven ONLY by what the user selected:
+ *   - Diet preferences  → green "✓ <preference>" badges (handled in ProductCard)
+ *   - Allergen tags     → red "Contains <substance>" badge when a product
+ *                         contains that allergen. The substance shown is the
+ *                         allergen's representative name (e.g. dairy → "milk").
+ * No generic "Non-Vegetarian"/"Non-Vegan" conflict labels are produced.
  */
 function filterProductsClient(
   products: Product[],
-  exclusionSet: string[],
+  dietTags: string[] = [],
+  allergenTags: string[] = [],
 ): {
   safe: Product[];
   removed: { product: Product; reason: string }[];
+  warnings: Map<string, { message: string; type: "allergen" | "diet" }>;
 } {
-  if (!exclusionSet || exclusionSet.length === 0)
-    return { safe: products, removed: [] };
+  const warnings = new Map<
+    string,
+    { message: string; type: "allergen" | "diet" }
+  >();
 
-  const safe: Product[] = [];
-  const removed: { product: Product; reason: string }[] = [];
+  // Build the active allergen tags (those the user actually selected and that
+  // we have a keyword mapping for).
+  const activeAllergens = allergenTags
+    .map((t) => t.toLowerCase())
+    .filter((t) => ALLERGEN_EXCLUSIONS[t]);
 
   for (const product of products) {
-    const searchable =
-      `${product.name} ${product.category} ${(product as any).tags ?? ""}`.toLowerCase();
-    const matchedKeyword = exclusionSet.find((kw) =>
-      searchable.includes(kw.toLowerCase()),
+    // Build searchable text from product fields.
+    // We deliberately exclude both `category` AND `tags` because they're
+    // polluted by category names. Example: every product in the "Dairy and
+    // Eggs" aisle (milk, butter, cheese, yogurt) gets the words "dairy" and
+    // "eggs" injected into its tags by the backend's _make_tags() builder,
+    // which would falsely trigger egg/dairy allergen warnings on lactose-free
+    // milk, butter, etc. The product NAME and structured INGREDIENTS list are
+    // the only authoritative sources for what the product actually contains.
+    const productAllergenTags = ((product as any).allergen_tags ?? []).map(
+      (t: string) => t.toLowerCase(),
     );
-    if (matchedKeyword) {
-      removed.push({
-        product,
-        reason: `Removed due to ${matchedKeyword} restriction`,
-      });
-    } else {
-      safe.push(product);
+    const ingredientsText = ((product as any).ingredients ?? [])
+      .join(" ")
+      .toLowerCase();
+    const nameText = (product.name ?? "").toLowerCase();
+    const searchable = `${nameText} ${ingredientsText}`;
+    // Word-boundary matcher to avoid substring-in-substring false positives
+    // (e.g. "egg" matching inside "eggless"). Each keyword must appear as a
+    // standalone token, optionally with a plural 's', or be present as a
+    // structured allergen_tag.
+    const matchKeyword = (kw: string): boolean => {
+      // 1. Structured allergen_tags are authoritative
+      if (productAllergenTags.some((t: string) => t === kw || t.startsWith(kw)))
+        return true;
+      // 2. Word-boundary check in name/ingredients
+      const re = new RegExp(
+        `\\b${kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}s?\\b`,
+        "i",
+      );
+      return re.test(searchable);
+    };
+
+    // ALLERGEN CHECK — for each allergen the user selected, see if the product
+    // contains it. If so, show a single red badge naming the allergen substance
+    // (e.g. "Contains milk" for any dairy-derived product).
+    for (const allergen of activeAllergens) {
+      const keywords = ALLERGEN_EXCLUSIONS[allergen];
+      if (keywords.some(matchKeyword)) {
+        warnings.set(product.id, {
+          message: `Contains ${ALLERGEN_DISPLAY[allergen] ?? allergen}`,
+          type: "allergen",
+        });
+        break; // one allergen badge per product is enough
+      }
     }
   }
 
-  return { safe, removed };
+  // All products are shown — none removed
+  return { safe: products, removed: [], warnings };
 }
 
 const SUB_CATS = [
@@ -79,13 +155,26 @@ export function RecommendationFeed({
   onProductSelect,
   exclusionSet,
   alternatives,
+  cart = [],
+  dietTags = [],
+  allergenTags = [],
 }: Props) {
   const [activeCategory, setActiveCategory] = useState("");
   const [activeSub, setActiveSub] = useState("All");
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
   const [loadingCategory, setLoadingCategory] = useState(false);
 
+  // Helper to get cart quantity for a product
+  const getCartQty = (productId: string) => {
+    const item = cart.find((c) => c.product.id === productId);
+    return item ? item.quantity : 0;
+  };
 
+  console.log("[RecommendationFeed] Rendering with:", {
+    nowSuggestions: nowSuggestions.length,
+    trending: trending.length,
+    exclusionSet: exclusionSet?.length ?? 0,
+  });
 
   // Fetch catalog products whenever a category is selected
   useEffect(() => {
@@ -112,17 +201,26 @@ export function RecommendationFeed({
     : [...nowSuggestions, ...trending];
   const filteredReorder = isBrowsing ? [] : reorderNudges;
 
-  // Apply client-side dietary safety filter
-  const { safe: safeProducts, removed: removedProducts } = filterProductsClient(
-    filtered,
-    exclusionSet ?? [],
-  );
-  const { safe: safeReorder } = filterProductsClient(
+  // Apply client-side dietary safety check (warns, never removes)
+  const {
+    safe: safeProducts,
+    removed: removedProducts,
+    warnings: productWarnings,
+  } = filterProductsClient(filtered, dietTags, allergenTags);
+  const { safe: safeReorder, warnings: reorderWarnings } = filterProductsClient(
     filteredReorder,
-    exclusionSet ?? [],
+    dietTags,
+    allergenTags,
   );
 
+  // Only render dietary/allergen badges when the user has actually set up a profile.
+  // Without a profile, products show no diet labels at all.
+  const hasProfile = dietTags.length > 0 || allergenTags.length > 0;
 
+  console.log("[RecommendationFeed] After filter:", {
+    safe: safeProducts.length,
+    removed: removedProducts.length,
+  });
 
   const sectionTitle = (() => {
     let title = isBrowsing
@@ -148,22 +246,6 @@ export function RecommendationFeed({
       {/* Category icon strip */}
       <CategoryStrip active={activeCategory} onChange={handleCategoryChange} />
 
-      {/* Task 9.5: Personalized indicator when exclusionSet is active */}
-      {exclusionSet && exclusionSet.length > 0 && (
-        <div
-          style={{
-            padding: "4px 12px",
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
-          <span style={{ fontSize: 10, color: "#067D62", fontWeight: 500 }}>
-            🛡️ Personalized for your dietary profile
-          </span>
-        </div>
-      )}
-
       {/* Sub-category pill chips */}
       <div style={{ background: "white", borderBottom: "1px solid #F0F0F0" }}>
         <div
@@ -174,28 +256,7 @@ export function RecommendationFeed({
             overflowX: "auto",
             padding: "8px 10px",
           }}
-        >
-          {SUB_CATS.map((s) => (
-            <button
-              key={s}
-              onClick={() => setActiveSub(s)}
-              style={{
-                flexShrink: 0,
-                padding: "5px 12px",
-                borderRadius: 20,
-                border: "1px solid #DDD",
-                background: activeSub === s ? "#0F1111" : "white",
-                color: activeSub === s ? "white" : "#0F1111",
-                fontSize: 11,
-                fontWeight: activeSub === s ? 700 : 400,
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
+        ></div>
       </div>
 
       {/* Loading state */}
@@ -218,56 +279,13 @@ export function RecommendationFeed({
           <ProductGrid4
             products={safeProducts}
             onProductSelect={onProductSelect}
+            getCartQty={getCartQty}
+            warnings={productWarnings}
+            showDietaryInfo={hasProfile}
+            userDietTags={dietTags}
+            userAllergenTags={allergenTags}
           />
         </Section>
-      )}
-
-      {/* Explainability: filtered items */}
-      {removedProducts.length > 0 && (
-        <div
-          style={{
-            padding: "8px 12px",
-            background: "#FFF8E1",
-            margin: "0 10px 8px",
-            borderRadius: 8,
-            border: "1px solid #FFE082",
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              fontSize: 11,
-              color: "#B71C1C",
-              fontWeight: 600,
-            }}
-          >
-            🛡️ {removedProducts.length} item
-            {removedProducts.length > 1 ? "s" : ""} filtered for your safety
-          </p>
-          <div
-            style={{
-              marginTop: 4,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            {removedProducts.slice(0, 3).map(({ product, reason }) => (
-              <p
-                key={product.id}
-                style={{ margin: 0, fontSize: 10, color: "#666" }}
-              >
-                • {product.name} —{" "}
-                <span style={{ color: "#C62828" }}>{reason}</span>
-              </p>
-            ))}
-            {removedProducts.length > 3 && (
-              <p style={{ margin: 0, fontSize: 10, color: "#888" }}>
-                + {removedProducts.length - 3} more items hidden
-              </p>
-            )}
-          </div>
-        </div>
       )}
 
       {/* Task 9.1: Alternatives carousel */}
@@ -287,7 +305,15 @@ export function RecommendationFeed({
                 key={p.id}
                 style={{ minWidth: 150, maxWidth: 150, flexShrink: 0 }}
               >
-                <ProductCard product={p} onAddToCart={onProductSelect} grid />
+                <ProductCard
+                  product={p}
+                  onAddToCart={onProductSelect}
+                  grid
+                  initialQty={getCartQty(p.id)}
+                  showDietaryInfo={hasProfile}
+                  userDietTags={dietTags}
+                  userAllergenTags={allergenTags}
+                />
               </div>
             ))}
           </div>
@@ -298,14 +324,23 @@ export function RecommendationFeed({
       {!isBrowsing && safeReorder.length > 0 && (
         <Section title="🔁 Buy Again">
           <div>
-            {safeReorder.map((p) => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                onAddToCart={onProductSelect}
-                compact
-              />
-            ))}
+            {safeReorder.map((p) => {
+              const warn = reorderWarnings.get(p.id);
+              return (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  onAddToCart={onProductSelect}
+                  compact
+                  initialQty={getCartQty(p.id)}
+                  allergyWarning={warn?.message}
+                  warningType={warn?.type}
+                  showDietaryInfo={hasProfile}
+                  userDietTags={dietTags}
+                  userAllergenTags={allergenTags}
+                />
+              );
+            })}
           </div>
         </Section>
       )}
@@ -378,9 +413,19 @@ function Section({
 function ProductGrid4({
   products,
   onProductSelect,
+  getCartQty,
+  warnings = new Map(),
+  showDietaryInfo = false,
+  userDietTags = [],
+  userAllergenTags = [],
 }: {
   products: Product[];
   onProductSelect: (p: Product, qty: number) => void;
+  getCartQty: (productId: string) => number;
+  warnings?: Map<string, { message: string; type: "allergen" | "diet" }>;
+  showDietaryInfo?: boolean;
+  userDietTags?: string[];
+  userAllergenTags?: string[];
 }) {
   return (
     <div
@@ -391,14 +436,23 @@ function ProductGrid4({
         padding: "8px 10px 12px",
       }}
     >
-      {products.map((p) => (
-        <ProductCard
-          key={p.id}
-          product={p}
-          onAddToCart={onProductSelect}
-          grid
-        />
-      ))}
+      {products.map((p) => {
+        const warning = warnings.get(p.id);
+        return (
+          <ProductCard
+            key={p.id}
+            product={p}
+            onAddToCart={onProductSelect}
+            grid
+            initialQty={getCartQty(p.id)}
+            allergyWarning={warning?.message}
+            warningType={warning?.type}
+            showDietaryInfo={showDietaryInfo}
+            userDietTags={userDietTags}
+            userAllergenTags={userAllergenTags}
+          />
+        );
+      })}
     </div>
   );
 }

@@ -21,6 +21,10 @@ router = APIRouter()
 # ── In-memory token store {user_id → google_access_token} ────────────────────
 _GOOGLE_TOKENS: dict[str, str] = {}
 
+# Calendar-driven event recommendations are demoed for a single user (Shreya
+# Sharma → user_002) to keep the two-user demo unambiguous.
+EVENT_RECO_USER_ID = "user_002"
+
 
 # ── Models ────────────────────────────────────────────────────────────────────
 
@@ -67,6 +71,53 @@ async def get_events(
             "service_account" if os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") else "mock"
         ),
         "date": date or "today",
+    }
+
+
+@router.get(
+    "/calendar/event-recommendations",
+    summary="LLM product recommendations based on today's calendar events",
+    description=(
+        "Reads the user's calendar events for the day and uses the LLM together "
+        "with the full product catalogue to recommend items the user likely needs "
+        "for those events (e.g. snacks & drinks for a house party).\n\n"
+        "This feature is intentionally enabled only for the demo user Shreya "
+        "Sharma (user_002) to keep the two-account demo unambiguous. For any "
+        "other user it returns `enabled: false` with empty lists."
+    ),
+    tags=["Calendar"],
+)
+async def event_recommendations(
+    user_id: str = Query(..., description="User ID — feature active only for user_002"),
+    date: Optional[str] = Query(
+        default=None, description="YYYY-MM-DD, defaults to today"
+    ),
+):
+    # Gate the feature to Shreya only
+    if user_id != EVENT_RECO_USER_ID:
+        return {"enabled": False, "events": [], "recommendations": []}
+
+    token = _GOOGLE_TOKENS.get(user_id)
+    events = get_today_events(access_token=token, date_str=date)
+    if not events:
+        return {"enabled": True, "events": [], "recommendations": []}
+
+    from app.services.refill_engine import _extract_history
+    from app.services.event_planner import suggest_for_events
+
+    history = _extract_history(user_id=user_id)
+    recommendations = suggest_for_events(events, history)
+
+    # ProductCard renders the grey reason line from `reason`; the planner sets
+    # `ai_reason`, so mirror it onto `reason` for display.
+    for product in recommendations:
+        if not product.get("reason"):
+            product["reason"] = product.get("ai_reason", "For your event today")
+
+    return {
+        "enabled": True,
+        "events": events,
+        "recommendations": recommendations,
     }
 
 

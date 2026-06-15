@@ -7,6 +7,7 @@ from app.schemas.cart import (
     OutcomeRequest,
     BudgetTier,
     CartItem,
+    ItemCategory,
 )
 from app.agents.intent_agent import intent_agent
 from app.agents.product_agent import product_agent
@@ -58,7 +59,6 @@ async def build_cart_from_intent(request: IntentRequest):
         raise HTTPException(
             status_code=422, detail="Could not generate cart from the given intent"
         )
-    items = _map_to_catalog(items)
     nutrition = await nutrition_agent.analyze_nutrition(items)
     total_price = sum(item.estimated_price for item in items if item.estimated_price)
     return CartResponse(
@@ -104,7 +104,6 @@ async def build_cart_from_url(request: URLPromptRequest):
         raise HTTPException(
             status_code=422, detail="Could not extract products from URL"
         )
-    items = _map_to_catalog(items)
     nutrition = await nutrition_agent.analyze_nutrition(items)
     total_price = sum(item.estimated_price for item in items if item.estimated_price)
     return CartResponse(

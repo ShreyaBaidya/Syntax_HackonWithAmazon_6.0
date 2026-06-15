@@ -1,8 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { placeOrder, Order, fetchCoupons, CouponResult } from "@/lib/api";
+import {
+  placeOrder,
+  Order,
+  fetchCoupons,
+  CouponResult,
+  deleteSharedCart,
+} from "@/lib/api";
 import { CartItem } from "@/components/SpeedCheckout";
 import { DELIVERY_FEE } from "@/lib/coupons";
 
@@ -101,6 +107,9 @@ export default function CartPage() {
   const [phase, setPhase] = useState<Phase>("cart");
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState("");
+  const [isSharedCart, setIsSharedCart] = useState(false);
+  const orderCompletedRef = useRef(false);
+  const [countdown, setCountdown] = useState(60);
 
   // ── Subtotal — computed on every render (no state, always in sync) ──────────
   const subtotal = items.reduce((s, i) => s + i.product.price * i.quantity, 0);
@@ -121,9 +130,19 @@ export default function CartPage() {
   // ── Load from localStorage + one-time backend fetch for coupon catalogue ────
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("amazon_now_cart");
+      // Check for shared cart checkout first, otherwise use regular cart
+      const sharedCart = localStorage.getItem("shared_cart_checkout");
+      const regularCart = localStorage.getItem("amazon_now_cart");
+      const saved = sharedCart || regularCart;
       const parsed: CartItem[] = saved ? JSON.parse(saved) : [];
       setItems(parsed);
+      setIsSharedCart(!!sharedCart);
+
+      // If using shared cart checkout, mark it with a flag so we don't clear it prematurely
+      if (sharedCart) {
+        sessionStorage.setItem("using_shared_checkout", "true");
+      }
+
       const sub = parsed.reduce((s, i) => s + i.product.price * i.quantity, 0);
       if (sub > 0) {
         fetchCoupons(sub)
@@ -137,6 +156,25 @@ export default function CartPage() {
     }
     setLoadingCart(false);
   }, []);
+
+  // ── Countdown timer for order confirmation ────────────────────────────────
+  useEffect(() => {
+    if (phase === "confirmed") {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            // Redirect to home page after countdown completes
+            router.push("/");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [phase, router]);
 
   // ── Derived values — all instant, no async ──────────────────────────────────
   // computeCouponSavings recalculates from raw params on every render.
@@ -154,18 +192,26 @@ export default function CartPage() {
   // ── Handlers ───────────────────────────────────────────────────────────────
   // Update qty AND immediately persist to localStorage (avoids a separate
   // persist useEffect that would fire with stale empty state on mount).
-  const updateQty = useCallback((productId: string, qty: number) => {
-    setItems((prev) => {
-      const updated =
-        qty <= 0
-          ? prev.filter((i) => i.product.id !== productId)
-          : prev.map((i) =>
-              i.product.id === productId ? { ...i, quantity: qty } : i,
-            );
-      localStorage.setItem("amazon_now_cart", JSON.stringify(updated));
-      return updated;
-    });
-  }, []);
+  const updateQty = useCallback(
+    (productId: string, qty: number) => {
+      setItems((prev) => {
+        const updated =
+          qty <= 0
+            ? prev.filter((i) => i.product.id !== productId)
+            : prev.map((i) =>
+                i.product.id === productId ? { ...i, quantity: qty } : i,
+              );
+        // Update the correct cart based on which one is active
+        if (isSharedCart) {
+          localStorage.setItem("shared_cart_checkout", JSON.stringify(updated));
+        } else {
+          localStorage.setItem("amazon_now_cart", JSON.stringify(updated));
+        }
+        return updated;
+      });
+    },
+    [isSharedCart],
+  );
 
   const handlePlaceOrder = async () => {
     setError("");
@@ -193,7 +239,27 @@ export default function CartPage() {
       });
       setOrder(result);
       setPhase("confirmed");
+      orderCompletedRef.current = true;
+
+      // If this was a shared cart checkout, delete the shared cart
+      if (isSharedCart) {
+        const sharedCartId = localStorage.getItem("shared_cart_id");
+        if (sharedCartId) {
+          try {
+            await deleteSharedCart(sharedCartId);
+            localStorage.removeItem("shared_cart_id");
+            // Clean up session storage
+            sessionStorage.removeItem(`cart_name_${sharedCartId}`);
+          } catch {
+            // Ignore deletion errors - cart might already be deleted
+          }
+        }
+      }
+
+      // Clear both regular and shared cart checkouts
       localStorage.removeItem("amazon_now_cart");
+      localStorage.removeItem("shared_cart_checkout");
+      sessionStorage.removeItem("using_shared_checkout");
     } catch {
       setError("Order failed. Please try again.");
       setPhase("cart");
@@ -223,6 +289,8 @@ export default function CartPage() {
 
   // ── Order confirmed ────────────────────────────────────────────────────────
   if (phase === "confirmed" && order) {
+    const minutes = Math.floor(countdown / 60);
+    const seconds = countdown % 60;
     return (
       <div className="min-h-screen bg-[#F0F2F2] flex items-center justify-center px-4">
         <div className="bg-white rounded-2xl p-8 w-full max-w-sm text-center shadow-xl">
@@ -241,6 +309,14 @@ export default function CartPage() {
               Estimated delivery
             </p>
           </div>
+          <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4">
+            <p className="text-2xl font-bold text-blue-600">
+              {minutes}:{seconds.toString().padStart(2, "0")}
+            </p>
+            <p className="text-xs text-blue-700 font-medium mt-1">
+              Preparing your order
+            </p>
+          </div>
           {totalSavings > 0 && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 mb-4">
               <p className="text-sm font-semibold text-yellow-800">
@@ -250,9 +326,7 @@ export default function CartPage() {
           )}
           <p className="text-sm text-gray-500 mb-6">
             Total paid:{" "}
-            <span className="font-bold text-gray-900">
-              ₹{order.total_amount.toFixed(2)}
-            </span>
+            <span className="font-bold text-gray-900">₹{total.toFixed(2)}</span>
           </p>
           <button
             onClick={() => router.push("/")}

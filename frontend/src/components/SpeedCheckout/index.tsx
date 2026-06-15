@@ -20,39 +20,10 @@ export function SpeedCheckout({
   onOrderComplete,
   onClose,
   onUpdateQty,
-  onAddProduct,
 }: Readonly<Props>) {
   const [phase, setPhase] = useState<Phase>("review");
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState("");
-  const [upsells, setUpsells] = useState<Product[]>([]);
-  import("@/lib/api").then(({ getRecommendations }) => {
-    // Only fetch once when phase is review
-  });
-
-  import("react").then(({ useEffect }) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      if (cart.length > 0 && phase === "review") {
-        const intentQuery = cart.map((i) => i.product.name).join(", ");
-        import("@/lib/api").then(({ getRecommendations }) => {
-          getRecommendations(
-            "demo_user",
-            `I am buying ${intentQuery}. What goes well with this?`,
-          )
-            .then((data) => {
-              // filter out products already in cart
-              const inCartIds = new Set(cart.map((c) => c.product.id));
-              const suggestions = data.now_suggestions.filter(
-                (p) => !inCartIds.has(p.id),
-              );
-              setUpsells(suggestions.slice(0, 2));
-            })
-            .catch(() => {});
-        });
-      }
-    }, [cart, phase]);
-  });
 
   const total = cart.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
   const maxEta = cart.length

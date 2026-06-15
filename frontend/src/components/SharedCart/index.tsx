@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   CartState,
   CartItem,
@@ -43,6 +44,7 @@ function colorForParticipant(name: string, all: string[]) {
 }
 
 export function SharedCart({ cartId, initialCart, participantName }: Props) {
+  const router = useRouter();
   const [cart, setCart] = useState<CartState>(initialCart);
   const [activity, setActivity] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
@@ -161,26 +163,28 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
   );
 
   // ── Checkout ────────────────────────────────────────────────────────────────
-  const handleCheckout = useCallback(async () => {
+  const handleCheckout = useCallback(() => {
     if (cart.item_count === 0) return;
-    setCheckingOut(true);
-    try {
-      const items = Object.values(cart.items).map((i) => ({
-        product_id: i.product_id,
-        quantity: i.quantity,
-      }));
-      const order = await placeOrder({
-        user_id: participantName,
-        items,
-        delivery_address: "Shared Cart Delivery",
-      });
-      setOrderDone(order.order_id);
-    } catch {
-      alert("Checkout failed — try again");
-    } finally {
-      setCheckingOut(false);
-    }
-  }, [cart, participantName]);
+    // Transform shared cart items to regular cart format
+    const cartItems = Object.values(cart.items).map((item) => ({
+      product: {
+        id: item.product_id,
+        name: item.name,
+        price: item.price,
+        unit: item.unit,
+        image_url: item.image_url,
+        category: item.category,
+        eta_min: 28, // default ETA for shared cart items
+      },
+      quantity: item.quantity,
+    }));
+    // Store in separate key to avoid mixing with regular cart
+    localStorage.setItem("shared_cart_checkout", JSON.stringify(cartItems));
+    // Store cartId for deletion after order completion
+    localStorage.setItem("shared_cart_id", cartId);
+    // Navigate to cart checkout page
+    router.push("/cart");
+  }, [cart, cartId, router]);
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
   const itemList = Object.values(cart.items);
@@ -618,7 +622,7 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
         {isOwner ? (
           <button
             onClick={handleCheckout}
-            disabled={cart.item_count === 0 || checkingOut}
+            disabled={cart.item_count === 0}
             style={{
               width: "100%",
               background: cart.item_count === 0 ? "#E0E0E0" : "#FFD814",
@@ -631,9 +635,7 @@ export function SharedCart({ cartId, initialCart, participantName }: Props) {
               cursor: cart.item_count === 0 ? "not-allowed" : "pointer",
             }}
           >
-            {checkingOut
-              ? "Placing Order…"
-              : `⚡ Checkout · ₹${cart.total.toFixed(2)}`}
+            {`⚡ Proceed to Checkout · ₹${cart.total.toFixed(2)}`}
           </button>
         ) : (
           <div style={{ textAlign: "center" }}>
