@@ -234,38 +234,6 @@ export function SpeedCheckout({
           </div>
         </div>
 
-        {upsells.length > 0 && (
-          <div className="mb-5 bg-gradient-to-r from-indigo-50 to-purple-50 p-3 rounded-xl border border-indigo-100">
-            <p className="text-xs font-bold text-indigo-900 mb-2 flex items-center gap-1">
-              ✨ AI Suggests you might need:
-            </p>
-            {upsells.map((u) => (
-              <div
-                key={u.id}
-                className="flex justify-between items-center bg-white p-2 rounded-lg mb-2 shadow-sm"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <img
-                    src={u.image_url}
-                    alt={u.name}
-                    className="w-8 h-8 object-contain bg-gray-50 rounded"
-                  />
-                  <p className="text-xs font-medium truncate">{u.name}</p>
-                </div>
-                <button
-                  onClick={() => {
-                    if (onAddProduct) onAddProduct(u);
-                    setUpsells((prev) => prev.filter((p) => p.id !== u.id));
-                  }}
-                  className="bg-[#FFD814] text-black font-bold text-xs px-2 py-1 rounded whitespace-nowrap ml-2 border border-[#F0C000]"
-                >
-                  + Add ₹{u.price}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
         {error && (
           <p className="text-sm text-red-500 text-center mb-3">{error}</p>
         )}

@@ -1,10 +1,5 @@
 import type {
   CartResponse,
-  IntentRequest,
-  OccasionRequest,
-  OutcomeRequest,
-  URLPromptRequest,
-  Occasion,
 } from "@/types";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
