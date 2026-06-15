@@ -28,6 +28,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [eventRecs, setEventRecs] = useState<EventRecommendations | null>(null);
+  const [showJoinCart, setShowJoinCart] = useState(false);
+  const [joinCartId, setJoinCartId] = useState("");
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -192,6 +194,25 @@ export default function HomePage() {
     }
   }, [router]);
 
+  const handleJoinCart = useCallback(async () => {
+    if (!joinCartId.trim()) {
+      alert("Enter a cart ID or link");
+      return;
+    }
+    try {
+      const cartId = joinCartId.includes("/")
+        ? joinCartId.split("/").pop()
+        : joinCartId;
+      const storedName = sessionStorage.getItem("my_name") || "Guest";
+      await getSharedCart(cartId || "");
+      sessionStorage.setItem(`cart_name_${cartId}`, storedName);
+      setShowJoinCart(false);
+      router.push(`/cart/${cartId}`);
+    } catch {
+      alert("Cart not found. Check the ID or link.");
+    }
+  }, [joinCartId, router]);
+
   const cartTotal = cart.reduce((s, i) => s + i.product.price * i.quantity, 0);
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
@@ -275,6 +296,112 @@ export default function HomePage() {
             <div style={{ flex: 1 }}>
               <p style={{ color: "white", fontWeight: 700, fontSize: 12, margin: 0 }}>Start Cart</p>
               <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 10, margin: "2px 0 0" }}>Create & share link</p>
+            </div>
+          </div>
+
+          <div
+            onClick={() => setShowJoinCart(true)}
+            style={{
+              flex: 1,
+              background: "linear-gradient(135deg, #1565C0 0%, #1E88E5 100%)",
+              borderRadius: 10,
+              padding: "12px 12px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <div style={{ width: 36, height: 36, background: "rgba(255,255,255,0.2)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>
+              🔗
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ color: "white", fontWeight: 700, fontSize: 12, margin: 0 }}>Join Cart</p>
+              <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 10, margin: "2px 0 0" }}>Paste shared link</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Join Cart Modal */}
+      {showJoinCart && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 999,
+          }}
+          onClick={() => setShowJoinCart(false)}
+        >
+          <div
+            style={{
+              background: "white",
+              borderRadius: 12,
+              padding: 20,
+              width: "90%",
+              maxWidth: 320,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 12px", color: "#0F1111" }}>
+              Join Shared Cart
+            </h2>
+            <input
+              autoFocus
+              type="text"
+              placeholder="Paste cart link or ID"
+              value={joinCartId}
+              onChange={(e) => setJoinCartId(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleJoinCart();
+              }}
+              style={{
+                width: "100%",
+                padding: "10px 12px",
+                border: "1px solid #DDD",
+                borderRadius: 6,
+                fontSize: 13,
+                marginBottom: 12,
+                boxSizing: "border-box",
+              }}
+            />
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                onClick={() => setShowJoinCart(false)}
+                style={{
+                  flex: 1,
+                  padding: "10px",
+                  background: "#F0F0F0",
+                  border: "none",
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: 13,
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleJoinCart}
+                style={{
+                  flex: 1,
+                  padding: "10px",
+                  background: "#1E88E5",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: 13,
+                }}
+              >
+                Join
+              </button>
             </div>
           </div>
         </div>
