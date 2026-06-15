@@ -3,6 +3,7 @@
     {
       "id": "carbonara",
       "name": "Pasta Carbonara",
+      "image_url": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=300&h=200&fit=crop",
       "keywords": ["carbonara", "guanciale", "pecorino", "cacio"],
       "url_patterns": ["carbonara", "cacio.*pepe", "tastemade.*pasta", "bbcgood"],
       "image_patterns": ["carbonara", "pasta.*white", "guanciale"],
@@ -48,6 +49,7 @@
     {
       "id": "biryani",
       "name": "Chicken Biryani",
+      "image_url": "https://images.unsplash.com/photo-1563379091339-03b21ab4a104?w=300&h=200&fit=crop",
       "keywords": ["biryani", "hyderabadi", "dum pukht"],
       "url_patterns": ["biryani", "ndtv.*biryani", "tarla.*biryani"],
       "image_patterns": ["biryani", "rice.*chicken", "hyderabadi"],
@@ -107,6 +109,7 @@
     {
       "id": "butter_chicken",
       "name": "Butter Chicken Curry",
+      "image_url": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=300&h=200&fit=crop",
       "keywords": ["butter chicken", "murgh makhani", "tikka masala"],
       "url_patterns": ["butter.*chicken", "murgh.*makhani", "tikka.*masala"],
       "image_patterns": ["butter.*chicken", "curry.*red", "chicken.*cream"],
@@ -173,6 +176,7 @@
     {
       "id": "paneer_tikka",
       "name": "Paneer Tikka",
+      "image_url": "https://images.unsplash.com/photo-1599599810694-b5ac4dd94b61?w=300&h=200&fit=crop",
       "keywords": ["paneer tikka", "paneer", "tandoori"],
       "url_patterns": ["paneer.*tikka", "tandoori"],
       "image_patterns": ["paneer", "tikka", "tandoori"],
@@ -232,6 +236,7 @@
     {
       "id": "pizza",
       "name": "Homemade Pizza",
+      "image_url": "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=300&h=200&fit=crop",
       "keywords": ["pizza", "margherita", "pepperoni"],
       "url_patterns": ["pizza", "margherita", "dominos"],
       "image_patterns": ["pizza", "cheese.*bread"],
@@ -291,6 +296,7 @@
     {
       "id": "dhal_fry",
       "name": "Dal Fry (Lentil Curry)",
+      "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=200&fit=crop",
       "keywords": ["dal fry", "lentil curry", "moong dal"],
       "url_patterns": ["dal.*fry", "lentil.*curry", "moong"],
       "image_patterns": ["dal", "lentil", "curry.*yellow"],
