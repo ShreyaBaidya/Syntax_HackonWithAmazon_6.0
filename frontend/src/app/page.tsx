@@ -193,6 +193,9 @@ export default function HomePage() {
       // Persist immediately in the handler (not via a useEffect) to avoid the
       // mount-time wipe where useEffect fires with cart=[] before the load effect.
       localStorage.setItem('amazon_now_cart', JSON.stringify(updated));
+      // Clear any stale shared cart checkout since user is now using regular cart
+      localStorage.removeItem('shared_cart_checkout');
+      sessionStorage.removeItem('using_shared_checkout');
       return updated;
     });
   }, []);
@@ -478,6 +481,11 @@ export default function HomePage() {
                     : <>{refill.item_count} items likely running low · <strong>₹{refill.total.toFixed(0)}</strong></>
                   }
                 </p>
+                {!refillExpanded && (
+                  <p style={{ fontSize: 10, color: '#888', textAlign: 'center' }}>
+                    Tap to see items 
+                  </p>
+                )}
               </div>
               <button
                 onClick={(e) => {
@@ -509,8 +517,8 @@ export default function HomePage() {
                     const group = refill.grouped[tab];
                     const count = (group?.items ?? []).filter(i => !dismissedRefillIds.has(i.id)).length;
                     const labels: Record<string, string> = {
-                      weekly: '📅 Weekly',
-                      biweekly: '🗓️ Bi-weekly', monthly: '📦 Monthly',
+                      weekly: 'Weekly',
+                      biweekly: ' Bi-weekly', monthly: 'Monthly',
                     };
                     return (
                       <button
@@ -587,7 +595,7 @@ export default function HomePage() {
                           </div>
                         ) : (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
-                            <button onClick={() => handleProductSelect(item as unknown as Product, 0)} style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '50%', width: 24, height: 24, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DC2626' }}>🗑</button>
+                            <button onClick={() => handleProductSelect(item as unknown as Product, 0)} style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '50%', width: 24, height: 24, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'black' }}>🗑</button>
                             <div style={{ display: 'flex', alignItems: 'center', background: '#FFD814', borderRadius: 20, border: '1px solid #F0C000', overflow: 'hidden' }}>
                               <button onClick={() => handleProductSelect(item as unknown as Product, qty - 1)} style={{ width: 24, height: 24, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>−</button>
                               <span style={{ minWidth: 16, textAlign: 'center', fontSize: 11, fontWeight: 700 }}>{qty}</span>
@@ -602,12 +610,6 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* Tap to expand hint */}
-            {!refillExpanded && (
-              <div style={{ padding: '6px 14px', textAlign: 'center' }}>
-                <span style={{ fontSize: 10, color: '#888' }}>Tap to see items ▼</span>
-              </div>
-            )}
           </div>
         )}
         {loading ? (
@@ -621,6 +623,9 @@ export default function HomePage() {
             onProductSelect={handleProductSelect}
             exclusionSet={exclusionSet}
             alternatives={recs.alternatives}
+            cart={cart}
+            dietTags={profile?.diet_tags ?? []}
+            allergenTags={profile?.allergen_tags ?? []}
           />
         ) : (
           <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', margin: '8px 0' }}>

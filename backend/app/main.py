@@ -6,6 +6,7 @@ from app.api import chat, recommendations, products, orders, cart, refill, coupo
 from app.api import calendar as calendar_api, auth, profile
 from app.api import ai_routes
 
+
 _DESCRIPTION = """
 
 ---
@@ -69,7 +70,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Shreya-dev core routers ───────────────────────────────────────────────────
+app.include_router(auth.router,            prefix="/api/v1", tags=["Auth"])
 app.include_router(chat.router,            prefix="/api/v1", tags=["NowSpeak"])
 app.include_router(recommendations.router, prefix="/api/v1", tags=["Recommendations"])
 app.include_router(products.router,        prefix="/api/v1", tags=["Products"])
@@ -78,7 +79,6 @@ app.include_router(cart.router,            prefix="/api/v1", tags=["Shared Cart"
 app.include_router(profile.router,         prefix="/api/v1", tags=["Profile"])
 app.include_router(refill.router,          prefix="/api/v1", tags=["Recommendations"])
 app.include_router(coupon.router,          prefix="/api/v1", tags=["Coupons"])
-app.include_router(auth.router,            prefix="/api/v1", tags=["Auth"])
 app.include_router(calendar_api.router,    prefix="/api/v1", tags=["Calendar"])
 
 # ── AI Shopping Assistant routers (merged from shopping-assistantAI branch) ──
