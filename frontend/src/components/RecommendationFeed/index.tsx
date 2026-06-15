@@ -13,33 +13,126 @@ interface Props {
   onProductSelect: (product: Product, qty: number) => void;
   exclusionSet?: string[];
   alternatives?: Product[];
+  cart?: { product: Product; quantity: number }[];
+  dietTags?: string[];
+  allergenTags?: string[];
 }
 
+// Dietary tag to keyword mappings (mirroring backend)
+const DIET_EXCLUSIONS: Record<string, string[]> = {
+  vegan: ['milk', 'dairy', 'egg', 'meat', 'chicken', 'fish', 'butter', 'cheese', 'yogurt', 'honey'],
+  vegetarian: ['meat', 'chicken', 'fish', 'mutton', 'pork', 'prawn', 'shrimp'],
+  keto: ['sugar', 'bread', 'rice', 'wheat', 'flour', 'atta', 'noodles', 'pasta'],
+  halal: ['pork', 'alcohol', 'wine', 'beer', 'rum'],
+  pescatarian: ['meat', 'chicken', 'mutton', 'pork'],
+  'gluten-free': ['wheat', 'bread', 'flour', 'atta', 'noodles', 'pasta', 'biscuit', 'cookies'],
+};
+
+const ALLERGEN_EXCLUSIONS: Record<string, string[]> = {
+  nuts: ['nut', 'almond', 'cashew', 'peanut', 'walnut', 'pistachio'],
+  gluten: ['wheat', 'bread', 'flour', 'atta', 'noodles', 'pasta', 'biscuit', 'cookies'],
+  dairy: ['milk', 'dairy', 'butter', 'cheese', 'yogurt', 'cream', 'paneer'],
+  soy: ['soy', 'soya', 'tofu'],
+  shellfish: ['prawn', 'shrimp', 'crab', 'lobster', 'shellfish'],
+  eggs: ['egg', 'eggs'],
+};
+
 /**
- * Client-side safety filter: removes products whose category/tags/name
- * contain any exclusion keyword (case-insensitive substring match).
- * Returns { safe: Product[], removed: { product: Product, reason: string }[] }
+ * Enhanced dietary safety check with proper allergen vs diet preference logic.
+ * Rules:
+ * 1. Allergens: ALWAYS warn (red banner) - user is allergic
+ * 2. Vegan users: warn if product contains dairy/eggs (orange banner) - dietary incompatibility
+ * 3. Vegetarian users: NO warning for vegan products - vegetarians can eat vegan
+ * 4. All products shown with appropriate warnings
  */
-function filterProductsClient(products: Product[], exclusionSet: string[]): {
+function filterProductsClient(
+  products: Product[],
+  dietTags: string[] = [],
+  allergenTags: string[] = [],
+): {
   safe: Product[];
   removed: { product: Product; reason: string }[];
+  warnings: Map<string, { message: string; type: 'allergen' | 'diet' }>;
 } {
-  if (!exclusionSet || exclusionSet.length === 0) return { safe: products, removed: [] };
+  const warnings = new Map<string, { message: string; type: 'allergen' | 'diet' }>();
 
-  const safe: Product[] = [];
-  const removed: { product: Product; reason: string }[] = [];
+  // Build exclusion sets from tags
+  const allergenKeywords = new Set<string>();
+  allergenTags.forEach(tag => {
+    const keywords = ALLERGEN_EXCLUSIONS[tag.toLowerCase()];
+    if (keywords) keywords.forEach(kw => allergenKeywords.add(kw));
+  });
+
+  const dietKeywords = new Set<string>();
+  dietTags.forEach(tag => {
+    const keywords = DIET_EXCLUSIONS[tag.toLowerCase()];
+    if (keywords) keywords.forEach(kw => dietKeywords.add(kw));
+  });
+
+  const isVegan = dietTags.some(t => t.toLowerCase() === 'vegan');
+  const isVegetarian = dietTags.some(t => t.toLowerCase() === 'vegetarian');
 
   for (const product of products) {
-    const searchable = `${product.name} ${product.category} ${(product as any).tags ?? ''}`.toLowerCase();
-    const matchedKeyword = exclusionSet.find(kw => searchable.includes(kw.toLowerCase()));
-    if (matchedKeyword) {
-      removed.push({ product, reason: `Removed due to ${matchedKeyword} restriction` });
-    } else {
-      safe.push(product);
+    // Build searchable text from product fields
+    const searchable = `${product.name} ${product.category} ${(product as any).tags ?? ''} ${(product as any).ingredients?.join(' ') ?? ''}`.toLowerCase();
+    const productTags = ((product as any).tags ?? '').toLowerCase();
+
+    // Check if product is vegan (has 'vegan' in tags)
+    const isProductVegan = productTags.includes('vegan');
+
+    // 1. ALLERGEN CHECK (highest priority - always warn)
+    const allergenMatches = Array.from(allergenKeywords).filter(kw => searchable.includes(kw));
+    if (allergenMatches.length > 0) {
+      warnings.set(product.id, {
+        message: `⚠️ Allergen: ${allergenMatches[0]}`,
+        type: 'allergen',
+      });
+      continue; // Allergen warning takes precedence
+    }
+
+    // 2. DIETARY INCOMPATIBILITY CHECK
+    if (isVegan) {
+      // Vegans can't consume dairy or eggs (even from vegetarian products)
+      const veganConflicts = ['milk', 'dairy', 'egg', 'butter', 'cheese', 'yogurt', 'cream', 'paneer', 'honey'];
+      const matchedConflict = veganConflicts.find(kw => searchable.includes(kw));
+      if (matchedConflict) {
+        warnings.set(product.id, {
+          message: `Not vegan: ${matchedConflict}`,
+          type: 'diet',
+        });
+        continue;
+      }
+    }
+
+    if (isVegetarian && !isProductVegan) {
+      // Vegetarians can eat vegan products (no warning needed for vegan items)
+      // Only warn if product contains meat/fish
+      const vegetarianConflicts = ['meat', 'chicken', 'fish', 'mutton', 'pork', 'prawn', 'shrimp'];
+      const matchedConflict = vegetarianConflicts.find(kw => searchable.includes(kw));
+      if (matchedConflict) {
+        warnings.set(product.id, {
+          message: `Contains: ${matchedConflict}`,
+          type: 'diet',
+        });
+        continue;
+      }
+    }
+
+    // 3. OTHER DIET RESTRICTIONS (keto, halal, etc.)
+    const dietMatches = Array.from(dietKeywords).filter(kw =>
+      searchable.includes(kw) &&
+      !['milk', 'dairy', 'egg', 'butter', 'cheese', 'yogurt', 'cream', 'paneer', 'honey', 'meat', 'chicken', 'fish', 'mutton', 'pork', 'prawn', 'shrimp'].includes(kw)
+    );
+    if (dietMatches.length > 0) {
+      warnings.set(product.id, {
+        message: `Contains: ${dietMatches[0]}`,
+        type: 'diet',
+      });
     }
   }
 
-  return { safe, removed };
+  // All products are shown — none removed
+  return { safe: products, removed: [], warnings };
 }
 
 const SUB_CATS = [
@@ -56,12 +149,19 @@ const SECTION_TITLES: Record<string, string> = {
 };
 
 export function RecommendationFeed({
-  nowSuggestions, reorderNudges, trending, timeContext, onProductSelect, exclusionSet, alternatives,
+  nowSuggestions, reorderNudges, trending, timeContext, onProductSelect, exclusionSet, alternatives, cart = [],
+  dietTags = [], allergenTags = [],
 }: Props) {
   const [activeCategory, setActiveCategory] = useState('');
   const [activeSub, setActiveSub] = useState('All');
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
   const [loadingCategory, setLoadingCategory] = useState(false);
+
+  // Helper to get cart quantity for a product
+  const getCartQty = (productId: string) => {
+    const item = cart.find(c => c.product.id === productId);
+    return item ? item.quantity : 0;
+  };
 
   console.log('[RecommendationFeed] Rendering with:', {
     nowSuggestions: nowSuggestions.length,
@@ -92,9 +192,9 @@ export function RecommendationFeed({
   const filtered = isBrowsing ? categoryProducts : [...nowSuggestions, ...trending];
   const filteredReorder = isBrowsing ? [] : reorderNudges;
 
-  // Apply client-side dietary safety filter
-  const { safe: safeProducts, removed: removedProducts } = filterProductsClient(filtered, exclusionSet ?? []);
-  const { safe: safeReorder } = filterProductsClient(filteredReorder, exclusionSet ?? []);
+  // Apply client-side dietary safety check (warns, never removes)
+  const { safe: safeProducts, removed: removedProducts, warnings: productWarnings } = filterProductsClient(filtered, dietTags, allergenTags);
+  const { safe: safeReorder } = filterProductsClient(filteredReorder, dietTags, allergenTags);
 
   console.log('[RecommendationFeed] After filter:', {
     safe: safeProducts.length,
@@ -120,13 +220,6 @@ export function RecommendationFeed({
     <div style={{ background: '#F7F7F7' }}>
       {/* Category icon strip */}
       <CategoryStrip active={activeCategory} onChange={handleCategoryChange} />
-
-      {/* Task 9.5: Personalized indicator when exclusionSet is active */}
-      {exclusionSet && exclusionSet.length > 0 && (
-        <div style={{ padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 10, color: '#067D62', fontWeight: 500 }}>🛡️ Personalized for your dietary profile</span>
-        </div>
-      )}
 
       {/* Sub-category pill chips */}
       <div style={{ background: 'white', borderBottom: '1px solid #F0F0F0' }}>
@@ -163,29 +256,8 @@ export function RecommendationFeed({
       {/* Main product grid */}
       {!loadingCategory && safeProducts.length > 0 && (
         <Section title={sectionTitle}>
-          <ProductGrid4 products={safeProducts} onProductSelect={onProductSelect} />
+          <ProductGrid4 products={safeProducts} onProductSelect={onProductSelect} getCartQty={getCartQty} warnings={productWarnings} />
         </Section>
-      )}
-
-      {/* Explainability: filtered items */}
-      {removedProducts.length > 0 && (
-        <div style={{ padding: '8px 12px', background: '#FFF8E1', margin: '0 10px 8px', borderRadius: 8, border: '1px solid #FFE082' }}>
-          <p style={{ margin: 0, fontSize: 11, color: '#B71C1C', fontWeight: 600 }}>
-            🛡️ {removedProducts.length} item{removedProducts.length > 1 ? 's' : ''} filtered for your safety
-          </p>
-          <div style={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {removedProducts.slice(0, 3).map(({ product, reason }) => (
-              <p key={product.id} style={{ margin: 0, fontSize: 10, color: '#666' }}>
-                • {product.name} — <span style={{ color: '#C62828' }}>{reason}</span>
-              </p>
-            ))}
-            {removedProducts.length > 3 && (
-              <p style={{ margin: 0, fontSize: 10, color: '#888' }}>
-                + {removedProducts.length - 3} more items hidden
-              </p>
-            )}
-          </div>
-        </div>
       )}
 
       {/* Task 9.1: Alternatives carousel */}
@@ -196,7 +268,7 @@ export function RecommendationFeed({
           }}>
             {alternatives.map(p => (
               <div key={p.id} style={{ minWidth: 150, maxWidth: 150, flexShrink: 0 }}>
-                <ProductCard product={p} onAddToCart={onProductSelect} grid />
+                <ProductCard product={p} onAddToCart={onProductSelect} grid initialQty={getCartQty(p.id)} />
               </div>
             ))}
           </div>
@@ -208,7 +280,7 @@ export function RecommendationFeed({
         <Section title="🔁 Buy Again">
           <div>
             {safeReorder.map(p => (
-              <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} compact />
+              <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} compact initialQty={getCartQty(p.id)} />
             ))}
           </div>
         </Section>
@@ -250,9 +322,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 // 4-column compact grid (Amazon Now style)
-function ProductGrid4({ products, onProductSelect }: {
+function ProductGrid4({ products, onProductSelect, getCartQty, warnings = new Map() }: {
   products: Product[];
   onProductSelect: (p: Product, qty: number) => void;
+  getCartQty: (productId: string) => number;
+  warnings?: Map<string, { message: string; type: 'allergen' | 'diet' }>;
 }) {
   return (
     <div style={{
@@ -261,9 +335,20 @@ function ProductGrid4({ products, onProductSelect }: {
       gap: 8,
       padding: '8px 10px 12px',
     }}>
-      {products.map(p => (
-        <ProductCard key={p.id} product={p} onAddToCart={onProductSelect} grid />
-      ))}
+      {products.map(p => {
+        const warning = warnings.get(p.id);
+        return (
+          <ProductCard
+            key={p.id}
+            product={p}
+            onAddToCart={onProductSelect}
+            grid
+            initialQty={getCartQty(p.id)}
+            allergyWarning={warning?.message}
+            warningType={warning?.type}
+          />
+        );
+      })}
     </div>
   );
 }

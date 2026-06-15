@@ -3,8 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.api import chat, recommendations, products, orders, cart, refill, coupon, profile
+<<<<<<< Updated upstream
 from app.api import calendar as calendar_api, auth, profile
 from app.api import ai_routes
+=======
+from app.api import calendar as calendar_api, auth
+>>>>>>> Stashed changes
 
 _DESCRIPTION = """
 
@@ -69,7 +73,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+<<<<<<< Updated upstream
 # ── Shreya-dev core routers ───────────────────────────────────────────────────
+=======
+app.include_router(auth.router,            prefix="/api/v1", tags=["Auth"])
+>>>>>>> Stashed changes
 app.include_router(chat.router,            prefix="/api/v1", tags=["NowSpeak"])
 app.include_router(recommendations.router, prefix="/api/v1", tags=["Recommendations"])
 app.include_router(products.router,        prefix="/api/v1", tags=["Products"])

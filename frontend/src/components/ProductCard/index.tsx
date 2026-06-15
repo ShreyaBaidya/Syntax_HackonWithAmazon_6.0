@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Product } from '@/lib/api';
 
 interface Props {
@@ -10,6 +10,12 @@ interface Props {
   compact?: boolean;
   /** grid = 4-column compact card (default for product grid) */
   grid?: boolean;
+  /** initialQty = current quantity in cart */
+  initialQty?: number;
+  /** allergyWarning = warning message if product matches user's allergen restrictions */
+  allergyWarning?: string;
+  /** warningType = type of warning: 'allergen' (red) or 'diet' (orange) */
+  warningType?: 'allergen' | 'diet';
 }
 
 // Mock original prices for some products to show discount
@@ -18,9 +24,14 @@ const ORIG: Record<string, number> = {
   p016: 25, p017: 49, p019: 75, p031: 649, p039: 999,
 };
 
-export function ProductCard({ product, onAddToCart, compact = false, grid = false }: Props) {
-  const [qty, setQty] = useState(0);
+export function ProductCard({ product, onAddToCart, compact = false, grid = false, initialQty = 0, allergyWarning, warningType = 'allergen' }: Props) {
+  const [qty, setQty] = useState(initialQty);
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
+
+  // Sync qty with initialQty when it changes (e.g., coming back from cart page)
+  useEffect(() => {
+    setQty(initialQty);
+  }, [initialQty]);
 
   const add = useCallback(() => {
     setQty(1);
@@ -128,6 +139,17 @@ export function ProductCard({ product, onAddToCart, compact = false, grid = fals
               fontSize: 8, fontWeight: 700, padding: '1px 4px', borderRadius: 2,
             }}>
               {discount}% OFF
+            </div>
+          )}
+          {allergyWarning && (
+            <div style={{
+              position: 'absolute', bottom: 0, left: 0, right: 0,
+              background: warningType === 'allergen' ? 'rgba(220, 38, 38, 0.92)' : 'rgba(234, 88, 12, 0.92)',
+              color: 'white',
+              fontSize: 8, fontWeight: 700, padding: '3px 4px',
+              textAlign: 'center', lineHeight: 1.3,
+            }}>
+              {allergyWarning}
             </div>
           )}
         </div>
