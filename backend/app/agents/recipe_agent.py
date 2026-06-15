@@ -1,4 +1,3 @@
-import json
 import httpx
 from bs4 import BeautifulSoup
 from openai import OpenAI
@@ -21,7 +20,9 @@ class RecipeAgent:
     @property
     def client(self):
         if self._client is None:
-            self._client = OpenAI(api_key=settings.nvidia_api_key, base_url=settings.nvidia_base_url)
+            self._client = OpenAI(
+                api_key=settings.nvidia_api_key, base_url=settings.nvidia_base_url
+            )
         return self._client
 
     async def fetch_url_content(self, url: str) -> dict:
@@ -31,15 +32,21 @@ class RecipeAgent:
                 response = await client.get(url, follow_redirects=True, timeout=20.0)
                 response.raise_for_status()
 
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, "html.parser")
 
             # Remove non-content elements
-            for tag in soup(["script", "style", "nav", "footer", "header", "aside", "iframe"]):
+            for tag in soup(
+                ["script", "style", "nav", "footer", "header", "aside", "iframe"]
+            ):
                 tag.decompose()
 
             # Try to get main content area first
             main = soup.find("main") or soup.find("article") or soup.find("body")
-            text_content = main.get_text(separator="\n", strip=True) if main else soup.get_text(separator="\n", strip=True)
+            text_content = (
+                main.get_text(separator="\n", strip=True)
+                if main
+                else soup.get_text(separator="\n", strip=True)
+            )
 
             # Clean up excessive whitespace
             lines = [line.strip() for line in text_content.split("\n") if line.strip()]
@@ -50,7 +57,11 @@ class RecipeAgent:
 
         except httpx.HTTPStatusError as e:
             print(f"[RecipeAgent] HTTP error {e.response.status_code} for URL: {url}")
-            return {"success": False, "content": "", "error": f"HTTP {e.response.status_code}"}
+            return {
+                "success": False,
+                "content": "",
+                "error": f"HTTP {e.response.status_code}",
+            }
         except httpx.TimeoutException:
             print(f"[RecipeAgent] Timeout fetching URL: {url}")
             return {"success": False, "content": "", "error": "Timeout"}
@@ -58,7 +69,12 @@ class RecipeAgent:
             print(f"[RecipeAgent] URL fetch error: {type(e).__name__}: {e}")
             return {"success": False, "content": "", "error": str(e)}
 
-    async def url_to_cart(self, url: str, prompt: str = None, budget_tier: BudgetTier = BudgetTier.STANDARD) -> list[CartItem]:
+    async def url_to_cart(
+        self,
+        url: str,
+        prompt: str = None,
+        budget_tier: BudgetTier = BudgetTier.STANDARD,
+    ) -> list[CartItem]:
         """Extract products from URL, or use prompt + URL as context for AI."""
         print(f"[RecipeAgent] Processing URL: {url}")
         print(f"[RecipeAgent] User prompt: {prompt}")
@@ -101,11 +117,14 @@ Categories: essential, recommended, optional"""
             response = self.client.chat.completions.create(
                 model=settings.nvidia_model,
                 messages=[
-                    {"role": "system", "content": "You are a shopping assistant. Return ONLY a valid JSON array of products. No markdown code blocks. No explanations. Output starts with [ and ends with ]. Prices in Indian Rupees."},
-                    {"role": "user", "content": ai_prompt}
+                    {
+                        "role": "system",
+                        "content": "You are a shopping assistant. Return ONLY a valid JSON array of products. No markdown code blocks. No explanations. Output starts with [ and ends with ]. Prices in Indian Rupees.",
+                    },
+                    {"role": "user", "content": ai_prompt},
                 ],
                 temperature=0.3,
-                max_tokens=2000
+                max_tokens=2000,
             )
 
             text = response.choices[0].message.content or ""
@@ -120,14 +139,16 @@ Categories: essential, recommended, optional"""
                 if not isinstance(item, dict) or "name" not in item:
                     continue
                 try:
-                    cart_items.append(CartItem(
-                        name=item["name"],
-                        quantity=item.get("quantity", "1"),
-                        category=ItemCategory(item.get("category", "essential")),
-                        estimated_price=item.get("estimated_price"),
-                        substitute_available=len(item.get("substitutes", [])) > 0,
-                        substitutes=item.get("substitutes", [])
-                    ))
+                    cart_items.append(
+                        CartItem(
+                            name=item["name"],
+                            quantity=item.get("quantity", "1"),
+                            category=ItemCategory(item.get("category", "essential")),
+                            estimated_price=item.get("estimated_price"),
+                            substitute_available=len(item.get("substitutes", [])) > 0,
+                            substitutes=item.get("substitutes", []),
+                        )
+                    )
                 except (ValueError, KeyError) as e:
                     print(f"[RecipeAgent] Skipping item: {e}")
                     continue

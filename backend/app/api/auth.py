@@ -2,20 +2,21 @@
 Authentication API — email/password + mock Google OAuth.
 Two demo users are seeded in-memory by default (no DB required).
 """
+
 from __future__ import annotations
 
 import hashlib
 import secrets
-import time
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 router = APIRouter()
 
 # ── In-memory "database" ──────────────────────────────────────────────────────
 # Passwords stored as SHA-256 hex (demo only — use bcrypt in production)
+
 
 def _sha256(plain: str) -> str:
     return hashlib.sha256(plain.encode()).hexdigest()
@@ -24,7 +25,7 @@ def _sha256(plain: str) -> str:
 _USERS: dict[str, dict] = {
     "user_001": {
         "user_id": "user_001",
-        "customer_id": "C001",          # links to order_store._ORDER_HISTORY customer C001
+        "customer_id": "C001",  # links to order_store._ORDER_HISTORY customer C001
         "name": "Ravi Kumar",
         "email": "ravi@example.com",
         "password_hash": _sha256("Amazon@123"),
@@ -33,7 +34,7 @@ _USERS: dict[str, dict] = {
     },
     "user_002": {
         "user_id": "user_002",
-        "customer_id": "C002",          # links to order_store._ORDER_HISTORY customer C002
+        "customer_id": "C002",  # links to order_store._ORDER_HISTORY customer C002
         "name": "Shreya Sharma",
         "email": "shreya@example.com",
         "password_hash": _sha256("Prime#456"),
@@ -50,6 +51,7 @@ _TOKENS: dict[str, str] = {}
 
 
 # ── Request / Response models ─────────────────────────────────────────────────
+
 
 class LoginRequest(BaseModel):
     email: str
@@ -72,6 +74,7 @@ class AuthResponse(BaseModel):
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+
 def _issue_token(user_id: str) -> str:
     token = f"{secrets.token_hex(24)}"
     _TOKENS[token] = user_id
@@ -91,21 +94,30 @@ def _user_response(user: dict) -> AuthResponse:
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
-@router.post("/auth/login", response_model=AuthResponse, summary="Email + password login")
+
+@router.post(
+    "/auth/login", response_model=AuthResponse, summary="Email + password login"
+)
 async def login(body: LoginRequest):
     """Authenticate with email and password. Returns a session token."""
     uid = _EMAIL_INDEX.get(body.email.lower().strip())
     if not uid:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password"
+        )
 
     user = _USERS[uid]
     if user["password_hash"] != _sha256(body.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password"
+        )
 
     return _user_response(user)
 
 
-@router.post("/auth/google", response_model=AuthResponse, summary="Mock Google OAuth login")
+@router.post(
+    "/auth/google", response_model=AuthResponse, summary="Mock Google OAuth login"
+)
 async def google_login(body: GoogleLoginRequest):
     """
     Mock Google OAuth — looks up the user by Google email.
@@ -126,7 +138,7 @@ async def google_login(body: GoogleLoginRequest):
         "user_id": new_uid,
         "name": name,
         "email": email,
-        "password_hash": "",          # Google users have no password
+        "password_hash": "",  # Google users have no password
         "avatar": f"https://api.dicebear.com/7.x/avataaars/svg?seed={name}",
         "phone": "",
     }
@@ -140,15 +152,26 @@ async def me(token: str):
     """Validate a token and return the user profile."""
     uid = _TOKENS.get(token)
     if not uid or uid not in _USERS:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token"
+        )
     user = _USERS[uid]
-    return {"user_id": user["user_id"], "name": user["name"], "email": user["email"], "avatar": user["avatar"]}
+    return {
+        "user_id": user["user_id"],
+        "name": user["name"],
+        "email": user["email"],
+        "avatar": user["avatar"],
+    }
 
 
 @router.get("/auth/seed-users", summary="List demo users (dev helper)")
 async def seed_users():
     """Returns the two pre-seeded demo user credentials (no passwords)."""
     return [
-        {"email": u["email"], "name": u["name"], "hint": "see backend/app/api/auth.py for password"}
+        {
+            "email": u["email"],
+            "name": u["name"],
+            "hint": "see backend/app/api/auth.py for password",
+        }
         for u in _USERS.values()
     ]

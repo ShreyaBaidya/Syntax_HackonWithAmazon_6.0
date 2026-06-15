@@ -1,4 +1,5 @@
 """DynamoDB client wrapper for products and orders tables."""
+
 import boto3
 from boto3.dynamodb.conditions import Attr
 
@@ -24,7 +25,8 @@ def search_products_by_query(query: str, limit: int = 10) -> list[dict]:
     )
     items = response.get("Items", [])
     matched = [
-        item for item in items
+        item
+        for item in items
         if query_lower in item.get("name", "").lower()
         or query_lower in item.get("tags", "").lower()
         or query_lower in item.get("category", "").lower()

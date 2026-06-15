@@ -1,23 +1,30 @@
-import type { CartResponse, IntentRequest, OccasionRequest, OutcomeRequest, URLPromptRequest, Occasion } from '@/types';
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? '';
+import type {
+  CartResponse,
+  IntentRequest,
+  OccasionRequest,
+  OutcomeRequest,
+  URLPromptRequest,
+  Occasion,
+} from "@/types";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 // ── Coupon types (mirrors backend app/models/coupon.py) ───────────────────────
 
-export type CouponType = 'flat' | 'percent' | 'delivery';
+export type CouponType = "flat" | "percent" | "delivery";
 
 export type CouponResult = {
   code: string;
   label: string;
   description: string;
   type: CouponType;
-  min_subtotal: number;     // minimum cart value for eligibility
-  savings: number;          // pre-computed for the requested subtotal (use computeCouponSavings for live updates)
+  min_subtotal: number; // minimum cart value for eligibility
+  savings: number; // pre-computed for the requested subtotal (use computeCouponSavings for live updates)
   eligible: boolean;
   badge?: string | null;
   // Raw params — lets the frontend recompute savings on every qty change with zero latency
-  discount_amount?: number | null;  // flat / delivery: fixed saving
-  discount_rate?:   number | null;  // percent: rate (e.g. 0.20)
-  discount_cap?:    number | null;  // percent: maximum saving cap
+  discount_amount?: number | null; // flat / delivery: fixed saving
+  discount_rate?: number | null; // percent: rate (e.g. 0.20)
+  discount_cap?: number | null; // percent: maximum saving cap
 };
 
 export type CouponsResponse = {
@@ -30,7 +37,7 @@ export async function fetchCoupons(
   userId?: string,
 ): Promise<CouponsResponse> {
   const params = new URLSearchParams({ subtotal: subtotal.toFixed(2) });
-  if (userId) params.set('user_id', userId);
+  if (userId) params.set("user_id", userId);
   const res = await fetch(`${API_BASE}/api/v1/coupons/best?${params}`);
   if (!res.ok) throw new Error(`Coupons fetch failed: ${res.status}`);
   return res.json();
@@ -50,16 +57,21 @@ export type Product = {
   ingredients?: string[];
   dietary_tags?: string[];
   allergen_tags?: string[];
-  nutrition_summary?: { calories?: number; protein?: string; carbs?: string; fat?: string };
+  nutrition_summary?: {
+    calories?: number;
+    protein?: string;
+    carbs?: string;
+    fat?: string;
+  };
   is_alternative?: boolean;
   replaces?: string;
 };
 
 export type SSEEvent =
-  | { type: 'text'; delta: string }
-  | { type: 'products'; products: Product[] }
-  | { type: 'done' }
-  | { type: 'error'; error: string };
+  | { type: "text"; delta: string }
+  | { type: "products"; products: Product[] }
+  | { type: "done" }
+  | { type: "error"; error: string };
 
 export type Recommendations = {
   time_context: string;
@@ -92,7 +104,12 @@ export type CartState = {
 };
 
 export type CartSSEEvent = {
-  type: 'cart_update' | 'participant_joined' | 'participant_left' | 'checkout' | 'error';
+  type:
+    | "cart_update"
+    | "participant_joined"
+    | "participant_left"
+    | "checkout"
+    | "error";
   cart?: CartState;
   message?: string;
 };
@@ -122,7 +139,7 @@ export type RefillItem = Product & {
     avg_gap_days: number;
     days_since_last: number;
     urgency: number;
-    frequency: 'daily' | 'weekly' | 'biweekly' | 'monthly';
+    frequency: "daily" | "weekly" | "biweekly" | "monthly";
     reason: string;
     last_purchased: string;
   };
@@ -157,7 +174,7 @@ export async function getProductsByCategory(
 ): Promise<Product[]> {
   const params = new URLSearchParams({ category, limit: String(limit) });
   if (userId) {
-    params.set('user_id', userId);
+    params.set("user_id", userId);
   }
   const res = await fetch(`${API_BASE}/api/v1/products?${params}`);
   if (!res.ok) throw new Error(`Products fetch failed: ${res.status}`);
@@ -166,10 +183,14 @@ export async function getProductsByCategory(
   return Array.isArray(data) ? data : (data.products ?? []);
 }
 
-export async function searchProducts(query: string, limit = 8, userId?: string): Promise<Product[]> {
+export async function searchProducts(
+  query: string,
+  limit = 8,
+  userId?: string,
+): Promise<Product[]> {
   const params = new URLSearchParams({ q: query, limit: String(limit) });
   if (userId) {
-    params.set('user_id', userId);
+    params.set("user_id", userId);
   }
   const res = await fetch(`${API_BASE}/api/v1/products?${params}`);
   if (!res.ok) throw new Error(`Product search failed: ${res.status}`);
@@ -177,29 +198,40 @@ export async function searchProducts(query: string, limit = 8, userId?: string):
   return Array.isArray(data) ? data : (data.products ?? []);
 }
 
-export async function getRecommendations(userId?: string, query?: string): Promise<Recommendations> {
+export async function getRecommendations(
+  userId?: string,
+  query?: string,
+): Promise<Recommendations> {
   const params = new URLSearchParams();
-  if (userId) params.set('user_id', userId);
-  if (query) params.set('query', query);
-  const qs = params.toString() ? `?${params.toString()}` : '';
+  if (userId) params.set("user_id", userId);
+  if (query) params.set("query", query);
+  const qs = params.toString() ? `?${params.toString()}` : "";
   const url = `${API_BASE}/api/v1/recommendations${qs}`;
-  console.log('[API] getRecommendations →', url);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Recommendations fetch failed: ${res.status}`);
   const data = await res.json();
-  console.log('[API] getRecommendations response — now_suggestions:', data.now_suggestions?.length, ', trending:', data.trending?.length);
+  console.log(
+    "[API] getRecommendations response — now_suggestions:",
+    data.now_suggestions?.length,
+    ", trending:",
+    data.trending?.length,
+  );
   return data;
 }
 
-export async function getRefillSuggestions(userId?: string, cartItemNames?: string[]): Promise<RefillSuggestions> {
+export async function getRefillSuggestions(
+  userId?: string,
+  cartItemNames?: string[],
+): Promise<RefillSuggestions> {
   const params = new URLSearchParams();
-  if (userId) params.set('user_id', userId);
+  if (userId) params.set("user_id", userId);
   if (cartItemNames && cartItemNames.length > 0) {
-    params.set('cart_items', cartItemNames.join(','));
+    params.set("cart_items", cartItemNames.join(","));
   }
-  const query = params.toString() ? `?${params.toString()}` : '';
+  const query = params.toString() ? `?${params.toString()}` : "";
   const res = await fetch(`${API_BASE}/api/v1/refill-suggestions${query}`);
-  if (!res.ok) throw new Error(`Refill suggestions fetch failed: ${res.status}`);
+  if (!res.ok)
+    throw new Error(`Refill suggestions fetch failed: ${res.status}`);
   return res.json();
 }
 
@@ -209,16 +241,20 @@ export async function placeOrder(payload: {
   delivery_address: string;
 }): Promise<Order> {
   const res = await fetch(`${API_BASE}/api/v1/orders`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error(`Order failed: ${res.status}`);
   return res.json();
 }
 
-export async function getOrderHistory(userId = 'demo_user'): Promise<OrderHistoryItem[]> {
-  const res = await fetch(`${API_BASE}/api/v1/orders?user_id=${encodeURIComponent(userId)}`);
+export async function getOrderHistory(
+  userId = "demo_user",
+): Promise<OrderHistoryItem[]> {
+  const res = await fetch(
+    `${API_BASE}/api/v1/orders?user_id=${encodeURIComponent(userId)}`,
+  );
   if (!res.ok) throw new Error(`Order history failed: ${res.status}`);
   const data = await res.json();
   return data.orders ?? [];
@@ -226,10 +262,12 @@ export async function getOrderHistory(userId = 'demo_user'): Promise<OrderHistor
 
 // ── Shared Cart API ───────────────────────────────────────────────────────────
 
-export async function createSharedCart(participantName: string): Promise<CartState> {
+export async function createSharedCart(
+  participantName: string,
+): Promise<CartState> {
   const res = await fetch(`${API_BASE}/api/v1/cart`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ participant_name: participantName }),
   });
   if (!res.ok) throw new Error(`Create cart failed: ${res.status}`);
@@ -242,10 +280,13 @@ export async function getSharedCart(cartId: string): Promise<CartState> {
   return res.json();
 }
 
-export async function joinSharedCart(cartId: string, participantName: string): Promise<CartState> {
+export async function joinSharedCart(
+  cartId: string,
+  participantName: string,
+): Promise<CartState> {
   const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/join`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ participant_name: participantName }),
   });
   if (!res.ok) throw new Error(`Join cart failed: ${res.status}`);
@@ -259,9 +300,13 @@ export async function addToSharedCart(
   quantity = 1,
 ): Promise<CartState> {
   const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/items`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ product_id: productId, participant_name: participantName, quantity }),
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      product_id: productId,
+      participant_name: participantName,
+      quantity,
+    }),
   });
   if (!res.ok) throw new Error(`Add to cart failed: ${res.status}`);
   return res.json();
@@ -272,11 +317,14 @@ export async function updateCartItemQty(
   productId: string,
   quantity: number,
 ): Promise<CartState> {
-  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/items/${productId}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ quantity }),
-  });
+  const res = await fetch(
+    `${API_BASE}/api/v1/cart/${cartId}/items/${productId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity }),
+    },
+  );
   if (!res.ok) throw new Error(`Update qty failed: ${res.status}`);
   return res.json();
 }
@@ -285,9 +333,12 @@ export async function removeFromSharedCart(
   cartId: string,
   productId: string,
 ): Promise<CartState> {
-  const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/items/${productId}`, {
-    method: 'DELETE',
-  });
+  const res = await fetch(
+    `${API_BASE}/api/v1/cart/${cartId}/items/${productId}`,
+    {
+      method: "DELETE",
+    },
+  );
   if (!res.ok) throw new Error(`Remove from cart failed: ${res.status}`);
   return res.json();
 }
@@ -296,10 +347,13 @@ export function openCartStream(cartId: string): EventSource {
   return new EventSource(`${API_BASE}/api/v1/cart/${cartId}/stream`);
 }
 
-export async function leaveSharedCart(cartId: string, participantName: string): Promise<CartState> {
+export async function leaveSharedCart(
+  cartId: string,
+  participantName: string,
+): Promise<CartState> {
   const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}/leave`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ participant_name: participantName }),
   });
   if (!res.ok) throw new Error(`Leave cart failed: ${res.status}`);
@@ -308,7 +362,7 @@ export async function leaveSharedCart(cartId: string, participantName: string): 
 
 export async function deleteSharedCart(cartId: string): Promise<void> {
   const res = await fetch(`${API_BASE}/api/v1/cart/${cartId}`, {
-    method: 'DELETE',
+    method: "DELETE",
   });
   if (!res.ok) throw new Error(`Delete cart failed: ${res.status}`);
 }
@@ -323,25 +377,28 @@ export type AuthUser = {
   avatar: string;
 };
 
-export async function loginWithEmail(email: string, password: string): Promise<AuthUser> {
+export async function loginWithEmail(
+  email: string,
+  password: string,
+): Promise<AuthUser> {
   const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail ?? 'Invalid email or password');
+    throw new Error(err.detail ?? "Invalid email or password");
   }
   return res.json();
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 async function post<T>(path: string, body: object): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   if (!res.ok) {
@@ -351,27 +408,38 @@ async function post<T>(path: string, body: object): Promise<T> {
   return res.json();
 }
 
-export async function loginWithGoogle(googleEmail: string, googleName?: string): Promise<AuthUser> {
+export async function loginWithGoogle(
+  googleEmail: string,
+  googleName?: string,
+): Promise<AuthUser> {
   const res = await fetch(`${API_BASE}/api/v1/auth/google`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ google_email: googleEmail, google_name: googleName }),
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      google_email: googleEmail,
+      google_name: googleName,
+    }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail ?? 'Google login failed');
+    throw new Error(err.detail ?? "Google login failed");
   }
   return res.json();
 }
 
-export async function buildCartFromIntent(request: IntentRequest): Promise<CartResponse> {
-  return post('/api/v1/cart/intent', request);
+export async function buildCartFromIntent(
+  request: IntentRequest,
+): Promise<CartResponse> {
+  return post("/api/v1/cart/intent", request);
 }
 
 export async function buildCartFromImage(file: File): Promise<CartResponse> {
   const formData = new FormData();
-  formData.append('file', file);
-  const res = await fetch(`${API_URL}/api/v1/cart/image`, { method: 'POST', body: formData });
+  formData.append("file", file);
+  const res = await fetch(`${API_URL}/api/v1/cart/image`, {
+    method: "POST",
+    body: formData,
+  });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw { response: { data } };
@@ -389,22 +457,28 @@ export function openChatStream(
   userId?: string,
 ): Promise<Response> {
   return fetch(`${API_BASE}/api/v1/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message, session_id: sessionId, user_id: userId }),
   });
 }
 
-export async function buildCartFromURL(request: URLPromptRequest): Promise<CartResponse> {
-  return post('/api/v1/cart/url', request);
+export async function buildCartFromURL(
+  request: URLPromptRequest,
+): Promise<CartResponse> {
+  return post("/api/v1/cart/url", request);
 }
 
-export async function buildCartForOccasion(request: OccasionRequest): Promise<CartResponse> {
-  return post('/api/v1/cart/occasion', request);
+export async function buildCartForOccasion(
+  request: OccasionRequest,
+): Promise<CartResponse> {
+  return post("/api/v1/cart/occasion", request);
 }
 
-export async function buildCartForOutcome(request: OutcomeRequest): Promise<CartResponse> {
-  return post('/api/v1/cart/outcome', request);
+export async function buildCartForOutcome(
+  request: OutcomeRequest,
+): Promise<CartResponse> {
+  return post("/api/v1/cart/outcome", request);
 }
 
 export async function getOccasions(): Promise<Occasion[]> {
@@ -432,8 +506,9 @@ export async function getFridgeStatus(): Promise<FridgeStatus> {
 }
 
 export async function getUpcomingEvents(userId: string) {
-  const res = await fetch(`${API_URL}/api/v1/calendar/events?user_id=${userId}`);
+  const res = await fetch(
+    `${API_URL}/api/v1/calendar/events?user_id=${userId}`,
+  );
   if (!res.ok) throw new Error(`Calendar fetch failed: ${res.status}`);
   return res.json();
 }
-

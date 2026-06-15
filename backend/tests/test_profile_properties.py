@@ -10,6 +10,7 @@ custom_exclusions, the computed exclusion set equals exactly the union of:
   - ALLERGEN_TAG_EXCLUSIONS[tag] for each tag in allergen_tags
   - {kw.strip().lower() for kw in custom_exclusions.split(",") if kw.strip()}
 """
+
 import sys
 import os
 
@@ -160,10 +161,12 @@ ALL_KEYWORDS = list(
     | set(kw for keywords in ALLERGEN_TAG_EXCLUSIONS.values() for kw in keywords)
 )
 
-product_strategy = st.fixed_dictionaries({
-    "name": st.text(min_size=1, max_size=30),
-    "tags": st.text(min_size=0, max_size=100),
-})
+product_strategy = st.fixed_dictionaries(
+    {
+        "name": st.text(min_size=1, max_size=30),
+        "tags": st.text(min_size=0, max_size=100),
+    }
+)
 
 products_strategy = st.lists(product_strategy, min_size=0, max_size=20)
 
@@ -201,6 +204,7 @@ def test_filter_completeness_no_excluded_product_passes(
 
     # Save a deep copy of the original products to check for mutation
     import copy
+
     products_copy = copy.deepcopy(products)
 
     # Act
@@ -262,6 +266,7 @@ def test_filter_preserves_safe_products(
 
     # Save a deep copy of the original products to check for mutation
     import copy
+
     products_copy = copy.deepcopy(products)
 
     # Partition products into safe and unsafe

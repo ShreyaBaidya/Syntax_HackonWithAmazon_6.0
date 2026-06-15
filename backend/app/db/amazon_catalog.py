@@ -1,4 +1,5 @@
 """Load the Amazon Now JSON catalog into the app's product contract."""
+
 from __future__ import annotations
 
 import json
@@ -63,9 +64,7 @@ def _make_tags(item: dict, category_slug: str) -> str:
 def _unit(item: dict) -> str:
     attributes = item.get("attributes") or {}
     return str(
-        attributes.get("size_or_volume")
-        or attributes.get("pack_size")
-        or "piece"
+        attributes.get("size_or_volume") or attributes.get("pack_size") or "piece"
     ).strip()
 
 
@@ -109,25 +108,27 @@ def _load() -> list[dict]:
         except (TypeError, ValueError):
             rating, review_count = 0.0, 0
 
-        products.append({
-            "id": product_id,
-            "name": name,
-            "category": category_slug,
-            "price": price,
-            "mrp": price,
-            "discount_percent": 0,
-            "unit": _unit(item),
-            "eta_min": _ETA_MAP.get(category_slug, 28),
-            "in_stock": stock_quantity > 0 and availability != "out of stock",
-            "image_url": str(item.get("image_url") or "").strip(),
-            "tags": _make_tags(item, category_slug),
-            "sku": str(item.get("sku") or ""),
-            "brand": str(item.get("brand") or ""),
-            "subcategory": str(item.get("subcategory") or ""),
-            "stock_quantity": stock_quantity,
-            "rating": rating,
-            "review_count": review_count,
-        })
+        products.append(
+            {
+                "id": product_id,
+                "name": name,
+                "category": category_slug,
+                "price": price,
+                "mrp": price,
+                "discount_percent": 0,
+                "unit": _unit(item),
+                "eta_min": _ETA_MAP.get(category_slug, 28),
+                "in_stock": stock_quantity > 0 and availability != "out of stock",
+                "image_url": str(item.get("image_url") or "").strip(),
+                "tags": _make_tags(item, category_slug),
+                "sku": str(item.get("sku") or ""),
+                "brand": str(item.get("brand") or ""),
+                "subcategory": str(item.get("subcategory") or ""),
+                "stock_quantity": stock_quantity,
+                "rating": rating,
+                "review_count": review_count,
+            }
+        )
 
     return products
 

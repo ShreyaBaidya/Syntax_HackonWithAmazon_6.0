@@ -31,32 +31,32 @@ _CATEGORY_CHOICES = (
 )
 
 
-@router.get(
-    "/products",
-    response_model=ProductSearchResponse
-)
+@router.get("/products", response_model=ProductSearchResponse)
 async def search(
     q: str = Query(
         default="",
         description="Free-text search — matched against product name, tags, and category",
         openapi_examples={
             "tomato": {"summary": "Search by name", "value": "tomato"},
-            "maggi":  {"summary": "Brand search",   "value": "maggi"},
-            "fever":  {"summary": "Symptom search",  "value": "fever"},
+            "maggi": {"summary": "Brand search", "value": "maggi"},
+            "fever": {"summary": "Symptom search", "value": "fever"},
         },
     ),
     category: Optional[str] = Query(
         default=None,
         description=f"Internal category slug. One of: {_CATEGORY_CHOICES}",
         openapi_examples={
-            "fresh":         {"summary": "Fresh produce & meats",  "value": "fresh"},
-            "snacks":        {"summary": "Snacks & confectionery", "value": "snacks"},
-            "dairy":         {"summary": "Dairy, bread & eggs",    "value": "dairy"},
-            "beverages":     {"summary": "Drinks",                 "value": "beverages"},
-            "grocery":       {"summary": "Cooking essentials",     "value": "grocery"},
-            "personal_care": {"summary": "Hygiene & grooming",     "value": "personal_care"},
-            "cleaning":      {"summary": "Home & cleaning",        "value": "cleaning"},
-            "medicine":      {"summary": "Health & medicine",      "value": "medicine"},
+            "fresh": {"summary": "Fresh produce & meats", "value": "fresh"},
+            "snacks": {"summary": "Snacks & confectionery", "value": "snacks"},
+            "dairy": {"summary": "Dairy, bread & eggs", "value": "dairy"},
+            "beverages": {"summary": "Drinks", "value": "beverages"},
+            "grocery": {"summary": "Cooking essentials", "value": "grocery"},
+            "personal_care": {
+                "summary": "Hygiene & grooming",
+                "value": "personal_care",
+            },
+            "cleaning": {"summary": "Home & cleaning", "value": "cleaning"},
+            "medicine": {"summary": "Health & medicine", "value": "medicine"},
         },
     ),
     limit: int = Query(
@@ -71,7 +71,9 @@ async def search(
     ),
 ):
     exclusion_set = get_exclusion_set(user_id)
-    products = search_products(query=q, category=category, limit=limit, exclusion_set=exclusion_set)
+    products = search_products(
+        query=q, category=category, limit=limit, exclusion_set=exclusion_set
+    )
     return {"products": products, "total": len(products)}
 
 
@@ -93,7 +95,10 @@ async def get_product_alternatives(
 
     # Get safe products from the same category to use as potential alternatives
     safe_products = search_products(
-        query="", category=product.get("category"), limit=20, exclusion_set=exclusion_set
+        query="",
+        category=product.get("category"),
+        limit=20,
+        exclusion_set=exclusion_set,
     )
 
     alternatives = find_alternatives([product], exclusion_set, safe_products)

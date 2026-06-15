@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Product, placeOrder, Order } from '@/lib/api';
+import { useState } from "react";
+import { Product, placeOrder, Order } from "@/lib/api";
 
 export type CartItem = { product: Product; quantity: number };
 
@@ -13,60 +13,77 @@ interface Props {
   onAddProduct?: (product: Product) => void;
 }
 
-type Phase = 'review' | 'biometric' | 'confirmed';
+type Phase = "review" | "biometric" | "confirmed";
 
-export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onAddProduct }: Readonly<Props>) {
-  const [phase, setPhase] = useState<Phase>('review');
+export function SpeedCheckout({
+  cart,
+  onOrderComplete,
+  onClose,
+  onUpdateQty,
+  onAddProduct,
+}: Readonly<Props>) {
+  const [phase, setPhase] = useState<Phase>("review");
   const [order, setOrder] = useState<Order | null>(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [upsells, setUpsells] = useState<Product[]>([]);
-  import('@/lib/api').then(({ getRecommendations }) => {
+  import("@/lib/api").then(({ getRecommendations }) => {
     // Only fetch once when phase is review
   });
 
-  import('react').then(({ useEffect }) => {
+  import("react").then(({ useEffect }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      if (cart.length > 0 && phase === 'review') {
-        const intentQuery = cart.map(i => i.product.name).join(', ');
-        import('@/lib/api').then(({ getRecommendations }) => {
-          getRecommendations('demo_user', `I am buying ${intentQuery}. What goes well with this?`)
-            .then(data => {
+      if (cart.length > 0 && phase === "review") {
+        const intentQuery = cart.map((i) => i.product.name).join(", ");
+        import("@/lib/api").then(({ getRecommendations }) => {
+          getRecommendations(
+            "demo_user",
+            `I am buying ${intentQuery}. What goes well with this?`,
+          )
+            .then((data) => {
               // filter out products already in cart
-              const inCartIds = new Set(cart.map(c => c.product.id));
-              const suggestions = data.now_suggestions.filter(p => !inCartIds.has(p.id));
+              const inCartIds = new Set(cart.map((c) => c.product.id));
+              const suggestions = data.now_suggestions.filter(
+                (p) => !inCartIds.has(p.id),
+              );
               setUpsells(suggestions.slice(0, 2));
-            }).catch(() => {});
+            })
+            .catch(() => {});
         });
       }
     }, [cart, phase]);
   });
 
   const total = cart.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
-  const maxEta = cart.length ? Math.max(...cart.map(i => i.product.eta_min)) : 28;
+  const maxEta = cart.length
+    ? Math.max(...cart.map((i) => i.product.eta_min))
+    : 28;
 
   const handleOrderNow = async () => {
-    setError('');
-    setPhase('biometric');
-    await new Promise(r => setTimeout(r, 1800)); // biometric animation duration
+    setError("");
+    setPhase("biometric");
+    await new Promise((r) => setTimeout(r, 1800)); // biometric animation duration
 
     try {
       const result = await placeOrder({
-        user_id: 'demo_user',
-        items: cart.map(i => ({ product_id: i.product.id, quantity: i.quantity })),
-        delivery_address: '📍 Your saved address',
+        user_id: "demo_user",
+        items: cart.map((i) => ({
+          product_id: i.product.id,
+          quantity: i.quantity,
+        })),
+        delivery_address: "📍 Your saved address",
       });
       setOrder(result);
-      setPhase('confirmed');
+      setPhase("confirmed");
       onOrderComplete(result);
     } catch {
-      setError('Order failed. Please try again.');
-      setPhase('review');
+      setError("Order failed. Please try again.");
+      setPhase("review");
     }
   };
 
   // ── Biometric animation ────────────────────────────────────────────────────
-  if (phase === 'biometric') {
+  if (phase === "biometric") {
     return (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
         <div className="bg-white rounded-3xl p-10 w-full max-w-xs text-center shadow-2xl">
@@ -78,28 +95,41 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onA
             </div>
           </div>
           <p className="text-lg font-bold text-gray-900">Authenticating</p>
-          <p className="text-sm text-gray-500 mt-1">Face ID verification in progress…</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Face ID verification in progress…
+          </p>
         </div>
       </div>
     );
   }
 
   // ── Order confirmed ────────────────────────────────────────────────────────
-  if (phase === 'confirmed' && order) {
+  if (phase === "confirmed" && order) {
     return (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
         <div className="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl">
           <div className="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
             <span className="text-4xl">✅</span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">Order Placed!</h2>
-          <p className="text-gray-400 text-sm mb-5 font-mono">{order.order_id}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">
+            Order Placed!
+          </h2>
+          <p className="text-gray-400 text-sm mb-5 font-mono">
+            {order.order_id}
+          </p>
           <div className="bg-green-50 border border-green-100 rounded-2xl p-5 mb-5">
-            <p className="text-4xl font-bold text-green-600">{order.eta_minutes} min</p>
-            <p className="text-sm text-green-700 font-medium mt-1">Estimated delivery</p>
+            <p className="text-4xl font-bold text-green-600">
+              {order.eta_minutes} min
+            </p>
+            <p className="text-sm text-green-700 font-medium mt-1">
+              Estimated delivery
+            </p>
           </div>
           <p className="text-sm text-gray-500 mb-6">
-            Total paid: <span className="font-semibold text-gray-900">₹{order.total_amount.toFixed(2)}</span>
+            Total paid:{" "}
+            <span className="font-semibold text-gray-900">
+              ₹{order.total_amount.toFixed(2)}
+            </span>
           </p>
           <button
             onClick={onClose}
@@ -121,12 +151,20 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onA
 
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+          >
+            ×
+          </button>
         </div>
 
         {/* Items */}
-        <div className="space-y-3 mb-5" style={{ maxHeight: '40vh', overflowY: 'auto' }}>
-          {cart.map(item => (
+        <div
+          className="space-y-3 mb-5"
+          style={{ maxHeight: "40vh", overflowY: "auto" }}
+        >
+          {cart.map((item) => (
             <div key={item.product.id} className="flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -138,27 +176,62 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onA
                 <p className="text-sm font-medium text-gray-900 leading-tight truncate">
                   {item.product.name}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">{item.product.unit}</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {item.product.unit}
+                </p>
               </div>
               {/* Qty stepper */}
               {onUpdateQty ? (
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 0,
-                  background: '#FFD814', borderRadius: 20,
-                  border: '1px solid #F0C000', overflow: 'hidden',
-                }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0,
+                    background: "#FFD814",
+                    borderRadius: 20,
+                    border: "1px solid #F0C000",
+                    overflow: "hidden",
+                  }}
+                >
                   <button
-                    onClick={() => onUpdateQty(item.product.id, item.quantity - 1)}
-                    style={{ width: 26, height: 26, background: 'none', border: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 700 }}
+                    onClick={() =>
+                      onUpdateQty(item.product.id, item.quantity - 1)
+                    }
+                    style={{
+                      width: 26,
+                      height: 26,
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: 15,
+                      fontWeight: 700,
+                    }}
                   >
-                    {item.quantity === 1 ? '🗑' : '−'}
+                    {item.quantity === 1 ? "🗑" : "−"}
                   </button>
-                  <span style={{ minWidth: 16, textAlign: 'center', fontSize: 12, fontWeight: 700 }}>
+                  <span
+                    style={{
+                      minWidth: 16,
+                      textAlign: "center",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}
+                  >
                     {item.quantity}
                   </span>
                   <button
-                    onClick={() => onUpdateQty(item.product.id, item.quantity + 1)}
-                    style={{ width: 26, height: 26, background: 'none', border: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 700 }}
+                    onClick={() =>
+                      onUpdateQty(item.product.id, item.quantity + 1)
+                    }
+                    style={{
+                      width: 26,
+                      height: 26,
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: 15,
+                      fontWeight: 700,
+                    }}
                   >
                     +
                   </button>
@@ -166,7 +239,10 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onA
               ) : (
                 <p className="text-xs text-gray-400">×{item.quantity}</p>
               )}
-              <p className="font-semibold text-gray-900 flex-shrink-0" style={{ minWidth: 44, textAlign: 'right' }}>
+              <p
+                className="font-semibold text-gray-900 flex-shrink-0"
+                style={{ minWidth: 44, textAlign: "right" }}
+              >
                 ₹{(item.product.price * item.quantity).toFixed(0)}
               </p>
             </div>
@@ -177,7 +253,9 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onA
         <div className="border-t border-gray-100 pt-4 mb-5 flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-400">Total</p>
-            <p className="text-2xl font-bold text-gray-900">₹{total.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-gray-900">
+              ₹{total.toFixed(2)}
+            </p>
           </div>
           <div className="text-right">
             <p className="text-xs text-gray-400">Delivery</p>
@@ -187,17 +265,26 @@ export function SpeedCheckout({ cart, onOrderComplete, onClose, onUpdateQty, onA
 
         {upsells.length > 0 && (
           <div className="mb-5 bg-gradient-to-r from-indigo-50 to-purple-50 p-3 rounded-xl border border-indigo-100">
-            <p className="text-xs font-bold text-indigo-900 mb-2 flex items-center gap-1">✨ AI Suggests you might need:</p>
-            {upsells.map(u => (
-              <div key={u.id} className="flex justify-between items-center bg-white p-2 rounded-lg mb-2 shadow-sm">
+            <p className="text-xs font-bold text-indigo-900 mb-2 flex items-center gap-1">
+              ✨ AI Suggests you might need:
+            </p>
+            {upsells.map((u) => (
+              <div
+                key={u.id}
+                className="flex justify-between items-center bg-white p-2 rounded-lg mb-2 shadow-sm"
+              >
                 <div className="flex items-center gap-2 min-w-0">
-                  <img src={u.image_url} alt={u.name} className="w-8 h-8 object-contain bg-gray-50 rounded" />
+                  <img
+                    src={u.image_url}
+                    alt={u.name}
+                    className="w-8 h-8 object-contain bg-gray-50 rounded"
+                  />
                   <p className="text-xs font-medium truncate">{u.name}</p>
                 </div>
-                <button 
+                <button
                   onClick={() => {
                     if (onAddProduct) onAddProduct(u);
-                    setUpsells(prev => prev.filter(p => p.id !== u.id));
+                    setUpsells((prev) => prev.filter((p) => p.id !== u.id));
                   }}
                   className="bg-[#FFD814] text-black font-bold text-xs px-2 py-1 rounded whitespace-nowrap ml-2 border border-[#F0C000]"
                 >

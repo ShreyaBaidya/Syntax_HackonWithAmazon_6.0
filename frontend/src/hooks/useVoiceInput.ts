@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Web Speech API types aren't included in TS's DOM lib — declare them here
@@ -11,7 +11,7 @@ declare global {
   type SpeechRecognitionEvent = any;
 }
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from "react";
 
 export interface VoiceInputHook {
   isListening: boolean;
@@ -25,23 +25,27 @@ export interface VoiceInputHook {
  * Calls onResult with the final transcript when speech ends.
  * Gracefully no-ops in environments without browser speech support.
  */
-export function useVoiceInput(onResult: (transcript: string) => void): VoiceInputHook {
+export function useVoiceInput(
+  onResult: (transcript: string) => void,
+): VoiceInputHook {
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const isSupported =
-    typeof window !== 'undefined' &&
-    ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+    typeof window !== "undefined" &&
+    ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
 
   const startListening = useCallback(() => {
     if (!isSupported || isListening) return;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SR = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+    const SR =
+      (window as any).SpeechRecognition ??
+      (window as any).webkitSpeechRecognition;
     const recognition: SpeechRecognition = new SR();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'en-IN';
+    recognition.lang = "en-IN";
 
     recognition.onstart = () => setIsListening(true);
 

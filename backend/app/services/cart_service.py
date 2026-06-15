@@ -9,6 +9,7 @@ When any participant modifies a cart, _broadcast() serialises the new
 CartState and pushes it into every queue for that cart_id. Each SSE
 connection drains its queue and forwards the JSON to the browser.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -59,11 +60,13 @@ async def _broadcast(cart_id: str, event_type: str, message: str = "") -> None:
     if not cart:
         return
     state = _to_state(cart)
-    payload = json.dumps({
-        "type":    event_type,
-        "cart":    state.model_dump(),
-        "message": message,
-    })
+    payload = json.dumps(
+        {
+            "type": event_type,
+            "cart": state.model_dump(),
+            "message": message,
+        }
+    )
     data = f"data: {payload}\n\n"
     dead: list[asyncio.Queue] = []
     for q in list(_STREAMS.get(cart_id, [])):
@@ -78,16 +81,17 @@ async def _broadcast(cart_id: str, event_type: str, message: str = "") -> None:
 
 # ── Public API ────────────────────────────────────────────────────────────────
 
+
 def create_cart(participant_name: str = "You") -> CartState:
     cart_id = _gen_id()
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     _CARTS[cart_id] = {
-        "cart_id":      cart_id,
-        "items":        {},
+        "cart_id": cart_id,
+        "items": {},
         "participants": [participant_name],
-        "total":        0.0,
-        "item_count":   0,
-        "created_at":   now,
+        "total": 0.0,
+        "item_count": 0,
+        "created_at": now,
     }
     _STREAMS[cart_id] = []
     return _to_state(_CARTS[cart_id])
@@ -121,18 +125,21 @@ async def add_item(
         p = products[0]
         cart["items"][product_id] = {
             "product_id": product_id,
-            "name":       p["name"],
-            "price":      p["price"],
-            "unit":       p["unit"],
-            "image_url":  p["image_url"],
-            "category":   p["category"],
-            "quantity":   quantity,
-            "added_by":   [participant_name],
+            "name": p["name"],
+            "price": p["price"],
+            "unit": p["unit"],
+            "image_url": p["image_url"],
+            "category": p["category"],
+            "quantity": quantity,
+            "added_by": [participant_name],
         }
 
     cart["total"], cart["item_count"] = _compute_totals(cart["items"])
-    await _broadcast(cart_id, "cart_update",
-                     f"{participant_name} added {cart['items'][product_id]['name']}")
+    await _broadcast(
+        cart_id,
+        "cart_update",
+        f"{participant_name} added {cart['items'][product_id]['name']}",
+    )
     return _to_state(cart)
 
 
@@ -171,8 +178,9 @@ async def join_cart(cart_id: str, participant_name: str) -> Optional[CartState]:
         return None
     if participant_name not in cart["participants"]:
         cart["participants"].append(participant_name)
-        await _broadcast(cart_id, "participant_joined",
-                         f"{participant_name} joined the cart 👋")
+        await _broadcast(
+            cart_id, "participant_joined", f"{participant_name} joined the cart 👋"
+        )
     return _to_state(cart)
 
 
@@ -182,8 +190,9 @@ async def leave_cart(cart_id: str, participant_name: str) -> Optional[CartState]
         return None
     if participant_name in cart["participants"]:
         cart["participants"].remove(participant_name)
-        await _broadcast(cart_id, "participant_left",
-                         f"{participant_name} left the cart")
+        await _broadcast(
+            cart_id, "participant_left", f"{participant_name} left the cart"
+        )
     return _to_state(cart)
 
 
@@ -193,11 +202,13 @@ async def delete_cart(cart_id: str) -> bool:
     if not cart:
         return False
     # Notify all connected streams that the cart is gone
-    payload = json.dumps({
-        "type": "checkout",
-        "cart": None,
-        "message": "Cart has been deleted by the owner",
-    })
+    payload = json.dumps(
+        {
+            "type": "checkout",
+            "cart": None,
+            "message": "Cart has been deleted by the owner",
+        }
+    )
     data = f"data: {payload}\n\n"
     for q in list(_STREAMS.get(cart_id, [])):
         try:

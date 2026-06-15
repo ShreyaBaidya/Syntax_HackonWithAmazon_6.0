@@ -1,8 +1,13 @@
-'use client';
-import { useState, useEffect, useCallback } from 'react';
-import { ProfileObject, ProfileResponse, saveProfile as apiSaveProfile, getProfile as apiGetProfile } from '../lib/profile-api';
+"use client";
+import { useState, useEffect, useCallback } from "react";
+import {
+  ProfileObject,
+  ProfileResponse,
+  saveProfile as apiSaveProfile,
+  getProfile as apiGetProfile,
+} from "../lib/profile-api";
 
-export type { ProfileObject } from '../lib/profile-api';
+export type { ProfileObject } from "../lib/profile-api";
 
 export type ProfileState = {
   userId: string | null;
@@ -11,7 +16,7 @@ export type ProfileState = {
   loading: boolean;
 };
 
-const STORAGE_KEY = 'diet_user_id';
+const STORAGE_KEY = "diet_user_id";
 
 function getStoredUserId(): string | null {
   try {
@@ -51,7 +56,7 @@ export function useProfile() {
     if (stored) {
       fetchProfile(stored);
     } else {
-      setState(s => ({ ...s, loading: false }));
+      setState((s) => ({ ...s, loading: false }));
     }
   }, []);
 
@@ -66,22 +71,30 @@ export function useProfile() {
       });
     } catch {
       removeStoredUserId();
-      setState({ userId: null, profile: null, exclusionSet: [], loading: false });
+      setState({
+        userId: null,
+        profile: null,
+        exclusionSet: [],
+        loading: false,
+      });
     }
   };
 
-  const saveProfile = useCallback(async (profile: ProfileObject): Promise<string> => {
-    const existingUserId = getStoredUserId();
-    const data = await apiSaveProfile(profile, existingUserId ?? undefined);
-    setStoredUserId(data.user_id);
-    setState({
-      userId: data.user_id,
-      profile: data.profile,
-      exclusionSet: data.exclusion_set,
-      loading: false,
-    });
-    return data.user_id;
-  }, []);
+  const saveProfile = useCallback(
+    async (profile: ProfileObject): Promise<string> => {
+      const existingUserId = getStoredUserId();
+      const data = await apiSaveProfile(profile, existingUserId ?? undefined);
+      setStoredUserId(data.user_id);
+      setState({
+        userId: data.user_id,
+        profile: data.profile,
+        exclusionSet: data.exclusion_set,
+        loading: false,
+      });
+      return data.user_id;
+    },
+    [],
+  );
 
   const clearProfile = useCallback(() => {
     removeStoredUserId();

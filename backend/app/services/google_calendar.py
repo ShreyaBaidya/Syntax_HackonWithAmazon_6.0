@@ -11,6 +11,7 @@ Two modes:
 The service gracefully returns mock events if credentials are not configured,
 so the rest of the app continues to work locally without any Google setup.
 """
+
 from __future__ import annotations
 
 import json
@@ -21,11 +22,12 @@ from typing import Optional
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+
 def _today_range() -> tuple[str, str]:
     """Return ISO-8601 strings for today midnight→midnight in UTC."""
     today = date.today()
     start = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc)
-    end   = datetime(today.year, today.month, today.day, 23, 59, 59, tzinfo=timezone.utc)
+    end = datetime(today.year, today.month, today.day, 23, 59, 59, tzinfo=timezone.utc)
     return start.isoformat(), end.isoformat()
 
 
@@ -37,36 +39,50 @@ def _parse_event(item: dict) -> dict:
     if "T" in start_str:
         try:
             dt = datetime.fromisoformat(start_str.replace("Z", "+00:00"))
-            time_str = dt.strftime("%I:%M %p")   # e.g. "07:30 PM"
+            time_str = dt.strftime("%I:%M %p")  # e.g. "07:30 PM"
         except ValueError:
             pass
 
     return {
-        "event_id":    item.get("id", ""),
-        "title":       item.get("summary", "Untitled Event"),
+        "event_id": item.get("id", ""),
+        "title": item.get("summary", "Untitled Event"),
         "description": item.get("description", ""),
-        "time":        time_str,
-        "location":    item.get("location", ""),
-        "type":        _infer_type(item.get("summary", ""), item.get("description", "")),
+        "time": time_str,
+        "location": item.get("location", ""),
+        "type": _infer_type(item.get("summary", ""), item.get("description", "")),
     }
 
 
 def _infer_type(title: str, description: str) -> str:
     """Guess event type from title/description keywords."""
     text = (title + " " + description).lower()
-    if any(w in text for w in ["party", "birthday", "celebration", "get together", "gathering"]):
+    if any(
+        w in text
+        for w in ["party", "birthday", "celebration", "get together", "gathering"]
+    ):
         return "party"
-    if any(w in text for w in ["festival", "diwali", "holi", "eid", "christmas", "puja", "navratri"]):
+    if any(
+        w in text
+        for w in ["festival", "diwali", "holi", "eid", "christmas", "puja", "navratri"]
+    ):
         return "festival"
-    if any(w in text for w in ["guest", "family", "relatives", "in-laws", "visit", "host"]):
+    if any(
+        w in text for w in ["guest", "family", "relatives", "in-laws", "visit", "host"]
+    ):
         return "guest"
     if any(w in text for w in ["workout", "gym", "run", "yoga", "fitness", "marathon"]):
         return "workout"
-    if any(w in text for w in ["sick", "unwell", "fever", "doctor", "hospital", "medicine"]):
+    if any(
+        w in text for w in ["sick", "unwell", "fever", "doctor", "hospital", "medicine"]
+    ):
         return "health"
-    if any(w in text for w in ["travel", "trip", "flight", "train", "journey", "vacation"]):
+    if any(
+        w in text for w in ["travel", "trip", "flight", "train", "journey", "vacation"]
+    ):
         return "travel"
-    if any(w in text for w in ["office", "work", "meeting", "conference", "presentation"]):
+    if any(
+        w in text for w in ["office", "work", "meeting", "conference", "presentation"]
+    ):
         return "work"
     return "general"
 
@@ -75,19 +91,22 @@ def _infer_type(title: str, description: str) -> str:
 
 _MOCK_EVENTS: list[dict] = [
     {
-        "event_id":    "mock_001",
-        "title":       "House Party 🎉",
+        "event_id": "mock_001",
+        "title": "House Party 🎉",
         "description": "10 friends coming over for dinner and drinks",
-        "time":        "07:00 PM",
-        "location":    "Home",
-        "type":        "party",
+        "time": "07:00 PM",
+        "location": "Home",
+        "type": "party",
     },
 ]
 
 
 # ── OAuth2 mode (user token from frontend) ────────────────────────────────────
 
-def fetch_events_with_token(access_token: str, date_str: Optional[str] = None) -> list[dict]:
+
+def fetch_events_with_token(
+    access_token: str, date_str: Optional[str] = None
+) -> list[dict]:
     """
     Fetch calendar events using a user's OAuth2 access token.
     Call this when the user has connected their Google account.
@@ -104,28 +123,37 @@ def fetch_events_with_token(access_token: str, date_str: Optional[str] = None) -
                 d = date.fromisoformat(date_str)
             except ValueError:
                 d = date.today()
-            start = datetime(d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc).isoformat()
-            end   = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc).isoformat()
+            start = datetime(
+                d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc
+            ).isoformat()
+            end = datetime(
+                d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc
+            ).isoformat()
         else:
             start, end = _today_range()
 
-        result = service.events().list(
-            calendarId="primary",
-            timeMin=start,
-            timeMax=end,
-            singleEvents=True,
-            orderBy="startTime",
-            maxResults=10,
-        ).execute()
+        result = (
+            service.events()
+            .list(
+                calendarId="primary",
+                timeMin=start,
+                timeMax=end,
+                singleEvents=True,
+                orderBy="startTime",
+                maxResults=10,
+            )
+            .execute()
+        )
 
         return [_parse_event(e) for e in result.get("items", [])]
 
-    except Exception as exc:
+    except Exception:
         # Return empty list — event_planner handles missing events gracefully
         return []
 
 
 # ── Service Account mode (shared demo calendar) ───────────────────────────────
+
 
 def fetch_events_service_account(date_str: Optional[str] = None) -> list[dict]:
     """
@@ -143,7 +171,9 @@ def fetch_events_service_account(date_str: Optional[str] = None) -> list[dict]:
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
 
-        info = json.loads(sa_json) if sa_json.startswith("{") else json.load(open(sa_json))
+        info = (
+            json.loads(sa_json) if sa_json.startswith("{") else json.load(open(sa_json))
+        )
         creds = service_account.Credentials.from_service_account_info(
             info,
             scopes=["https://www.googleapis.com/auth/calendar.readonly"],
@@ -155,28 +185,37 @@ def fetch_events_service_account(date_str: Optional[str] = None) -> list[dict]:
                 d = date.fromisoformat(date_str)
             except ValueError:
                 d = date.today()
-            start = datetime(d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc).isoformat()
-            end   = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc).isoformat()
+            start = datetime(
+                d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc
+            ).isoformat()
+            end = datetime(
+                d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc
+            ).isoformat()
         else:
             start, end = _today_range()
 
-        result = service.events().list(
-            calendarId=calendar_id,
-            timeMin=start,
-            timeMax=end,
-            singleEvents=True,
-            orderBy="startTime",
-            maxResults=10,
-        ).execute()
+        result = (
+            service.events()
+            .list(
+                calendarId=calendar_id,
+                timeMin=start,
+                timeMax=end,
+                singleEvents=True,
+                orderBy="startTime",
+                maxResults=10,
+            )
+            .execute()
+        )
 
         items = result.get("items", [])
         return [_parse_event(e) for e in items] if items else _MOCK_EVENTS
 
-    except Exception as exc:
+    except Exception:
         return _MOCK_EVENTS
 
 
 # ── Public entry point ────────────────────────────────────────────────────────
+
 
 def get_today_events(
     access_token: Optional[str] = None,

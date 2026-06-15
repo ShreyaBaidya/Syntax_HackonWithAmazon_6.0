@@ -21,7 +21,9 @@ class VisionAgent:
     @property
     def client(self):
         if self._client is None:
-            self._client = OpenAI(api_key=settings.nvidia_api_key, base_url=settings.nvidia_base_url)
+            self._client = OpenAI(
+                api_key=settings.nvidia_api_key, base_url=settings.nvidia_base_url
+            )
         return self._client
 
     async def analyze_image(self, image_base64: str) -> dict:
@@ -42,19 +44,35 @@ Return ONLY valid JSON (no markdown, no explanation):
                 print(f"[VisionAgent] Trying vision model: {model}")
                 response = self.client.chat.completions.create(
                     model=model,
-                    messages=[{"role": "user", "content": [
-                        {"type": "text", "text": prompt_text},
-                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_base64}"}}
-                    ]}],
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt_text},
+                                {
+                                    "type": "image_url",
+                                    "image_url": {
+                                        "url": f"data:image/jpeg;base64,{image_base64}"
+                                    },
+                                },
+                            ],
+                        }
+                    ],
                     temperature=0.3,
-                    max_tokens=1200
+                    max_tokens=1200,
                 )
                 text = response.choices[0].message.content or ""
                 print(f"[VisionAgent] Got response from {model}: {text[:200]}")
 
                 result = safe_parse_json(text, "VisionAgent", model)
-                if result and isinstance(result, dict) and len(result.get("detected_items", [])) > 0:
-                    print(f"[VisionAgent] SUCCESS with {model} - detected {len(result['detected_items'])} items")
+                if (
+                    result
+                    and isinstance(result, dict)
+                    and len(result.get("detected_items", [])) > 0
+                ):
+                    print(
+                        f"[VisionAgent] SUCCESS with {model} - detected {len(result['detected_items'])} items"
+                    )
                     return result
 
             except Exception as e:
@@ -63,7 +81,12 @@ Return ONLY valid JSON (no markdown, no explanation):
 
         # All vision models failed - use text model with image description request
         print("[VisionAgent] All vision models failed, using text-based fallback")
-        return {"image_type": "other", "detected_items": [], "missing_suggestions": [], "meal_suggestions": []}
+        return {
+            "image_type": "other",
+            "detected_items": [],
+            "missing_suggestions": [],
+            "meal_suggestions": [],
+        }
 
     async def image_to_cart(self, image_base64: str) -> list[CartItem]:
         """Convert image to shopping cart - always produces results."""
@@ -101,14 +124,19 @@ Categories: essential, recommended, optional"""
             response = self.client.chat.completions.create(
                 model=settings.nvidia_model,
                 messages=[
-                    {"role": "system", "content": "Return ONLY valid JSON array. No markdown. Prices in INR."},
-                    {"role": "user", "content": prompt}
+                    {
+                        "role": "system",
+                        "content": "Return ONLY valid JSON array. No markdown. Prices in INR.",
+                    },
+                    {"role": "user", "content": prompt},
                 ],
                 temperature=0.5,
-                max_tokens=1500
+                max_tokens=1500,
             )
             text = response.choices[0].message.content or ""
-            items_data = safe_parse_json(text, "VisionAgent.cart", settings.nvidia_model)
+            items_data = safe_parse_json(
+                text, "VisionAgent.cart", settings.nvidia_model
+            )
 
             if not items_data or not isinstance(items_data, list):
                 return []
@@ -118,14 +146,16 @@ Categories: essential, recommended, optional"""
                 if not isinstance(item, dict) or "name" not in item:
                     continue
                 try:
-                    cart_items.append(CartItem(
-                        name=item["name"],
-                        quantity=item.get("quantity", "1"),
-                        category=ItemCategory(item.get("category", "essential")),
-                        estimated_price=item.get("estimated_price"),
-                        substitute_available=len(item.get("substitutes", [])) > 0,
-                        substitutes=item.get("substitutes", [])
-                    ))
+                    cart_items.append(
+                        CartItem(
+                            name=item["name"],
+                            quantity=item.get("quantity", "1"),
+                            category=ItemCategory(item.get("category", "essential")),
+                            estimated_price=item.get("estimated_price"),
+                            substitute_available=len(item.get("substitutes", [])) > 0,
+                            substitutes=item.get("substitutes", []),
+                        )
+                    )
                 except (ValueError, KeyError):
                     continue
 

@@ -11,7 +11,9 @@ class NutritionAgent:
     @property
     def client(self):
         if self._client is None:
-            self._client = OpenAI(api_key=settings.nvidia_api_key, base_url=settings.nvidia_base_url)
+            self._client = OpenAI(
+                api_key=settings.nvidia_api_key, base_url=settings.nvidia_base_url
+            )
         return self._client
 
     async def analyze_nutrition(self, items: list[CartItem]) -> NutritionInfo:
@@ -23,15 +25,25 @@ No markdown. No explanations."""
             response = self.client.chat.completions.create(
                 model=settings.nvidia_model,
                 messages=[
-                    {"role": "system", "content": "Return ONLY valid JSON. No markdown."},
-                    {"role": "user", "content": prompt}
+                    {
+                        "role": "system",
+                        "content": "Return ONLY valid JSON. No markdown.",
+                    },
+                    {"role": "user", "content": prompt},
                 ],
-                temperature=0.3, max_tokens=200
+                temperature=0.3,
+                max_tokens=200,
             )
             text = response.choices[0].message.content or ""
             data = safe_parse_json(text, "NutritionAgent", settings.nvidia_model)
             if data and isinstance(data, dict):
-                return NutritionInfo(calories=data.get("calories", 0), protein=data.get("protein", 0), carbs=data.get("carbs", 0), fat=data.get("fat", 0), fiber=data.get("fiber"))
+                return NutritionInfo(
+                    calories=data.get("calories", 0),
+                    protein=data.get("protein", 0),
+                    carbs=data.get("carbs", 0),
+                    fat=data.get("fat", 0),
+                    fiber=data.get("fiber"),
+                )
             return NutritionInfo()
         except Exception as e:
             print(f"[NutritionAgent] ERROR: {e}")

@@ -2,7 +2,7 @@
 Unit tests for dual-mode filtering and get_product_conflicts in profile_service.
 Tests tasks 3.1 and 3.2 of the amazon-polish-enhancements spec.
 """
-import pytest
+
 from app.services.profile_service import filter_products, get_product_conflicts
 
 
