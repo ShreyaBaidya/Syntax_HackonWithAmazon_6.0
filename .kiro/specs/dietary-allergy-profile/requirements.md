@@ -115,6 +115,8 @@ The Dietary & Allergy Profile feature introduces a global personalization layer 
 5. THE Profile_Store SHALL map the "gluten" Allergen_Tag to exclude products tagged with keywords: "wheat", "bread", "flour", "atta", "noodles", "pasta", "biscuit", "cookies".
 6. THE Profile_Store SHALL map the "dairy" Allergen_Tag to exclude products tagged with keywords: "milk", "dairy", "butter", "cheese", "yogurt", "cream", "paneer".
 7. FOR ALL valid Profile_Objects, computing the Exclusion_Set then filtering then recomputing SHALL produce the same Exclusion_Set (idempotence).
+8. WHEN inferring a product's dietary_tags from its name (for products lacking structured dietary metadata), THE Catalog_Service SHALL treat eggs as NON-vegetarian (Indian dietary convention) — a product whose name contains "egg", "eggs", or "quail" SHALL NOT receive the "Vegetarian" tag.
+9. THE Catalog_Service dietary_tag inference SHALL match keywords against the product NAME using word boundaries only, NOT against the aggregated tags field, since category names such as "Dairy and Eggs" pollute the tags of unrelated products (e.g. milk, butter).
 
 ### Requirement 9: Safe Alternative Suggestions
 
@@ -128,17 +130,20 @@ The Dietary & Allergy Profile feature introduces a global personalization layer 
 4. WHEN no safe alternative exists in the same category, THE system SHALL omit the `alternative` field rather than suggesting a product from an unrelated category.
 5. THE Alternative_Suggestion logic SHALL reuse the existing Catalog_Service search with the Exclusion_Set applied, querying for the same category as the removed product.
 
-### Requirement 10: Explainable Recommendations
+### Requirement 10: Dietary Labels on Product Cards
 
-**User Story:** As a shopper, I want to understand why products were filtered or recommended based on my dietary profile, so that I trust the system and can verify it is working correctly.
+**User Story:** As a shopper, I want product cards to clearly show how each item relates to MY selected dietary preferences and allergens, so that I can make safe choices at a glance without irrelevant clutter.
 
 #### Acceptance Criteria
 
-1. WHEN a product passes the Filter_Function and matches a user's Diet_Tag positively (e.g., product is plant-based and user is vegan), THE product card SHALL display a positive badge with text such as "Safe for you ✓" or "Matches your vegetarian preference".
-2. WHEN a product is removed by the Filter_Function, AND the product appears in a context where removal is visible (e.g., shared cart warning, alternative suggestion), THE system SHALL provide a reason string explaining the removal (e.g., "Removed — contains dairy", "Filtered due to peanut allergy").
-3. THE reason string SHALL reference the specific Allergen_Tag or Diet_Tag that triggered the filter, not a generic message.
-4. WHEN the NowSpeak AI acknowledges dietary restrictions in its streamed reply, THE reply SHALL name the specific restriction being honored (e.g., "Since you're avoiding gluten, here are some options…").
-5. THE Profile_Banner on the home page SHALL display a count of products filtered in the current recommendation feed (e.g., "3 items filtered for your safety").
+1. WHEN a user has NOT configured a Profile_Object, THE product cards SHALL NOT display any dietary or allergen labels.
+2. WHEN a user has configured Diet_Tags, THE product card SHALL display a green badge for each of the product's dietary_tags that matches one of the user's selected Diet_Tags (e.g. "✓ Vegetarian"), AND SHALL NOT display dietary_tags the user did not select.
+3. WHEN a user has configured Allergen_Tags AND a product contains an allergen the user selected, THE product card SHALL display a single red badge naming the representative substance of that allergen (e.g. any dairy-derived product such as butter, cheese, paneer, cream, or yogurt SHALL display "Contains milk").
+4. THE system SHALL NOT display generic dietary-conflict labels such as "Non-Vegetarian" or "Non-Vegan"; labels are derived solely from the user's selected preferences and allergens.
+5. THE system SHALL NOT display an "Allergen Safe" badge, nor informational "Contains X" badges for allergens the user has not selected.
+6. THE allergen substance match SHALL use word-boundary matching against the product name and structured ingredient list only, AND SHALL NOT match against the product's category or aggregated tags field (which are polluted by category names such as "Dairy and Eggs" and would otherwise cause false positives like flagging lactose-free milk for an egg allergen).
+7. WHEN the NowSpeak AI acknowledges dietary restrictions in its streamed reply, THE reply SHALL name the specific restriction being honored (e.g., "Since you're avoiding gluten, here are some options…").
+8. THE Profile_Banner on the home page MAY display a count of products filtered in the current recommendation feed (e.g., "3 items filtered for your safety"). [Stretch]
 
 ### Requirement 11: Global Personalization Layer Architecture
 
@@ -174,4 +179,4 @@ The following requirements enhance the experience but are not required for a con
 
 - **Requirement 5**: Shared Cart Allergen Warnings — real-time warnings when others add conflicting items
 - **Requirement 9**: Safe Alternative Suggestions — proactive replacement recommendations
-- **Requirement 10**: Explainable Recommendations — badges and reason strings on product cards
+- **Requirement 10**: Dietary Labels on Product Cards — badges on product cards driven by the user's selected preferences and allergens

@@ -18,49 +18,85 @@ from app.services.profile_service import filter_products
 ALL_PRODUCTS: list[dict] = AMAZON_PRODUCTS + FOOD_ENHANCED_PRODUCTS + PRODUCTS
 
 
+import re
+
+
+def _has_word(text: str, words: list[str]) -> bool:
+    """Check if any of the given words appears as a whole word in text (case-insensitive)."""
+    if not text:
+        return False
+    for w in words:
+        if re.search(rf"\b{re.escape(w)}\b", text, re.IGNORECASE):
+            return True
+    return False
+
+
 def _infer_dietary_tags(p: dict) -> list[str]:
     """Infer dietary tags for legacy products that don't have structured metadata.
-    Only applies to food-related categories — non-food items get no dietary tags."""
+    Only applies to food-related categories — non-food items get no dietary tags.
+
+    Notes on correctness:
+    - In the Indian dietary context (which this app targets), EGGS are NOT considered
+      vegetarian. They're classified separately ("eggetarian"/ovo). We therefore
+      treat egg as a non-vegetarian indicator.
+    - We match against the product NAME using word boundaries. The `tags` string
+      is polluted by category names like "Dairy and Eggs" so we can't use it.
+    """
     if p.get("dietary_tags"):
         return p["dietary_tags"]
-    
+
     # Only infer for food categories
-    FOOD_CATEGORIES = {"fruits", "vegetables", "fresh", "dairy", "beverages", "snacks", 
-                       "grocery", "breakfast", "plant_based", "high_protein", 
+    FOOD_CATEGORIES = {"fruits", "vegetables", "fresh", "dairy", "beverages", "snacks",
+                       "grocery", "breakfast", "plant_based", "high_protein",
                        "allergy_friendly", "ready_to_eat", "medicine"}
     category = p.get("category", "")
     if category not in FOOD_CATEGORIES:
         return []
-    
-    tags_lower = p.get("tags", "").lower()
-    name_lower = p.get("name", "").lower()
-    combined = f"{tags_lower} {name_lower}"
-    inferred = []
-    
-    # Check for vegetarian indicators
-    meat_keywords = ["chicken", "mutton", "pork", "fish", "prawn", "shrimp", "meat", "non-veg"]
-    if not any(kw in combined for kw in meat_keywords):
+
+    name = p.get("name", "")
+    inferred: list[str] = []
+
+    # Non-vegetarian indicators (egg is non-veg in the Indian context this app serves)
+    non_veg_keywords = [
+        "chicken", "mutton", "pork", "fish", "prawn", "shrimp", "meat",
+        "egg", "eggs", "quail",
+    ]
+    has_egg = _has_word(name, ["egg", "eggs", "quail"])
+    has_meat = _has_word(name, ["chicken", "mutton", "pork", "fish", "prawn", "shrimp", "meat"])
+    is_non_veg = has_egg or has_meat
+
+    if not is_non_veg:
         inferred.append("Vegetarian")
-    
-    # Check for vegan (no animal products at all)
-    animal_keywords = meat_keywords + ["milk", "dairy", "egg", "butter", "cheese", "yogurt", "honey", "cream", "paneer", "ghee"]
-    if not any(kw in combined for kw in animal_keywords):
-        if "Vegetarian" in inferred:
-            inferred.append("Vegan")
-    
-    # Category-based inferences
+    elif has_egg and not has_meat:
+        # Tag egg-only products explicitly so users know what they're looking at
+        inferred.append("Contains Egg")
+
+    # Vegan check (must be vegetarian AND no animal-derived ingredients)
+    dairy_animal_keywords = [
+        "milk", "dairy", "butter", "cheese", "yogurt", "curd", "honey",
+        "cream", "paneer", "ghee", "lactose", "khoa", "khoya", "dahi",
+    ]
+    if "Vegetarian" in inferred and not _has_word(name, dairy_animal_keywords):
+        inferred.append("Vegan")
+
+    # Category-based positive inferences for clearly-vegan categories
     if category in ("fruits", "vegetables", "fresh"):
+        if "Vegetarian" not in inferred:
+            inferred.append("Vegetarian")
         if "Vegan" not in inferred:
             inferred.append("Vegan")
         if "Gluten-Free" not in inferred:
             inferred.append("Gluten-Free")
-    
-    # Gluten-free check
-    gluten_keywords = ["wheat", "bread", "flour", "atta", "maida", "noodles", "pasta", "biscuit"]
-    if not any(kw in combined for kw in gluten_keywords):
+
+    # Gluten-free check (against name only — tags are polluted by category)
+    gluten_keywords = [
+        "wheat", "bread", "flour", "atta", "maida", "noodles", "pasta",
+        "biscuit", "biscuits", "cookie", "cookies", "rusk",
+    ]
+    if not _has_word(name, gluten_keywords):
         if "Gluten-Free" not in inferred:
             inferred.append("Gluten-Free")
-    
+
     return inferred[:3]  # Limit to 3 tags
 
 
