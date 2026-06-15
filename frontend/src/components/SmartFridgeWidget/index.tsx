@@ -12,30 +12,27 @@ const RUNNING_LOW_ITEMS: Product[] = [
     name: "Fresh Milk 1L",
     price: 65,
     category: "dairy",
-    image_url: "https://via.placeholder.com/120?text=Milk",
-    rating: 4.8,
-    review_count: 2540,
-    in_stock: true,
+    image_url: "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=400&h=400&q=80",
+    unit: "1L",
+    eta_min: 8,
   },
   {
     id: "running_low_bread",
     name: "Whole Wheat Bread",
     price: 45,
     category: "grocery",
-    image_url: "https://via.placeholder.com/120?text=Bread",
-    rating: 4.6,
-    review_count: 1820,
-    in_stock: true,
+    image_url: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&h=400&q=80",
+    unit: "400g",
+    eta_min: 10,
   },
   {
     id: "running_low_eggs",
     name: "Farm Fresh Eggs (6)",
     price: 52,
     category: "fresh",
-    image_url: "https://via.placeholder.com/120?text=Eggs",
-    rating: 4.9,
-    review_count: 3200,
-    in_stock: true,
+    image_url: "https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=400&h=400&q=80",
+    unit: "6 pcs",
+    eta_min: 12,
   },
 ];
 
@@ -81,17 +78,27 @@ export function SmartFridgeWidget({ onAddToCart }: Props) {
               style={{
                 width: "100%",
                 height: 80,
-                background: "#EEE",
+                background: "#FAFAFA",
                 borderRadius: 6,
                 marginBottom: 8,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 12,
-                color: "#999",
+                overflow: "hidden",
               }}
             >
-              {item.name.split(" ")[0]}
+              {item.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={item.image_url}
+                  alt={item.name}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                <div style={{ fontSize: 12, color: "#999" }}>
+                  {item.name.split(" ")[0]}
+                </div>
+              )}
             </div>
 
             {/* Product name */}
