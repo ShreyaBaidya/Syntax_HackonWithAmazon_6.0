@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNowSpeak } from "@/hooks/useNowSpeak";
 import { useVoiceInput } from "@/hooks/useVoiceInput";
 import { ProductCard } from "@/components/ProductCard";
+import { RecipeInput } from "@/components/RecipeInput";
 import { Product } from "@/lib/api";
 import { useProfile } from "@/hooks/useProfile";
 
@@ -21,6 +22,7 @@ interface Props {
 export function NowSpeak({ onProductSelect }: Props) {
   const [inputText, setInputText] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [inputMode, setInputMode] = useState<"chat" | "recipe">("chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, isStreaming, sendMessage } = useNowSpeak();
   const { profile } = useProfile();
@@ -31,6 +33,17 @@ export function NowSpeak({ onProductSelect }: Props) {
 
   const handleVoiceResult = (transcript: string) => {
     sendMessage(transcript);
+  };
+
+  const handleRecipeFound = (products: Product[], servings: number, recipeName: string) => {
+    // Add all recipe products to cart
+    products.forEach(product => {
+      if (onProductSelect) {
+        onProductSelect(product);
+      }
+    });
+    // Show confirmation
+    setInputText("");
   };
 
   const { isListening, startListening, stopListening, isSupported } =
@@ -60,9 +73,37 @@ export function NowSpeak({ onProductSelect }: Props) {
         background: "#F3F3F3",
       }}
     >
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 0, background: "white", borderBottom: "1px solid #DDD", paddingBottom: 0 }}>
+        {(["chat", "recipe"] as const).map((mode) => (
+          <button
+            key={mode}
+            onClick={() => setInputMode(mode)}
+            style={{
+              flex: 1,
+              padding: "12px",
+              border: "none",
+              borderBottom: mode === inputMode ? "3px solid #FF9900" : "none",
+              background: "white",
+              color: mode === inputMode ? "#FF9900" : "#565959",
+              fontSize: "13px",
+              fontWeight: mode === inputMode ? 700 : 500,
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+          >
+            {mode === "chat" ? "🎙️ Chat" : "🍳 Recipe"}
+          </button>
+        ))}
+      </div>
+
       {/* Messages area */}
       <div style={{ flex: 1, overflowY: "auto", padding: "12px 12px 0" }}>
-        {messages.length === 0 && (
+        {inputMode === "recipe" ? (
+          <div style={{ padding: "12px" }}>
+            <RecipeInput onRecipeFound={handleRecipeFound} isLoading={isStreaming} />
+          </div>
+        ) : messages.length === 0 ? (
           <div
             style={{
               display: "flex",
@@ -143,10 +184,9 @@ export function NowSpeak({ onProductSelect }: Props) {
               ))}
             </div>
           </div>
-        )}
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {messages.map((msg, i) => (
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {messages.map((msg, i) => (
             <div
               key={i}
               style={{
@@ -231,8 +271,10 @@ export function NowSpeak({ onProductSelect }: Props) {
               </div>
             </div>
           ))}
-        </div>
-        <div ref={messagesEndRef} style={{ height: 12 }} />
+            </div>
+            <div ref={messagesEndRef} style={{ height: 12 }} />
+          </div>
+        )}
       </div>
 
       {/* Input bar — Amazon style */}

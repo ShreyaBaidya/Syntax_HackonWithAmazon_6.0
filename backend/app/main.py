@@ -10,6 +10,7 @@ from app.api import (
     cart,
     coupon,
     profile,
+    recipe,
 )
 from app.api import calendar as calendar_api, auth
 from app.api import ai_routes
@@ -92,6 +93,7 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
 app.include_router(chat.router, prefix="/api/v1", tags=["NowSpeak"])
+app.include_router(recipe.router, prefix="/api/v1", tags=["Recipe"])
 app.include_router(recommendations.router, prefix="/api/v1", tags=["Recommendations"])
 app.include_router(products.router, prefix="/api/v1", tags=["Products"])
 app.include_router(orders.router, prefix="/api/v1", tags=["Orders"])

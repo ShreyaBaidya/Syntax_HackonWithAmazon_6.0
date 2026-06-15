@@ -1,0 +1,358 @@
+{
+  "recipes": [
+    {
+      "id": "carbonara",
+      "name": "Pasta Carbonara",
+      "keywords": ["carbonara", "guanciale", "pecorino", "cacio"],
+      "url_patterns": ["carbonara", "cacio.*pepe", "tastemade.*pasta", "bbcgood"],
+      "image_patterns": ["carbonara", "pasta.*white", "guanciale"],
+      "default_servings": 4,
+      "ingredients": [
+        {
+          "name": "Spaghetti Pasta",
+          "base_qty": 400,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "spaghetti pasta"
+        },
+        {
+          "name": "Bacon/Guanciale",
+          "base_qty": 200,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "bacon chicken"
+        },
+        {
+          "name": "Eggs",
+          "base_qty": 3,
+          "base_unit": "pcs",
+          "category": "fresh",
+          "product_query": "eggs farm fresh"
+        },
+        {
+          "name": "Parmesan Cheese",
+          "base_qty": 100,
+          "base_unit": "g",
+          "category": "dairy",
+          "product_query": "parmesan cheese"
+        },
+        {
+          "name": "Black Pepper",
+          "base_qty": 10,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "black pepper"
+        }
+      ]
+    },
+    {
+      "id": "biryani",
+      "name": "Chicken Biryani",
+      "keywords": ["biryani", "hyderabadi", "dum pukht"],
+      "url_patterns": ["biryani", "ndtv.*biryani", "tarla.*biryani"],
+      "image_patterns": ["biryani", "rice.*chicken", "hyderabadi"],
+      "default_servings": 4,
+      "ingredients": [
+        {
+          "name": "Basmati Rice",
+          "base_qty": 500,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "basmati rice"
+        },
+        {
+          "name": "Chicken (boneless)",
+          "base_qty": 800,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "chicken breast boneless"
+        },
+        {
+          "name": "Onions",
+          "base_qty": 400,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "onion fresh"
+        },
+        {
+          "name": "Yogurt",
+          "base_qty": 200,
+          "base_unit": "g",
+          "category": "dairy",
+          "product_query": "yogurt curd"
+        },
+        {
+          "name": "Ginger-Garlic Paste",
+          "base_qty": 50,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "ginger garlic paste"
+        },
+        {
+          "name": "Biryani Masala",
+          "base_qty": 20,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "biryani masala spice"
+        },
+        {
+          "name": "Ghee",
+          "base_qty": 100,
+          "base_unit": "ml",
+          "category": "grocery",
+          "product_query": "ghee clarified butter"
+        }
+      ]
+    },
+    {
+      "id": "butter_chicken",
+      "name": "Butter Chicken Curry",
+      "keywords": ["butter chicken", "murgh makhani", "tikka masala"],
+      "url_patterns": ["butter.*chicken", "murgh.*makhani", "tikka.*masala"],
+      "image_patterns": ["butter.*chicken", "curry.*red", "chicken.*cream"],
+      "default_servings": 4,
+      "ingredients": [
+        {
+          "name": "Chicken (cubed)",
+          "base_qty": 800,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "chicken breast cubes"
+        },
+        {
+          "name": "Butter",
+          "base_qty": 150,
+          "base_unit": "g",
+          "category": "dairy",
+          "product_query": "butter salted"
+        },
+        {
+          "name": "Heavy Cream",
+          "base_qty": 250,
+          "base_unit": "ml",
+          "category": "dairy",
+          "product_query": "cream heavy whipping"
+        },
+        {
+          "name": "Tomato Puree",
+          "base_qty": 400,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "tomato puree paste"
+        },
+        {
+          "name": "Onions",
+          "base_qty": 300,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "onion fresh"
+        },
+        {
+          "name": "Ginger-Garlic Paste",
+          "base_qty": 40,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "ginger garlic paste"
+        },
+        {
+          "name": "Garam Masala",
+          "base_qty": 15,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "garam masala spice"
+        },
+        {
+          "name": "Kasuri Methi (Fenugreek)",
+          "base_qty": 10,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "kasuri methi dried"
+        }
+      ]
+    },
+    {
+      "id": "paneer_tikka",
+      "name": "Paneer Tikka",
+      "keywords": ["paneer tikka", "paneer", "tandoori"],
+      "url_patterns": ["paneer.*tikka", "tandoori"],
+      "image_patterns": ["paneer", "tikka", "tandoori"],
+      "default_servings": 4,
+      "ingredients": [
+        {
+          "name": "Paneer (cottage cheese)",
+          "base_qty": 500,
+          "base_unit": "g",
+          "category": "dairy",
+          "product_query": "paneer cottage cheese"
+        },
+        {
+          "name": "Yogurt",
+          "base_qty": 200,
+          "base_unit": "g",
+          "category": "dairy",
+          "product_query": "yogurt curd"
+        },
+        {
+          "name": "Onions",
+          "base_qty": 200,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "onion fresh"
+        },
+        {
+          "name": "Bell Peppers",
+          "base_qty": 300,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "bell pepper capsicum"
+        },
+        {
+          "name": "Ginger-Garlic Paste",
+          "base_qty": 30,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "ginger garlic paste"
+        },
+        {
+          "name": "Tandoori Masala",
+          "base_qty": 20,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "tandoori masala spice"
+        },
+        {
+          "name": "Lemon",
+          "base_qty": 2,
+          "base_unit": "pcs",
+          "category": "fresh",
+          "product_query": "lemon fresh citrus"
+        }
+      ]
+    },
+    {
+      "id": "pizza",
+      "name": "Homemade Pizza",
+      "keywords": ["pizza", "margherita", "pepperoni"],
+      "url_patterns": ["pizza", "margherita", "dominos"],
+      "image_patterns": ["pizza", "cheese.*bread"],
+      "default_servings": 4,
+      "ingredients": [
+        {
+          "name": "Maida Flour (All-purpose)",
+          "base_qty": 300,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "maida flour all-purpose"
+        },
+        {
+          "name": "Mozzarella Cheese",
+          "base_qty": 250,
+          "base_unit": "g",
+          "category": "dairy",
+          "product_query": "mozzarella cheese shredded"
+        },
+        {
+          "name": "Tomato Puree",
+          "base_qty": 200,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "tomato puree sauce"
+        },
+        {
+          "name": "Onions",
+          "base_qty": 200,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "onion fresh"
+        },
+        {
+          "name": "Bell Peppers",
+          "base_qty": 200,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "bell pepper capsicum"
+        },
+        {
+          "name": "Olive Oil",
+          "base_qty": 50,
+          "base_unit": "ml",
+          "category": "grocery",
+          "product_query": "olive oil extra virgin"
+        },
+        {
+          "name": "Oregano",
+          "base_qty": 10,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "oregano dried herbs"
+        }
+      ]
+    },
+    {
+      "id": "dhal_fry",
+      "name": "Dal Fry (Lentil Curry)",
+      "keywords": ["dal fry", "lentil curry", "moong dal"],
+      "url_patterns": ["dal.*fry", "lentil.*curry", "moong"],
+      "image_patterns": ["dal", "lentil", "curry.*yellow"],
+      "default_servings": 4,
+      "ingredients": [
+        {
+          "name": "Moong Dal (Yellow Lentils)",
+          "base_qty": 250,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "moong dal yellow lentils"
+        },
+        {
+          "name": "Onions",
+          "base_qty": 300,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "onion fresh"
+        },
+        {
+          "name": "Tomatoes",
+          "base_qty": 250,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "tomato fresh"
+        },
+        {
+          "name": "Ginger-Garlic Paste",
+          "base_qty": 30,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "ginger garlic paste"
+        },
+        {
+          "name": "Ghee",
+          "base_qty": 50,
+          "base_unit": "ml",
+          "category": "grocery",
+          "product_query": "ghee clarified butter"
+        },
+        {
+          "name": "Cumin Seeds",
+          "base_qty": 10,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "cumin seeds"
+        },
+        {
+          "name": "Turmeric Powder",
+          "base_qty": 5,
+          "base_unit": "g",
+          "category": "grocery",
+          "product_query": "turmeric powder"
+        },
+        {
+          "name": "Coriander (fresh)",
+          "base_qty": 20,
+          "base_unit": "g",
+          "category": "fresh",
+          "product_query": "coriander fresh cilantro"
+        }
+      ]
+    }
+  ]
+}
