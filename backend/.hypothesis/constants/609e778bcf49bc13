@@ -1,0 +1,4 @@
+# file: /home/kanakraj/workspace/Syntax_HackonWithAmazon_6.0/backend/app/core/config.py
+# hypothesis_version: 6.155.2
+
+[1.0, 16384, '.env', '1.0.0', 'Amazon Now', 'amazon-now-orders', 'amazon-now-products', 'ignore', 'us-east-1', 'utf-8', 'z-ai/glm-5.1']

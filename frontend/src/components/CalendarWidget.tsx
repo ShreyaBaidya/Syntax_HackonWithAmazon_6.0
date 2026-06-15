@@ -47,16 +47,16 @@ export function CalendarWidget({ userId }: { userId: string }) {
             display: 'flex', justifyContent: 'space-between', alignItems: 'center'
           }}>
             <div>
-              <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#1A237E' }}>{event.summary}</p>
+              <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#1A237E' }}>{event.title}</p>
               <p style={{ margin: '2px 0 0', fontSize: 10, color: '#5C6BC0' }}>
-                {new Date(event.start.dateTime || event.start.date).toLocaleDateString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit'})}
+                {event.time || "Today"}
               </p>
             </div>
             <button
               onClick={() => {
                 // When clicking "Prepare", we should route to a chat/intent or handle it here
                 // We can set the sessionStorage intent and navigate to nowspeak!
-                sessionStorage.setItem('last_chat_intent', `Prepare a cart for my event: ${event.summary}`);
+                sessionStorage.setItem('last_chat_intent', `Prepare a cart for my event: ${event.title}`);
                 router.push('/nowspeak');
               }}
               style={{

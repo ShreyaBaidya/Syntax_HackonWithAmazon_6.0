@@ -231,6 +231,44 @@ PRODUCTS: list[dict] = [
      "price": 20.0, "unit": "pack", "eta_min": 35, "in_stock": True,
      "image_url": "https://placehold.co/200x200/FEFCE8/A16207?text=Lemons",
      "tags": "lemon citrus vitamin c fresh juice nimbu"},
+
+    # ── Party & Gatherings ────────────────────────────────────────────────────
+    {"id": "p052", "name": "Party Popper (2 pcs)", "category": "party",
+     "price": 120.0, "unit": "pack", "eta_min": 30, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/FEF08A/854D0E?text=PartyPopper",
+     "tags": "party celebration birthday popper fun"},
+    {"id": "p053", "name": "Balloons Pack (50 pcs)", "category": "party",
+     "price": 99.0, "unit": "pack", "eta_min": 30, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/FEF08A/854D0E?text=Balloons",
+     "tags": "party decoration birthday balloons fun"},
+    {"id": "p054", "name": "Diet Coke Can 330ml (6 pack)", "category": "beverages",
+     "price": 240.0, "unit": "pack", "eta_min": 25, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/FFF7ED/EA580C?text=DietCoke",
+     "tags": "soft drink diet coke soda party drinks low calorie"},
+
+    # ── Pet Care ──────────────────────────────────────────────────────────────
+    {"id": "p055", "name": "Pedigree Adult Dog Food 1.2kg", "category": "pet",
+     "price": 320.0, "unit": "bag", "eta_min": 35, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/E0E7FF/4338CA?text=DogFood",
+     "tags": "dog food pet care pedigree meat"},
+    {"id": "p056", "name": "Whiskas Adult Cat Food 1.2kg", "category": "pet",
+     "price": 350.0, "unit": "bag", "eta_min": 35, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/E0E7FF/4338CA?text=CatFood",
+     "tags": "cat food pet care whiskas fish"},
+
+    # ── Quick Ready To Eat ────────────────────────────────────────────────────
+    {"id": "p057", "name": "MTR Ready to Eat Paneer Butter Masala 300g", "category": "grocery",
+     "price": 145.0, "unit": "pack", "eta_min": 25, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/FFFBEB/D97706?text=Paneer",
+     "tags": "paneer butter masala ready to eat quick food dinner mtr"},
+    {"id": "p058", "name": "Haldiram's Aloo Bhujia 400g", "category": "snacks",
+     "price": 110.0, "unit": "pack", "eta_min": 20, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/FEFCE8/CA8A04?text=Bhujia",
+     "tags": "namkeen snacks party spicy bhujia haldiram"},
+    {"id": "p059", "name": "Amul Ice Cream Tub - Vanilla 1L", "category": "dairy",
+     "price": 220.0, "unit": "tub", "eta_min": 15, "in_stock": True,
+     "image_url": "https://placehold.co/200x200/F0FDF4/16A34A?text=IceCream",
+     "tags": "ice cream dessert vanilla sweet cold party amul"},
 ]
 
 # Maps time-of-day context → preferred categories for recommendations
@@ -248,10 +286,14 @@ def seed_products() -> None:
     dynamodb = boto3.resource("dynamodb", region_name=settings.aws_region)
     table = dynamodb.Table(settings.dynamodb_products_table)
 
+    from decimal import Decimal
     print(f"Seeding {len(PRODUCTS)} products → {settings.dynamodb_products_table} ...")
     with table.batch_writer() as batch:
         for product in PRODUCTS:
-            batch.put_item(Item=product)
+            item = dict(product)
+            if 'price' in item:
+                item['price'] = Decimal(str(item['price']))
+            batch.put_item(Item=item)
     print("✅ Seed complete.")
 
 

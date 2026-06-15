@@ -16,10 +16,13 @@ class ItemCategory(str, Enum):
 
 
 class CartItem(BaseModel):
+    id: Optional[str] = None
     name: str
     quantity: str
     category: ItemCategory = ItemCategory.ESSENTIAL
+    price: Optional[float] = None
     estimated_price: Optional[float] = None
+    image_url: Optional[str] = None
     substitute_available: bool = False
     substitutes: list[str] = []
 

@@ -1,0 +1,4 @@
+# file: /home/kanakraj/workspace/Syntax_HackonWithAmazon_6.0/backend/app/core/json_parser.py
+# hypothesis_version: 6.155.2
+
+[',\\s*([}\\]])', '[', '\\1', ']', 'unknown', '{', '}']

@@ -1,0 +1,4 @@
+# file: /home/kanakraj/workspace/Syntax_HackonWithAmazon_6.0/backend/app/services/profile_service.py
+# hypothesis_version: 6.155.2
+
+[',', 'alcohol', 'allergen_tags', 'almond', 'atta', 'beer', 'biscuit', 'bread', 'butter', 'cashew', 'cheese', 'chicken', 'conflicts', 'cookies', 'crab', 'cream', 'custom_exclusions', 'dairy', 'diet_tags', 'egg', 'eggs', 'exclusion_set', 'fish', 'flour', 'gluten', 'gluten-free', 'halal', 'honey', 'ingredients', 'keto', 'lobster', 'meat', 'milk', 'mutton', 'noodles', 'nut', 'nuts', 'paneer', 'participant', 'pasta', 'peanut', 'pescatarian', 'pistachio', 'pork', 'prawn', 'profile', 'rice', 'rum', 'shellfish', 'shrimp', 'soy', 'soya', 'sugar', 'tags', 'tofu', 'user_id', 'vegan', 'vegetarian', 'walnut', 'wheat', 'wine', 'yogurt']
