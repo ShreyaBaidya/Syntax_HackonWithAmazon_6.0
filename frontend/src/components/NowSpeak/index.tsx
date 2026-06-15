@@ -198,92 +198,92 @@ export function NowSpeak({ onProductSelect }: Props) {
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {messages.map((msg, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
-              }}
-            >
-              <div style={{ maxWidth: "88%" }}>
-                {msg.role === "user" ? (
-                  <div
-                    style={{
-                      background: "#232F3E",
-                      color: "white",
-                      padding: "10px 14px",
-                      borderRadius: "18px 18px 4px 18px",
-                      fontSize: 13,
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {msg.text}
-                  </div>
-                ) : (
-                  <div
-                    style={{ display: "flex", flexDirection: "column", gap: 8 }}
-                  >
-                    {(msg.text ||
-                      (isStreaming && i === messages.length - 1)) && (
+            {messages.map((msg, i) => {
+              return (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
+                  }}
+                >
+                  <div style={{ maxWidth: "88%" }}>
+                    {msg.role === "user" ? (
                       <div
                         style={{
-                          background: "white",
-                          border: "1px solid #E8E8E8",
+                          background: "#232F3E",
+                          color: "white",
                           padding: "10px 14px",
-                          borderRadius: "18px 18px 18px 4px",
+                          borderRadius: "18px 18px 4px 18px",
                           fontSize: 13,
                           lineHeight: 1.5,
-                          color: "#0F1111",
-                          boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
                         }}
                       >
                         {msg.text}
-                        {isStreaming && i === messages.length - 1 && (
-                          <span
+                      </div>
+                    ) : (
+                      <div
+                        style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                      >
+                        {(msg.text ||
+                          (isStreaming && i === messages.length - 1)) && (
+                          <div
                             style={{
-                              display: "inline-block",
-                              width: 6,
-                              height: 14,
-                              background: "#FF9900",
-                              marginLeft: 4,
-                              borderRadius: 2,
-                              verticalAlign: "middle",
-                              animation: "pulse 1s infinite",
+                              background: "white",
+                              border: "1px solid #E8E8E8",
+                              padding: "10px 14px",
+                              borderRadius: "18px 18px 18px 4px",
+                              fontSize: 13,
+                              lineHeight: 1.5,
+                              color: "#0F1111",
+                              boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
                             }}
-                          />
+                          >
+                            {msg.text}
+                            {isStreaming && i === messages.length - 1 && (
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  width: 6,
+                                  height: 14,
+                                  background: "#FF9900",
+                                  marginLeft: 4,
+                                  borderRadius: 2,
+                                  verticalAlign: "middle",
+                                  animation: "pulse 1s infinite",
+                                }}
+                              />
+                            )}
+                          </div>
+                        )}
+                        {msg.products && msg.products.length > 0 && (
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
+                              gap: 8,
+                            }}
+                          >
+                            {msg.products.map((p) => (
+                              <ProductCard
+                                key={p.id}
+                                product={p}
+                                onAddToCart={(product, _qty) =>
+                                  onProductSelect?.(product)
+                                }
+                                showDietaryInfo={hasProfile}
+                                userDietTags={profile?.diet_tags ?? []}
+                                userAllergenTags={profile?.allergen_tags ?? []}
+                              />
+                            ))}
+                          </div>
                         )}
                       </div>
                     )}
-                    {/* Product cards */}
-                    {msg.products && msg.products.length > 0 && (
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
-                          gap: 8,
-                        }}
-                      >
-                        {msg.products.map((p) => (
-                          <ProductCard
-                            key={p.id}
-                            product={p}
-                            onAddToCart={(product, _qty) =>
-                              onProductSelect?.(product)
-                            }
-                            showDietaryInfo={hasProfile}
-                            userDietTags={profile?.diet_tags ?? []}
-                            userAllergenTags={profile?.allergen_tags ?? []}
-                          />
-                        ))}
-                      </div>
-                    )}
                   </div>
-                )}
-              </div>
-            </div>
-          ))}
-            </div>
+                </div>
+              );
+            })}
             <div ref={messagesEndRef} style={{ height: 12 }} />
           </div>
         )}
