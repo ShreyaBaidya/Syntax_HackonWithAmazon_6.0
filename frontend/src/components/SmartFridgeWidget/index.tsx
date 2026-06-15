@@ -3,7 +3,7 @@
 import { Product } from "@/lib/api";
 
 interface Props {
-  onAddToCart?: (product: Product) => void;
+  onAddToCart?: (product: Product, qty: number) => void;
 }
 
 const RUNNING_LOW_ITEMS: Product[] = [
@@ -121,7 +121,7 @@ export function SmartFridgeWidget({ onAddToCart }: Props) {
 
             {/* Add button */}
             <button
-              onClick={() => onAddToCart?.(item)}
+              onClick={() => onAddToCart?.(item, 1)}
               style={{
                 width: "100%",
                 background: "#FF9900",
