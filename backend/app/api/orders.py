@@ -5,8 +5,13 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, Query
 
 from app.db.seed import PRODUCTS
+from app.db.amazon_catalog import AMAZON_PRODUCTS
+from app.db.food_catalog import FOOD_ENHANCED_PRODUCTS
 from app.db.order_store import _ORDER_HISTORY
 from app.models.order import OrderRequest, OrderResponse
+
+# Full product catalog (same as search uses)
+ALL_PRODUCTS = AMAZON_PRODUCTS + FOOD_ENHANCED_PRODUCTS + PRODUCTS
 
 router = APIRouter()
 
@@ -21,9 +26,9 @@ async def place_order(request: OrderRequest):
         f"ORD-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
     )
 
-    # Calculate total from seed catalog prices
+    # Calculate total from full product catalog
     total = sum(
-        float(next((p["price"] for p in PRODUCTS if p["id"] == item.product_id), 0))
+        float(next((p["price"] for p in ALL_PRODUCTS if p["id"] == item.product_id), 0))
         * item.quantity
         for item in request.items
     )
