@@ -10,13 +10,18 @@ dist/
 build/
 .pytest_cache/
 
-# Secrets — never commit
-backend/.env
+# Environment files
 .env
 .env.local
 .env.*.local
+backend/.env
+frontend/.env.local
 
-# Google Cloud service account keys — never commit
+# Keep examples
+!backend/.env.example
+!frontend/.env.local.example
+
+# Google Cloud service account keys
 syntax-project-*.json
 *-service-account*.json
 *service_account*.json
@@ -28,54 +33,25 @@ node_modules/
 out/
 .cache/
 
-# OS
-.DS_Store
-Thumbs.db
-
 # Logs
 *.log
 /tmp/
 
 # IDEs
 .idea/
+.vscode/
 *.swp
 *.swo
-frontend/.env.local
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-.venv/
-venv/
-env/
-*.egg-info/
-dist/
-build/
-.pytest_cache/
-
-# Secrets — never commit
-backend/.env
-.env
-.env.local
-.env.*.local
-
-# Node / Next.js
-node_modules/
-.next/
-out/
-.cache/
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-/tmp/
+# Agent/browser generated files
+.wibey-tasks/
 
-# IDEs
-.idea/
-*.swp
-*.swo
-.wibey-tasks
-frontend/.env.local
+# Testing temp files
+backend/.hypothesis/
+
+# Build cache
+frontend/tsconfig.tsbuildinfo
